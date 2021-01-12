@@ -1,0 +1,112 @@
+#startMessage {
+  z-index: 30;
+  transition: height 0.3s ease-out;
+  /* cursor: pointer; */
+  width: 600px;
+  text-align: center;
+  line-height: 300px;
+  font-size: 60px;
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 2;
+  grid-row-end: 4;
+}
+.results {
+  max-height: 450px;
+  overflow: auto;
+  padding: 8px;
+  font-size: 24px;
+  line-height: calc(24px * 1.5);
+  width: calc(100vw - 8px - 8px);
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 6;
+  grid-row-end: 7;
+}
+#output, #translatedOutput {
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+#similarKanjiTooltip {
+  visibility: hidden;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px 0;
+  cursor: pointer;
+  
+  /* Position the tooltip */
+  position: fixed;
+  z-index: 999;
+}
+.logText {
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+.hide {
+  opacity: 0 !important
+}
+.options {
+  padding-left: 10px;
+  grid-column-start: 6;
+  grid-column-end: 6;
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+.container {
+  display: grid;
+  grid-template-columns: 100vw;
+}
+#gameToolbar {
+  width: 100vw;
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+#outputToolbar {
+  width: 100vw;
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 5;
+  grid-row-end: 5;
+}
+dialog {
+  opacity: 0;
+  transition: opacity 0.3s;
+  display: block;
+  pointer-events: none;
+}
+dialog[open] {
+  opacity: 1;
+  pointer-events: inherit;
+}
+video, canvas {
+  width: 100vw;
+  transition: height 0.3s ease-out;
+  /* border: 1px solid #999; */
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 2;
+  grid-row-end: 4;
+}
+#cv1 {
+  cursor: pointer;
+  z-index: 10;
+}
+.welcome-card-wide.mdl-card {
+  width: 100vw;
+}
+.welcome-card-wide > .mdl-card__title {
+  color: #fff;
+  height: 40vw;
+  background: url("static/greeting.jpg") center / cover;
+}
+.welcome-card-wide > .mdl-card__menu {
+  color: #fff;
+}
+.dark-theme {
+  background-color: #121212;
+  color: white !important; 
+}

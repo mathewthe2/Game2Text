@@ -4,7 +4,7 @@
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
 # Logs
-logs/text/
+logs/text/*.txt
 
 # Debian Build
 build/

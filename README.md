@@ -19,7 +19,7 @@ Windows: Tesseract is bundled with the application.
 
 Mac OS: Install with ```brew install tesseract```
 
-Linux: Follow innstallation instructions [here] (https://tesseract-ocr.github.io/tessdoc/Home.html)
+Linux: Follow innstallation instructions [here](https://tesseract-ocr.github.io/tessdoc/Home.html).
 
 ## Custom Config ##
 

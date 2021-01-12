@@ -23,9 +23,11 @@ Linux: Follow innstallation instructions [here] (https://tesseract-ocr.github.io
 
 ## Custom Config ##
 
-Update config.ini file for the following configurations:
-logimagetype: file type to save logged images
-refresh: hotkey to execute OCR
+Update *config.ini* file for the following configurations:
+
+- **browser**: Browser to launch Game2Text
+- **logimagetype**: file type to save logged images
+- **refresh**: hotkey to execute OCR
 
 ## Getting Started ##
 ```

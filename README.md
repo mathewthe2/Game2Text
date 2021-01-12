@@ -8,8 +8,7 @@ Game2Text helps you learn and retain Japanese words.
 - Deepl Translate
 - Anki Integration with AnkiConnect via Yomichan
 
-## Installation ##
-```pip install -r requirements.txt```
+## Download ##
 
 ## Tesseract ##
 
@@ -23,8 +22,11 @@ Update config.ini file for the following configurations:
 logimagetype: file type to save logged images
 refresh: hotkey to execute OCR
 
-## Develop ##
-```python game2text.py```
+## Getting Started ##
+```
+pip install -r requirements.txt
+python game2text.py
+```
 
 ## Distribution ##
 

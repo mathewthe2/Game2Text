@@ -1,6 +1,6 @@
 ## Game2Text ##
 
-Game2Text helps you learn and retain Japanese words.
+Game2Text helps you learn and retain Japanese words from games.
 
 ## Features ##
 

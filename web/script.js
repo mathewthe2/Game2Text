@@ -47,10 +47,6 @@ const croppedVideoCanvas = document.getElementById("croppedVideoCanvas");
 const croppedVideoCtx = croppedVideoCanvas.getContext("2d");
 const settingsDialog = document.getElementById("settingsDialog");
 const dialogCloseButton = document.getElementById("dialogCloseButton");
-const outputToClipboardSwitch = document.getElementById("output-to-clipboard-mode-switch");
-const clipboardModeSwitch = document.getElementById("clipboard-mode-switch");
-const OCREngineSelect = document.getElementById("ocr_engine_select");
-const OCREngineSelectContainer = document.getElementById("ocr_engine_select_container");
 
 function selectApplication() {
   startCapture();
@@ -354,7 +350,7 @@ function showStuff({width, height, x, y}) {
       }
       if (!sameImage || !autoMode) {
         imageData = newImageData;
-        if (preprocess) {
+        if (preprocess && OCREngine === 'Tesseract') {
           ctx2.putImageData(preprocessImage(cv2), 0, 0);
         }
         imageDataURL = cv2.toDataURL('image/png');
@@ -380,7 +376,7 @@ function getVideoImage() {
 function recognize_image(image) {
   OCRrequests += 1;
   (async() => {
-    const textOrientation = verticalText ? 'vertical' : 'horizontal';
+    const textOrientation = verticalText && (OCREngine === 'Tesseract') ? 'vertical' : 'horizontal';
     let text = await eel.recognize_image(OCREngine, image, textOrientation, logImages)();
     OCRrequests -= 1;
     if (logMode) {

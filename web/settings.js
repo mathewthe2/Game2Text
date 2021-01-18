@@ -4,6 +4,13 @@ const LOG_CONFIG = 'LOGCONFIG';
 
 let logImageType = 'jpg';
 
+const outputToClipboardSwitch = document.getElementById("output-to-clipboard-mode-switch");
+const clipboardModeSwitch = document.getElementById("clipboard-mode-switch");
+const OCREngineSelect = document.getElementById("ocr_engine_select");
+const OCREngineSelectContainer = document.getElementById("ocr_engine_select_container");
+const preprocessSwitch = document.getElementById("preprocess-switch");
+const textOrientationSwitch = document.getElementById("text-orientation-switch");
+
 initConfig();
 
 function initConfig () {
@@ -91,6 +98,18 @@ function toggleDarkThemeAndPersist() {
 */
 function updateOCREngine() {
     OCREngine = OCREngineSelect.value;
+    if (OCREngine !== 'Tesseract') {
+        // Incompatible text recognition features
+        preprocessSwitch.disabled = true;
+        preprocessSwitch.parentNode.classList.add("is-disabled");
+        textOrientationSwitch.disabled = true;
+        textOrientationSwitch.parentNode.classList.add("is-disabled");
+    } else {
+        preprocessSwitch.disabled = false;
+        preprocessSwitch.parentNode.classList.remove("is-disabled");
+        textOrientationSwitch.disabled = false;
+        textOrientationSwitch.parentNode.classList.remove("is-disabled");
+    }
     return OCREngine;
 }
 

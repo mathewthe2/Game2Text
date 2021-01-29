@@ -6,7 +6,7 @@ import platform
 import threading
 import base64
 from logger import log_text, get_time_string
-from config import r_config, LOG_CONFIG
+from config import r_config, LOG_CONFIG, OCR_CONFIG
 from util import create_directory_if_not_exists
 import requests
 import eel
@@ -52,20 +52,21 @@ def recognize_japanese(engine, base64img, text_orientation):
     if engine == "OCR Space USA" or engine == "OCR Space EU":
         api_url = OCRSPACE_API_URL_USA if engine == "OCR Space USA" else OCRSPACE_API_URL_EU
         image_path = base64_to_image_path(base64img, get_temp_image_path())
-        return ocr_space_file(filename=image_path, language='jpn', url=api_url)
+        language = r_config(OCR_CONFIG, "ocr_space_language")
+        return ocr_space_file(filename=image_path, language=language, url=api_url)
     else: 
         #default tesseract
         image = base64_to_image(base64img, get_temp_image_path())
         return tesseract_ocr(image, text_orientation)
 
 def tesseract_ocr(image, text_orientation):
-    lang = "jpn"
+    language = r_config(OCR_CONFIG, "tesseract_language")
     psm = HORIZONTAL_TEXT_DETECTION
     if (text_orientation == 'vertical'):
         psm = VERTICAL_TEXT_DETECTON
-        lang = "jpn_vert"
+        language += "_vert"
     custom_config = r'--oem 3 --psm {} -c preserve_interword_spaces=1'.format(psm)
-    result = pytesseract.image_to_string(image, config=custom_config, lang=lang)
+    result = pytesseract.image_to_string(image, config=custom_config, lang=language)
     return result
 
 def path_to_tesseract():

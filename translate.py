@@ -1,6 +1,7 @@
 from googletrans import Translator
 import requests
 import time
+from config import r_config, DEEPL_CONFIG
 
 def deepl_translate(text):
     text = text[:140] if len(text) > 140 else text
@@ -20,8 +21,8 @@ def deepl_translate(text):
             }],
             "lang":{
                 "user_preferred_langs":["EN"],
-                "source_lang_user_selected":"JA",
-                "target_lang":"EN"
+                "source_lang_user_selected": r_config(DEEPL_CONFIG, "source_lang") or "JA",
+                "target_lang": r_config(DEEPL_CONFIG, "target_lang") or "EN"
             },
             "priority":-1,
             "commonJobParams":{},

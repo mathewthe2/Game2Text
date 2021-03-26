@@ -1,5 +1,6 @@
 from configparser import ConfigParser
 import eel
+import os
 
 OCR_CONFIG = "OCRCONFIG"
 DEEPL_CONFIG = "DEEPLCONFIG"
@@ -11,10 +12,13 @@ LOG_CONFIG = "LOGCONFIG"
 #Get the configparser object
 config_object = ConfigParser()
 
+#Path for config file
+config_file = os.path.join(os.path.dirname(__file__), 'config.ini')
+
 def r_config(section, key):
     #Read config.ini file
     # config_object = ConfigParser()
-    config_object.read("config.ini")
+    config_object.read(config_file)
 
     #Get the password
     section = config_object[section]

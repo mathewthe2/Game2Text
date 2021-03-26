@@ -10,7 +10,7 @@ from datetime import datetime
 from util import create_directory_if_not_exists
 
 SCRIPT_DIR = Path(__file__).parent 
-TEXT_LOG_PATH = "logs/text/"
+TEXT_LOG_PATH = Path(SCRIPT_DIR, "logs", "text")
 
 def get_time_string():
     return time.strftime("%Y%m%d-%H%M%S")
@@ -25,7 +25,7 @@ def log_text(start_time,request_time, text):
     parsed_text =  text.replace("\n", "")
     if (len(parsed_text) < 1):
         return
-    filename = "{}{}.txt".format(TEXT_LOG_PATH, start_time)
+    filename = "{}/{}.txt".format(TEXT_LOG_PATH, start_time)
     create_directory_if_not_exists(filename)
     with open(filename, "a", encoding="utf-8", newline='') as f:
         if(os.path.getsize(filename) > 0):
@@ -53,7 +53,7 @@ def show_logs():
     output = []
     if not os.path.exists(TEXT_LOG_PATH):
         return []
-    list_of_files = glob.glob(TEXT_LOG_PATH + '*.txt')
+    list_of_files = glob.glob(str(TEXT_LOG_PATH) + '/*.txt')
     if len(list_of_files) < 1:
         return []
     latest_file = max(list_of_files, key=os.path.getctime)

@@ -45,10 +45,4 @@ Mac:
 
 ```sh build.sh```
 
-Temporary fix for all read/write operations using *os.path* on Mac builds with pyinstaller: create the following *wrapper* (Unix executable) file in app/Contents/MacOS and update *info.plist* by changing the value for *CFBundleExecutable* to **MacOS/wrapper**
-
-```bash
-#!/bin/bash
-dir=$(dirname $0)
-open -a Terminal file://${dir}/game2text
-```
+Temporary fix for all read/write operations using *os.path* on Mac builds with pyinstaller: create a wrapper file that runs the Game2Text executable inside the package 

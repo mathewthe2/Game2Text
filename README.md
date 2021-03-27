@@ -17,7 +17,10 @@ You can find downloads on [Releases](https://github.com/mathewthe2/Game2Text/rel
 
 Windows: Tesseract is bundled with the application.
 
-Mac OS: Install with ```brew install tesseract```
+Mac OS: 
+1. Install [Homebrew](https://brew.sh/)
+2. Install Tesseract with ```brew install tesseract```
+3. [Download trained data](https://github.com/tesseract-ocr/tessdata_best) and add *jpn.traineddata* and *jpn_vert.traineddata* to */usr/local/share/tessdata/*
 
 Linux: Follow installation instructions [here](https://tesseract-ocr.github.io/tessdoc/Home.html).
 
@@ -30,6 +33,8 @@ Update *config.ini* file for the following configurations:
 - **refresh**: hotkey to execute OCR
 
 ## Getting Started ##
+
+Create a venv, then once activated install requirements:
 ```
 pip install -r requirements.txt
 python game2text.py

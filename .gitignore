@@ -9,6 +9,9 @@ logs/text/*.txt
 # Debian Build
 build/
 
+# Virtual Environment
+venv/
+
 # Node artifact files
 node_modules/
 dist/

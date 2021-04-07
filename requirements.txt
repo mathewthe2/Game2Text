@@ -11,10 +11,7 @@ distlib==0.3.1
 Eel==0.12.4
 filelock==3.0.12
 future==0.18.2
-gevent==20.9.0
-gevent-websocket==0.10.1
 googletrans==3.0.0
-greenlet==0.4.17
 h11==0.9.0
 h2==3.2.0
 hpack==3.0.0
@@ -30,7 +27,6 @@ numpy==1.19.3
 opencv-python==4.4.0.46
 pefile==2019.4.18
 Pillow==8.0.1
-psutil==5.7.3
 pycparser==2.20
 pyinstaller==4.1
 pyinstaller-hooks-contrib==2020.10

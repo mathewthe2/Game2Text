@@ -15,8 +15,7 @@ You can find downloads on [Releases](https://github.com/mathewthe2/Game2Text/rel
 
 ## Prerequisite: Tesseract ##
 
-Windows: Tesseract is bundled with the application.
-Mac OS: Tesseract is bundled with the application.
+Windows/Mac: Tesseract is bundled with the application.
 
 Linux: Follow installation instructions [here](https://tesseract-ocr.github.io/tessdoc/Home.html).
 

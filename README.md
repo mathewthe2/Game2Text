@@ -16,11 +16,7 @@ You can find downloads on [Releases](https://github.com/mathewthe2/Game2Text/rel
 ## Prerequisite: Tesseract ##
 
 Windows: Tesseract is bundled with the application.
-
-Mac OS: 
-1. Install [Homebrew](https://brew.sh/)
-2. Install Tesseract with ```brew install tesseract```
-3. [Download trained data](https://github.com/tesseract-ocr/tessdata_best) and add *jpn.traineddata* and *jpn_vert.traineddata* to */usr/local/share/tessdata/*
+Mac OS: Tesseract is bundled with the application.
 
 Linux: Follow installation instructions [here](https://tesseract-ocr.github.io/tessdoc/Home.html).
 

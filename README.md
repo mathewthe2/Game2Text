@@ -1,6 +1,6 @@
 ## Game2Text ##
 
-Game2Text helps you learn and retain Japanese words from games.
+[Game2Text](https://www.game2text.com) helps you learn and retain Japanese words from games.
 
 ![Game2Text Preview](https://game2text.com/images/header-software-app.png)
 
@@ -17,7 +17,10 @@ You can find downloads on [Releases](https://github.com/mathewthe2/Game2Text/rel
 
 Windows: Tesseract is bundled with the application.
 
-Mac OS: Install with ```brew install tesseract```
+Mac OS: 
+1. Install [Homebrew](https://brew.sh/)
+2. Install Tesseract with ```brew install tesseract```
+3. [Download trained data](https://github.com/tesseract-ocr/tessdata_best) and add *jpn.traineddata* and *jpn_vert.traineddata* to */usr/local/share/tessdata/*
 
 Linux: Follow installation instructions [here](https://tesseract-ocr.github.io/tessdoc/Home.html).
 
@@ -30,6 +33,8 @@ Update *config.ini* file for the following configurations:
 - **refresh**: hotkey to execute OCR
 
 ## Getting Started ##
+
+Create a venv, then once activated install requirements:
 ```
 pip install -r requirements.txt
 python game2text.py
@@ -45,4 +50,20 @@ Mac:
 
 ```sh build.sh```
 
-Temporary fix for all read/write operations using *os.path* on Mac builds with pyinstaller: create a wrapper file that runs the Game2Text executable inside the package 
+Temporary fix for all read/write operations using *os.path* on Mac builds with pyinstaller: create a wrapper file that runs the Game2Text executable inside the package
+
+## FAQ ##
+
+Q. Why is my application not showing in screen share?
+- 
+On MacOS, make sure you have allowed screen recording for your browser in **Security & Privacy** settings.
+
+<img src="https://user-images.githubusercontent.com/13146030/113811992-d7243280-979f-11eb-8bdf-bcea6bd4e9bd.png" width="500" height="439">
+
+
+Q. How do I use Game2Text without Chrome?
+- 
+Modify *config.ini* and modify the value of browser to firefox or edge. 
+
+<img src="https://user-images.githubusercontent.com/13146030/113812636-02f3e800-97a1-11eb-8435-5f2c0e7b0339.png" width="400" height="504">
+

@@ -1,0 +1,12 @@
+prefix=/usr/local/Cellar/leptonica/1.80.0
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/leptonica
+
+Name: leptonica
+Description: An open source C library for efficient image processing and image analysis operations
+Version: 1.80.0
+Libs: -L${libdir} -llept
+Libs.private: -lz -L/usr/local/Cellar/libpng/1.6.37/lib -lpng16 -lz -L/usr/local/Cellar/jpeg/9d/lib -ljpeg -L/usr/local/Cellar/openjpeg/2.3.1/lib -lopenjp2 -lgif -L/usr/local/Cellar/libtiff/4.1.0/lib -ltiff -L/usr/local/Cellar/webp/1.1.0/lib -lwebp -L/usr/local/Cellar/webp/1.1.0/lib -lwebpmux -lwebp
+Cflags: -I${includedir}
+

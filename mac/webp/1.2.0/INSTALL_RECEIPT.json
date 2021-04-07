@@ -1,0 +1,61 @@
+{
+  "homebrew_version": "2.7.7-40-g24bbfff",
+  "used_options": [
+
+  ],
+  "unused_options": [
+
+  ],
+  "built_as_bottle": true,
+  "poured_from_bottle": true,
+  "installed_as_dependency": true,
+  "installed_on_request": false,
+  "changed_files": [
+    "ChangeLog",
+    "INSTALL_RECEIPT.json",
+    "README",
+    "lib/pkgconfig/libwebp.pc",
+    "lib/pkgconfig/libwebpdecoder.pc",
+    "lib/pkgconfig/libwebpdemux.pc",
+    "lib/pkgconfig/libwebpmux.pc"
+  ],
+  "time": 1617797021,
+  "source_modified_time": 1611200695,
+  "compiler": "clang",
+  "aliases": [
+
+  ],
+  "runtime_dependencies": [
+    {
+      "full_name": "jpeg",
+      "version": "9d"
+    },
+    {
+      "full_name": "libpng",
+      "version": "1.6.37"
+    },
+    {
+      "full_name": "libtiff",
+      "version": "4.2.0"
+    }
+  ],
+  "source": {
+    "path": "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/webp.rb",
+    "tap": "homebrew/core",
+    "spec": "stable",
+    "versions": {
+      "stable": "1.2.0",
+      "head": "HEAD",
+      "version_scheme": 0
+    },
+    "tap_git_head": "666853f71e7b5cb369fab5195180774039ac56f6"
+  },
+  "arch": "x86_64",
+  "built_on": {
+    "os": "Macintosh",
+    "os_version": "macOS 10.15.7",
+    "cpu_family": "penryn",
+    "xcode": "12.4",
+    "clt": "12.0.32.29"
+  }
+}

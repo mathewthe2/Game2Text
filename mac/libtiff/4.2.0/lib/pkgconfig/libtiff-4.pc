@@ -1,0 +1,11 @@
+prefix=/usr/local/Cellar/libtiff/4.2.0
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libtiff
+Description:  Tag Image File Format (TIFF) library.
+Version: 4.2.0
+Libs: -L${libdir} -ltiff
+Libs.private: -ljpeg -lz 
+Cflags: -I${includedir}

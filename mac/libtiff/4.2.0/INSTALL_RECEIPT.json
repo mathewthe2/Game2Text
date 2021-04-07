@@ -1,0 +1,51 @@
+{
+  "homebrew_version": "2.6.2-207-gf47c1ea",
+  "used_options": [
+
+  ],
+  "unused_options": [
+
+  ],
+  "built_as_bottle": true,
+  "poured_from_bottle": true,
+  "installed_as_dependency": true,
+  "installed_on_request": false,
+  "changed_files": [
+    "ChangeLog",
+    "INSTALL_RECEIPT.json",
+    "lib/pkgconfig/libtiff-4.pc",
+    "share/doc/tiff-4.2.0/ChangeLog"
+  ],
+  "time": 1617797014,
+  "source_modified_time": 1608400562,
+  "stdlib": "libcxx",
+  "compiler": "clang",
+  "aliases": [
+
+  ],
+  "runtime_dependencies": [
+    {
+      "full_name": "jpeg",
+      "version": "9d"
+    }
+  ],
+  "source": {
+    "path": "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/libtiff.rb",
+    "tap": "homebrew/core",
+    "spec": "stable",
+    "versions": {
+      "stable": "4.2.0",
+      "head": "",
+      "version_scheme": 0
+    },
+    "tap_git_head": "666853f71e7b5cb369fab5195180774039ac56f6"
+  },
+  "arch": "x86_64",
+  "built_on": {
+    "os": "Macintosh",
+    "os_version": "macOS 10.15.7",
+    "cpu_family": "penryn",
+    "xcode": "12.3",
+    "clt": "12.3.0.0.1.1607026830"
+  }
+}

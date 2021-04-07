@@ -1,0 +1,72 @@
+{
+  "homebrew_version": "2.2.2-14-gb7ee5a9",
+  "used_options": [
+
+  ],
+  "unused_options": [
+
+  ],
+  "built_as_bottle": true,
+  "poured_from_bottle": true,
+  "installed_as_dependency": false,
+  "installed_on_request": true,
+  "changed_files": [
+    "INSTALL_RECEIPT.json",
+    "lib/pkgconfig/tesseract.pc"
+  ],
+  "time": 1617804006,
+  "source_modified_time": 1577370111,
+  "stdlib": "libcxx",
+  "compiler": "clang",
+  "aliases": [
+
+  ],
+  "runtime_dependencies": [
+    {
+      "full_name": "giflib",
+      "version": "5.2.1"
+    },
+    {
+      "full_name": "jpeg",
+      "version": "9d"
+    },
+    {
+      "full_name": "libpng",
+      "version": "1.6.37"
+    },
+    {
+      "full_name": "libtiff",
+      "version": "4.2.0"
+    },
+    {
+      "full_name": "little-cms2",
+      "version": "2.12"
+    },
+    {
+      "full_name": "openjpeg",
+      "version": "2.4.0"
+    },
+    {
+      "full_name": "webp",
+      "version": "1.2.0"
+    },
+    {
+      "full_name": "leptonica",
+      "version": "1.80.0"
+    }
+  ],
+  "source": {
+    "path": "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/tesseract.rb",
+    "tap": "homebrew/core",
+    "spec": "stable",
+    "versions": {
+      "stable": "4.1.1",
+      "devel": "",
+      "head": "HEAD",
+      "version_scheme": 0
+    },
+    "tap_git_head": "e2813019a17ad747d8784533bcb7b4328a3d99b3"
+  },
+  "arch": "x86_64",
+  "built_on": null
+}

@@ -368,7 +368,7 @@ function getVideoImage() {
   cv3.height = videoElement.videoHeight;
   var ctx3 = cv3.getContext('2d');
   ctx3.drawImage(videoElement, 0, 0, cv3.width, cv3.height);
-  fullImageDataURL = cv3.toDataURL(`image/${logImageType}`);
+  fullImageDataURL = cv3.toDataURL(`image/${logImageType === 'jpg' ? 'jpeg' : logImageType}`, logImageQuality);
   fullImageb64 = fullImageDataURL.slice(fullImageDataURL.indexOf(',') + 1)
   return fullImageb64
 }

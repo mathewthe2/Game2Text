@@ -3,6 +3,7 @@ const OCR_CONFIG = 'OCRCONFIG';
 const LOG_CONFIG = 'LOGCONFIG';
 
 let logImageType = 'jpg';
+let logImageQuality = 1.0;
 
 const outputToClipboardSwitch = document.getElementById("output-to-clipboard-mode-switch");
 const clipboardModeSwitch = document.getElementById("clipboard-mode-switch");
@@ -21,7 +22,7 @@ function initConfig () {
     initOCREngine();
     // Logs
     initIsLogImages();
-    initSetLogImageType();
+    initSetLogImageTypeAndQuality();
 }
 
 async function initFontSize() {
@@ -64,8 +65,9 @@ async function initIsLogImages() {
     }
 }
 
-async function initSetLogImageType() {
+async function initSetLogImageTypeAndQuality() {
     logImageType = await eel.read_config(LOG_CONFIG, 'logimagetype')(); 
+    logImageQuality = await eel.read_config(LOG_CONFIG, 'logimagequality')(); 
 }
 
 /*

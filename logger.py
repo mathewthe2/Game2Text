@@ -39,7 +39,7 @@ def get_base64_image_with_log(log_id, folder_name):
     path = Path(SCRIPT_DIR, "logs", "images", folder_name)
     if not path.is_dir():
         return None
-    file_name = next((f for f in os.listdir(path) if re.match('{}.(?:jpg|jpeg|png)$'.format(log_id), f)), None)
+    file_name = next((f for f in os.listdir(path) if re.match('{}.(?:jpg|jpeg|png|tiff|webp)$'.format(log_id), f)), None)
     if not file_name:
         return None
     image_type = Path(file_name).suffix.split('.')[1]

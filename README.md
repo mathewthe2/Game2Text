@@ -58,7 +58,7 @@ On MacOS, make sure you have allowed screen recording for your browser in **Secu
 
 Q. How do I use Game2Text without Chrome?
 - 
-Modify *config.ini* and modify the value of browser to firefox or edge. 
+Modify *config.ini* and update the value of browser to edge, chromium, or firefox. 
 
 <img src="https://user-images.githubusercontent.com/13146030/113812636-02f3e800-97a1-11eb-8435-5f2c0e7b0339.png" width="400" height="504">
 

@@ -57,7 +57,7 @@ def recognize_japanese(engine, base64img, text_orientation):
         language = r_config(OCR_CONFIG, "ocr_space_language")
         return ocr_space_file(filename=image_path, language=language, url=api_url)
     else: 
-        #default tesseract
+        # default to tesseract
         image = base64_to_image(base64img, get_temp_image_path())
         return tesseract_ocr(image, text_orientation)
 
@@ -67,7 +67,7 @@ def tesseract_ocr(image, text_orientation):
     if (text_orientation == 'vertical'):
         psm = VERTICAL_TEXT_DETECTON
         language += "_vert"
-    custom_config = r'{} --oem 3 --psm {} -c preserve_interword_spaces=1'.format(get_tessdata_dir(), psm)
+    custom_config = r'{} --oem {} --psm {} -c preserve_interword_spaces=1 {}'.format(get_tessdata_dir(), r_config(OCR_CONFIG, "oem"), psm, r_config(OCR_CONFIG, "extra_options").strip('"'))
     result = pytesseract.image_to_string(image, config=custom_config, lang=language)
     return result
 
@@ -81,7 +81,15 @@ def path_to_tesseract():
 def get_tessdata_dir():
     platform_name = platform.system() 
     if platform_name == 'Darwin':
-        return '--tessdata-dir {}'.format(str(Path(SCRIPT_DIR, "mac", "tesseract", OSX_TESSERACT_VERSION, "share", "tessdata")))
+        if r_config(OCR_CONFIG, "oem") == '0': 
+            # legacy tesseract
+            return '--tessdata-dir {}'.format(str(Path(SCRIPT_DIR, "mac", "tesseract", OSX_TESSERACT_VERSION, "share", "legacy", "tessdata")))
+        else:
+            return '--tessdata-dir {}'.format(str(Path(SCRIPT_DIR, "mac", "tesseract", OSX_TESSERACT_VERSION, "share", "tessdata")))
+    elif platform_name == 'Windows':
+        if r_config(OCR_CONFIG, "oem") == '0': 
+            # legacy tesseract
+            return '--tessdata-dir {}'.format(str(Path(SCRIPT_DIR, "win", "tesseract", "legacy", "tessdata")))
     else:
         return ''
 

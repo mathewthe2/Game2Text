@@ -4,6 +4,7 @@ let autoMode = false;
 let logMode = false;
 let logImages = false;
 let selectionMode = 'ocr';
+let selectionLineWidth = 1;
 let selectionColor = 'red';
 let OCRrequests = 0;
 let showSelection = true;
@@ -160,6 +161,8 @@ function toggleCollapse(element) {
 function toggleCollapseVideo() {
   toggleCollapse(videoElement);
   toggleCollapse(cv1);
+  toggleCollapse(previewCanvas);
+  toggleCollapse(croppedVideoCanvas);
   minimizeButton.hidden = !minimizeButton.hidden;
   maximizeButton.hidden = !maximizeButton.hidden;
 }
@@ -171,7 +174,7 @@ function toggleShowSelection() {
     ctx.beginPath();
     ctx.rect(rect.x,rect.y, rect.width, rect.height);
     ctx.strokeStyle = selectionColor;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = selectionLineWidth;
     ctx.stroke();
     showSelectionButton.classList.add("mdl-button--colored");
     showSelectionTooltip.innerText = "Hide Selection";
@@ -283,7 +286,7 @@ cv1.addEventListener("mousemove", function (e) {
         ctx.rect(last_mousex,last_mousey,width,height);
         rect = {x: last_mousex, y: last_mousey, width, height}
         ctx.strokeStyle = selectionColor;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = selectionLineWidth;
         ctx.stroke();
     }
 }, false);

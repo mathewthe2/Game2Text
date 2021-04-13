@@ -36,31 +36,23 @@ function removeLogs(logsContainer) {
 function addLogs(logs) {
    const logsContainer = document.createElement('div');
    logsContainer.setAttribute("id", "logsContainer");
+   logsContainer.setAttribute("style",`width:calc(100vw - 8px - 8px);`);
    logs.forEach(log=>{
      const div = document.createElement('div');
      div.setAttribute("id", log.id);
      div.setAttribute("image", log.image);
-     div.setAttribute("contenteditable", true);
+     //  div.setAttribute("contenteditable", true);
+     div.onmouseover = function() {
+        showImageForLog(log);
+      }
      div.onclick = function () {
-       if (!log.image) {
-         return;
-       }
-       cv1.hidden = true;
-       previewCanvas.hidden = false;
-       previewCtx.clearRect(0,0,cv1.width,cv1.height); 
-       const img = new Image();
-       img.src = log.image;
-       img.onload = function() {
-         previewCanvas.width = videoElement.videoWidth;
-         previewCanvas.height = videoElement.videoHeight;
-         previewCtx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, videoElement.videoWidth, videoElement.videoHeight);
-       };
-      } 
+       showImageForLog(log);
+     } 
      div.onmouseup = showSimilarKanji;
      div.onkeyup = showSimilarKanji;
      div.input = updateLog;
      div.addEventListener('input', function(e) {
-        updateLog()
+       updateLog()
      })
      div.innerText = log.text;
      div.classList.add('logText');
@@ -75,6 +67,22 @@ function addLogs(logs) {
       log.classList.remove('hide');
     });
    }, 300);
+}
+
+function showImageForLog(log) {
+  if (!log.image) {
+    return;
+  }
+  cv1.hidden = true;
+  previewCanvas.hidden = false;
+  previewCtx.clearRect(0,0,cv1.width,cv1.height); 
+  const img = new Image();
+  img.src = log.image;
+  img.onload = function() {
+    previewCanvas.width = videoElement.videoWidth;
+    previewCanvas.height = videoElement.videoHeight;
+    previewCtx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, videoElement.videoWidth, videoElement.videoHeight);
+  };
 }
 
 function updateLog() {

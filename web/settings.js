@@ -21,14 +21,17 @@ const textOrientationSwitch = document.getElementById("text-orientation-switch")
 initConfig();
 
 function initConfig () {
-    // Appearance
-    initFontSize();
-    initDarkTheme();
-    // OCR
-    initOCREngine();
-    // Logs
-    initIsLogImages();
-    initSetLogImageTypeAndQuality();
+    (async() => {
+        // Appearance
+        initFontSize();
+        initDarkTheme();
+        initSelection();
+        // OCR
+        initOCREngine();
+        // Logs
+        initIsLogImages();
+        initSetLogImageTypeAndQuality();
+    })()
 }
 
 async function initFontSize() {
@@ -44,6 +47,11 @@ async function initDarkTheme() {
         toggleDarkTheme();
         document.getElementById("dark-theme-switch").parentElement.MaterialSwitch.on();
     }
+}
+
+async function initSelection() {
+    selectionColor = await eel.read_config(APPEARANCE_CONFIG, 'selection_color')(); 
+    selectionLineWidth = await eel.read_config(APPEARANCE_CONFIG, 'selection_line_width')(); 
 }
 
 async function initOCREngine() {

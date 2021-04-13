@@ -29,6 +29,8 @@ let dialogWindow;
 let autoModeTimer;
 let croppedVideoTimer;
 let currentText;
+let audioSources;
+let audioDeviceIndex;
 
 const videoElement = document.getElementById("video");
 // const myImg = document.getElementById("my_img");
@@ -202,6 +204,12 @@ function toggleTranslation() {
     showTranslationButton.classList.remove("mdl-button--colored");
     showTranslationTooltip.innerText = "Show Translation";
   }
+}
+
+function openLogWindow() {
+  (async() => {
+  eel.open_new_window('logs.html')();
+  })();
 }
 
 eel.expose(getOutputText);
@@ -455,3 +463,5 @@ function cropVideo() {
     }, 20);
   }
 }
+
+openSettings();

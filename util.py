@@ -1,5 +1,9 @@
 from threading import Timer
+from pathlib import Path
 import os
+import platform
+
+SCRIPT_DIR = Path(__file__).parent 
 
 class RepeatedTimer(object):
     def __init__(self, interval, function, *args, **kwargs):
@@ -33,3 +37,9 @@ def create_directory_if_not_exists(filename):
         except OSError as exc: # Guard against race condition
             if exc.errno != errno.EEXIST:
                 raise
+
+def open_folder_by_relative_path(relative_path):
+    platform_name = platform.system() 
+    if platform_name == 'Windows':
+        path = os.path.realpath(str(Path(SCRIPT_DIR, relative_path)))
+        os.startfile(path)

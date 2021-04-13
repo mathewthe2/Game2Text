@@ -83,9 +83,12 @@
     </button>
     <div id="settingsTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="settingsButton">Settings</div>
     <div id="showTranslationTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="showTranslationButton">Enable Translation</div>
-    <button disabled style="float: right; margin-right: 12px" id="toggleLogsButton" onclick="toggleLogs()" class="mdl-button mdl-js-button mdl-button--icon">
+    <button style="float: right; margin-right: 12px" id="toggleLogsButton" onclick="openLogWindow()" class="mdl-button mdl-js-button mdl-button--icon">
       <i class="material-icons">view_list</i>
     </button>
+    <!-- <button disabled style="float: right; margin-right: 12px" id="toggleLogsButton" onclick="toggleLogs()" class="mdl-button mdl-js-button mdl-button--icon">
+      <i class="material-icons">view_list</i>
+    </button> -->
     <div id="settingsTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="toggleLogsButton">Logs</div>
   </div>
 </div>
@@ -214,9 +217,9 @@
                   <ul class="demo-list-control mdl-list">
                         <li class="mdl-list__item mdl-list__item--two-line">
                           <span class="mdl-list__item-primary-content">
-                            <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">add_to_photos</i>
+                            <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">photo_library</i>
                             <span>Save screenshots</span>
-                            <span class="mdl-list__item-sub-title" >Images are saved to <b>logs/images/</b> directory</span>
+                            <span class="mdl-list__item-sub-title" >Images are saved to <a onclick="openFolder('logs/images')" href="#"><b>logs/images/</b></a> directory</span>
                           </span>
                           <span class="mdl-list__item-secondary-content">
                             <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="log-images-switch">
@@ -224,7 +227,40 @@
                             </label>
                           </span>
                         </li>
+
+                        <!-- Audio Host Selection -->
+                        <div style="padding-left: 16px">
+                          <div id="audio_host_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
+                            <input onchange="changeAudioHost()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="audio_host_select" readonly>
+                            <input type="hidden" value=""  name="audio_host_select">
+                            <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                            <label for="audio_host_select" class="mdl-textfield__label">Audio Host</label>
+                            <ul id="audio_host_selector" for="audio_host_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                            </ul>
+                          </div>
+                        </div>
+
+                        <!-- Audio Device Selection -->
+                        <div style="padding-left: 16px">
+                          <div id="audio_device_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
+                            <input onchange="changeAudioDevice()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="audio_device_select" readonly>
+                            <input type="hidden" value=""  name="audio_device_select">
+                            <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                            <label for="audio_device_select" class="mdl-textfield__label">Audio Device</label>
+                            <ul id="audio_device_selector" for="audio_device_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div style="padding-left: 16px">
+                          <button onclick="testRecord()">
+                            Test Record
+                          </button>
+
+                        </div>
+                        
                     </ul>
+
                 </div>
   
             </div>
@@ -247,7 +283,7 @@
 </span>
 <span id ="similarKanjiTooltip" class="tooltiptext"></span>
   <script src="script.js"></script>
-  <script src="logs.js"></script>
+  <!-- <script src="logs.js"></script> -->
   <script src="similarkanji.js"></script>
   <script src="settings.js"></script>
   <script src="image.js"></script>

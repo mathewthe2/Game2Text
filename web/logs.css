@@ -1,0 +1,32 @@
+/* #logsContainer {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width:calc(100vw - 8px - 8px);
+} */
+/* #logsContainer{
+    transition-duration: .28s;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    transition-property: background-color;
+} */
+.logItem {
+    transition-duration: .28s;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    transition-property: background-color;  
+}
+.logItem:hover {
+    background-color: #eee;
+}
+.playAudio {
+    color: #757575
+}
+.playAudioButton {
+    margin-right: 0.2em;
+}
+/* .logText {
+    opacity: 1;
+    transition: opacity 0.3s;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+}

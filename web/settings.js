@@ -10,6 +10,7 @@ const OEM_CONFIG = {
 
 let logImageType = 'jpg';
 let logImageQuality = 1.0;
+let audioDevices = {};
 
 const outputToClipboardSwitch = document.getElementById("output-to-clipboard-mode-switch");
 const clipboardModeSwitch = document.getElementById("clipboard-mode-switch");
@@ -17,6 +18,10 @@ const OCREngineSelect = document.getElementById("ocr_engine_select");
 const OCREngineSelectContainer = document.getElementById("ocr_engine_select_container");
 const preprocessSwitch = document.getElementById("preprocess-switch");
 const textOrientationSwitch = document.getElementById("text-orientation-switch");
+const audioHostSelector = document.getElementById("audio_host_selector");
+const audioHostSelect = document.getElementById("audio_host_select");
+const audioDeviceSelector = document.getElementById("audio_device_selector");
+const audioDeviceSelect = document.getElementById("audio_device_select");
 
 initConfig();
 
@@ -31,6 +36,7 @@ function initConfig () {
         // Logs
         initIsLogImages();
         initSetLogImageTypeAndQuality();
+        initSetAudioSources();
     })()
 }
 
@@ -134,7 +140,6 @@ function updateOCREngineAndPersist() {
     const OCREngine = updateOCREngine();
     eel.update_config(OCR_CONFIG, {'engine':OCREngine})();
     if (OCREngine.includes('Tesseract')) {
-        console.log('changing tess oem')
         eel.update_config(OCR_CONFIG, {'oem': OEM_CONFIG[OCREngine]})();
     }
 }
@@ -195,4 +200,61 @@ function toggleLogImages() {
 function toggleLogImagesAndPersist() {
     isLogImages = toggleLogImages();
     eel.update_config(LOG_CONFIG, {'logimages': isLogImages ? 'true' : 'false'})();
+}
+function openFolder(relative_path) {
+    eel.open_folder(relative_path);
+}
+async function initSetAudioSources() {
+    const default_audio_host = await eel.read_config(LOG_CONFIG, 'logaudiohost')();
+    audio_sources = await eel.get_audio_sources()();
+    console.log(audio_sources)
+    for (const source in audio_sources) {
+        const audioHostItem = document.createElement("li");
+        audioHostItem.classList.add("mdl-menu__item")
+        audioHostItem.data_val = source.replace(' ', '_');
+        audioHostItem.innerHTML = source;
+        if (source === default_audio_host) {
+            audioHostItem.setAttribute("data-selected", "true");
+            setAudioDevices(source)
+        }
+        audioHostSelector.append(audioHostItem);
+    }
+    getmdlSelect.init('#audio_host_select_container'); // Refresh mdl-select after dynamically inserting options
+}
+function setAudioDevices(audio_host) {
+    const deviceList = audio_sources[audio_host]
+    if (deviceList) {
+        // Remove previous options
+        audioDeviceSelector.innerHTML = '';
+        audioDevices = {};
+        // Add new options
+        deviceList.forEach(deviceObject => {
+            deviceIndex = Object.entries(deviceObject).flat()[0];
+            deviceName = Object.entries(deviceObject).flat()[1];
+            audioDevices[deviceName.trim()] = deviceIndex;
+            const audioDeviceItem = document.createElement("li");
+            audioDeviceItem.classList.add("mdl-menu__item")
+            audioDeviceItem.data_val = deviceIndex;
+            audioDeviceItem.innerHTML = deviceName;
+            // Default to first one
+            if (deviceObject === deviceList[0]) {
+                audioDeviceItem.setAttribute("data-selected", "true");
+                audioDeviceIndex = deviceIndex;
+            }
+            audioDeviceSelector.append(audioDeviceItem);
+        })
+        getmdlSelect.init('#audio_device_select_container'); // Refresh mdl-select after dynamically inserting options
+    }
+}
+function changeAudioHost() {
+    setAudioDevices(audioHostSelect.value);
+}
+function changeAudioDevice() {
+    // do nothing
+    //console.log(audioDevices[audioDeviceSelect.value]);
+}
+function testRecord() {
+    deviceIndex = parseInt(audioDevices[audioDeviceSelect.value], 10)
+    console.log(deviceIndex)
+    eel.record_audio(deviceIndex, 10);
 }

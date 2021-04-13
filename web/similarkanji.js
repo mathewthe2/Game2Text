@@ -50,6 +50,9 @@ function clearTooltips(e) {
    }
 }
 
-outputText.onmouseup = showSimilarKanji;
-outputText.onkeyup = showSimilarKanji;
+if (outputText) {
+   outputText.onmouseup = showSimilarKanji;
+   outputText.onkeyup = showSimilarKanji;
+}
+// TODO: add mouse events for log text
 document.onmousedown = clearTooltips;

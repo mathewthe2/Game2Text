@@ -2,6 +2,7 @@ import cv2
 import pytesseract
 import numpy as np
 from pathlib import Path
+import os
 import platform
 import threading
 import subprocess
@@ -87,11 +88,15 @@ def get_tessdata_dir():
         else:
             return '--tessdata-dir {}'.format(str(Path(SCRIPT_DIR, "mac", "tesseract", OSX_TESSERACT_VERSION, "share", "tessdata")))
     elif platform_name == 'Windows':
-        if r_config(OCR_CONFIG, "oem") == '0': 
-            # legacy tesseract
-            return '--tessdata-dir {}'.format(str(Path(SCRIPT_DIR, "win", "tesseract", "legacy", "tessdata")))
-    else:
-        return ''
+        if (r_config(OCR_CONFIG, "oem") == '0' and Path(SCRIPT_DIR, "win", "tesseract", "tessdata-legacy").exists()): 
+            # legacy tesseract by renaming tessdata folders
+            os.rename(Path(SCRIPT_DIR, "win", "tesseract", "tessdata"), Path(SCRIPT_DIR, "win", "tesseract", "tessdata-new"))
+            os.rename(Path(SCRIPT_DIR, "win", "tesseract", "tessdata-legacy"), Path(SCRIPT_DIR, "win", "tesseract", "tessdata"))
+        elif (r_config(OCR_CONFIG, "oem") != '0' and Path(SCRIPT_DIR, "win", "tesseract", "tessdata-new").exists()):  
+            # revert to default tessdata folder
+            os.rename(Path(SCRIPT_DIR, "win", "tesseract", "tessdata"), Path(SCRIPT_DIR, "win", "tesseract", "tessdata-legacy"))
+            os.rename(Path(SCRIPT_DIR, "win", "tesseract", "tessdata-new"), Path(SCRIPT_DIR, "win", "tesseract", "tessdata"))
+    return ''
 
 SCRIPT_DIR = Path(__file__).parent 
 tesseract_cmd, platform_name = path_to_tesseract()

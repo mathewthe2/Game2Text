@@ -40,9 +40,20 @@
   position: fixed;
   z-index: 999;
 }
+#logsContainer {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .logText {
   opacity: 1;
   transition: opacity 0.3s;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.logText:hover {
+  color: hotpink;
 }
 .hide {
   opacity: 0 !important

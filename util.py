@@ -4,6 +4,7 @@ import os
 import platform
 import base64
 import cv2
+import eel
 
 SCRIPT_DIR = Path(__file__).parent 
 
@@ -40,6 +41,7 @@ def create_directory_if_not_exists(filename):
             if exc.errno != errno.EEXIST:
                 raise
 
+@eel.expose
 def open_folder_by_relative_path(relative_path):
     platform_name = platform.system() 
     if platform_name == 'Windows':

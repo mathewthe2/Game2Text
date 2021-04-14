@@ -88,11 +88,11 @@ def show_logs():
         for index, line in enumerate(f):
             log_id = line[:15]
             date = parse_time_string(log_id)
-            image = get_base64_image_with_log(log_id=log_id, folder_name=Path(latest_file).stem)
+            # image = get_base64_image_with_log(log_id=log_id, folder_name=Path(latest_file).stem)
             log = {
                 'id': log_id,
                 'file': Path(latest_file).name,
-                'image': image,
+                # 'image': image,
                 'audio': get_audio_file_name(log_id, Path(latest_file).stem),
                 'hours': get_hours_string(date),
                 'text': line[16:]
@@ -100,6 +100,17 @@ def show_logs():
             output.append(log)
         f.close()
     return output
+
+@eel.expose
+def refresh_logs():
+    current_logs = eel.getLogsShown()()
+    if not current_logs:
+        print("refresh logs called but no logs")
+        return
+    saved_logs = show_logs()
+    current_log_ids = [log['id'] for log in current_logs]
+    output = [log for log in saved_logs if log['id'] not in current_log_ids]
+    eel.addLogs(output)()
 
 @eel.expose
 def play_log_audio(file_name, folder_name):

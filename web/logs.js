@@ -1,36 +1,40 @@
 showLogs();
+let currentLogs = [];
 
 function showLogs() {
   (async() => {
-      const logs = await eel.show_logs()();
-      if (logs) {
-          // logMode = !logMode;
-          // toggleLogsButton.disabled = false;
-          // toggleLogsButton.classList.add("mdl-button--colored");
-          // currentText = output.innerText;
-          // output.innerText = '';
-          addLogs(logs);
+      const newlogs = await eel.show_logs()();
+      if (newlogs) {
+          addLogs(newlogs);
       }
   })()
 }
   
-function removeLogs(logsContainer) {
-    setTimeout(function(){ 
-        NodeList.prototype.forEach = Array.prototype.forEach;
-        const logs = logsContainer.childNodes;
-        logs.forEach(function(log){
-            log.classList.add('hide');
-        });
-        logsContainer.remove();
-    }, 300);
+// function removeLogs(logsContainer) {
+//     setTimeout(function(){ 
+//         NodeList.prototype.forEach = Array.prototype.forEach;
+//         const logs = logsContainer.childNodes;
+//         logs.forEach(function(log){
+//             log.classList.add('hide');
+//         });
+//         logsContainer.remove();
+//     }, 300);
+// }
+
+eel.expose(getLogsShown);
+function getLogsShown() {
+  return currentLogs;
 }
   
-function addLogs(logs) {
+eel.expose(addLogs);
+function addLogs(newLogs) {
   const logsContainer = document.getElementById('logsContainer');
-  logs.forEach(log=>{
-    const logItem = logToHtml(log);
+  newLogs.forEach(newLog=>{
+    const logItem = logToHtml(newLog);
     logsContainer.append(logItem);
+    currentLogs.push(newLog);
    })
+  window.scrollTo(0,document.body.scrollHeight);
  // TODO: add fade in fade out when loading logs and when new log is added
 }
 

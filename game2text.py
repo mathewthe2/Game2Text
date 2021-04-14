@@ -4,7 +4,7 @@ from ocr import detect_and_log
 from translate import deepl_translate
 from hotkeys import refresh_ocr_hotkey, esc_hotkey
 from util import RepeatedTimer, open_folder_by_relative_path
-from audio import get_default_device_index, get_audio_objects
+from audio import get_recommended_device_index, get_audio_objects
 from recordaudio import RecordThread
 from pynput import keyboard
 from clipboard import clipboard_to_output, text_to_clipboard
@@ -38,10 +38,10 @@ def monitor_clipboard():
         clipboard_timer.start()
 
 @eel.expose
-def restart_audio_recording(device_index=get_default_device_index()):
+def restart_audio_recording(device_index):
     global audio_recorder
-    if not audio_recorder.bRecord:
-        audio_recorder.stop_recording(None, -1)
+    # if not audio_recorder.bRecord:
+    #     audio_recorder.stop_recording(None, -1)
     audio_recorder = RecordThread(device_index, int(r_config(LOG_CONFIG, "logaudioframes")))
     audio_recorder.start()
 
@@ -56,14 +56,6 @@ def read_config(section, key):
 @eel.expose
 def update_config(section, d):
     return w_config(section, d)
-
-@eel.expose
-def open_folder(relative_path):
-    open_folder_by_relative_path(relative_path)
-
-@eel.expose 
-def get_audio_sources():
-    return get_audio_objects()
 
 @eel.expose
 def open_new_window(html_file, height=800, width=600):
@@ -92,8 +84,11 @@ clipboard_timer = RepeatedTimer(1, clipboard_to_output)
 clipboard_timer.stop() # stop the initial timer
 
 # Thread to record audio continuously
-audio_recorder = RecordThread(get_default_device_index(), int(r_config(LOG_CONFIG, "logaudioframes")))
-audio_recorder.start()
+recommended_audio_device_index = get_recommended_device_index(r_config(LOG_CONFIG, 'logaudiohost'))
+audio_recorder = RecordThread(recommended_audio_device_index, int(r_config(LOG_CONFIG, "logaudioframes")))
+is_log_audio = r_config(LOG_CONFIG, "logaudio").lower() == "true"
+if is_log_audio and recommended_audio_device_index != -1:
+    audio_recorder.start()
 
 refresh_hotkey_string = {
     "Linux" : "<ctrl>+q",

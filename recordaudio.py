@@ -1,6 +1,7 @@
 import threading
 import pyaudio
 import wave
+from audio import valid_output_device
 from config import r_config, LOG_CONFIG
 
 class RecordThread(threading.Thread):
@@ -14,7 +15,12 @@ class RecordThread(threading.Thread):
         self.frames = frames
 
     def run(self):
-        # print("index?", self.deviceIndex)
+        if self.deviceIndex == -1:
+            print("recorder called but device index not specified")
+            return
+        if not valid_output_device(self.deviceIndex):
+            print("recorder called but device invalid")
+            return
         p = pyaudio.PyAudio()
         device_info = p.get_device_info_by_index(self.deviceIndex)
         is_input = device_info["maxInputChannels"] > 0

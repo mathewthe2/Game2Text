@@ -37,6 +37,7 @@ function initConfig () {
         // Logs
         initIsLogImages();
         initSetLogImageTypeAndQuality();
+        initIsLogAudio();
         initSetAudioSources();
         initSetAudioDuration();
     })()
@@ -91,6 +92,15 @@ async function initSetLogImageTypeAndQuality() {
     logImageType = await eel.read_config(LOG_CONFIG, 'logimagetype')(); 
     logImageQuality = await eel.read_config(LOG_CONFIG, 'logimagequality')(); 
 }
+
+async function initIsLogAudio() {
+    const isLogAudio = await eel.read_config(LOG_CONFIG, 'logaudio')();
+    if (isLogAudio === 'true') {
+        toggleLogImages();
+        document.getElementById("log-audio-switch").parentElement.MaterialSwitch.on();
+    }
+}
+
 
 /*
  *
@@ -204,7 +214,15 @@ function toggleLogImagesAndPersist() {
     eel.update_config(LOG_CONFIG, {'logimages': isLogImages ? 'True' : 'False'})();
 }
 function openFolder(relative_path) {
-    eel.open_folder(relative_path);
+    eel.open_folder_by_relative_path(relative_path);
+}
+function toggleLogAudio() {
+    logAudio = !logAudio;
+    return logAudio;
+}
+function toggleLogAudioAndPersist() {
+    isLogAudio = toggleLogAudio();
+    eel.update_config(LOG_CONFIG, {'logaudio': isLogAudio ? 'True' : 'False'})();
 }
 async function initSetAudioDuration() {
     audioDuration = await eel.read_config(LOG_CONFIG, 'logaudioduration')(); 
@@ -212,7 +230,7 @@ async function initSetAudioDuration() {
 }
 async function initSetAudioSources() {
     const default_audio_host = await eel.read_config(LOG_CONFIG, 'logaudiohost')();
-    audio_sources = await eel.get_audio_sources()();
+    audio_sources = await eel.get_audio_objects()();
     console.log(audio_sources)
     for (const source in audio_sources) {
         const audioHostItem = document.createElement("li");
@@ -221,18 +239,26 @@ async function initSetAudioSources() {
         audioHostItem.innerHTML = source;
         if (source === default_audio_host) {
             audioHostItem.setAttribute("data-selected", "true");
-            setAudioDevices(source)
+            // setAudioDevices(source);
         }
         audioHostSelector.append(audioHostItem);
     }
     getmdlSelect.init('#audio_host_select_container'); // Refresh mdl-select after dynamically inserting options
 }
-function setAudioDevices(audio_host) {
+async function setAudioDevices(audio_host) {
+    const recommended_audio_device = await eel.get_recommended_device_index(audio_host)();
+    if (recommended_audio_device == -1) {
+        if (logAudio) {
+            alert('Unable to find audio recording device. Please select audio device in settings.')
+        }
+        audioDeviceSelect.value = '';
+    }
     const deviceList = audio_sources[audio_host]
     if (deviceList) {
         // Remove previous options
         audioDeviceSelector.innerHTML = '';
         audioDevices = {};
+
         // Add new options
         deviceList.forEach(deviceObject => {
             deviceIndex = Object.entries(deviceObject).flat()[0];
@@ -242,8 +268,7 @@ function setAudioDevices(audio_host) {
             audioDeviceItem.classList.add("mdl-menu__item")
             audioDeviceItem.data_val = deviceIndex;
             audioDeviceItem.innerHTML = deviceName;
-            // Default to first one
-            if (deviceObject === deviceList[0]) {
+            if (recommended_audio_device === parseInt(deviceIndex, 10)) {
                 audioDeviceItem.setAttribute("data-selected", "true");
                 audioDeviceIndex = deviceIndex;
             }
@@ -252,7 +277,7 @@ function setAudioDevices(audio_host) {
         getmdlSelect.init('#audio_device_select_container'); // Refresh mdl-select after dynamically inserting options
     }
 }
-function changeAudioHost() {
+function changeAudioHost () {
     setAudioDevices(audioHostSelect.value);
 }
 eel.expose(restartAudioRecording)
@@ -261,7 +286,8 @@ function restartAudioRecording() {
     eel.restart_audio_recording(deviceIndex); 
 }
 function changeAudioDevice() {
-    // restartAudioRecording();
+    eel.update_config(LOG_CONFIG, {'logaudiodevice':audioDeviceSelect.value})();
+    restartAudioRecording();
 }
 function changeAudioDuration() {
     const duration = parseFloat(audioDurationInput.value, 10)

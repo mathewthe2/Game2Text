@@ -3,6 +3,7 @@ const autoModeSpeed = 500;
 let autoMode = false;
 let logMode = false;
 let logImages = false;
+let logAudio = false;
 let selectionMode = 'ocr';
 let selectionLineWidth = 1;
 let selectionColor = 'red';
@@ -385,17 +386,15 @@ function getVideoImage() {
 }
 
 function recognize_image(image) {
-  OCRrequests += 1;
+  OCRrequests += 1; // counter for auto-mode
   (async() => {
     const textOrientation = verticalText && (OCREngine === 'Tesseract') ? 'vertical' : 'horizontal';
     let text = await eel.recognize_image(OCREngine, image, textOrientation)();
-    OCRrequests -= 1;
-    if (logMode) {
-      const logs = await eel.show_logs()();
-      updateText(output, logs);
-    } else {
-      updateText(output, text);
-    }
+    OCRrequests -= 1; // counter for auto-mode
+
+    updateText(output, text);
+    eel.refresh_logs()();
+
     if (outputToClipboard) {
       eel.copy_text_to_clipboard(text)();
     }
@@ -463,5 +462,3 @@ function cropVideo() {
     }, 20);
   }
 }
-
-openSettings();

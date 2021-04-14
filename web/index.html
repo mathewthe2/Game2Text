@@ -228,6 +228,19 @@
                           </span>
                         </li>
 
+                        <li class="mdl-list__item mdl-list__item--two-line">
+                          <span class="mdl-list__item-primary-content">
+                            <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">video_library</i>
+                            <span>Record audio</span>
+                            <span class="mdl-list__item-sub-title" >Audio files are saved to <a onclick="openFolder('logs/audio')" href="#"><b>logs/audio/</b></a> directory</span>
+                          </span>
+                          <span class="mdl-list__item-secondary-content">
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="log-audio-switch">
+                              <input type="checkbox" onclick="toggleLogAudioAndPersist()" id="log-audio-switch" class="mdl-switch__input" />
+                            </label>
+                          </span>
+                        </li>
+
                         <!-- Audio Host Selection -->
                         <div style="padding-left: 16px">
                           <div id="audio_host_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">

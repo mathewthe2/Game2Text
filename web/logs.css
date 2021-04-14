@@ -1,13 +1,6 @@
-/* #logsContainer {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    width:calc(100vw - 8px - 8px);
-} */
-/* #logsContainer{
-    transition-duration: .28s;
-    transition-timing-function: cubic-bezier(.4,0,.2,1);
-    transition-property: background-color;
-} */
+html {
+    scroll-behavior: smooth;
+}
 .logItem {
     transition-duration: .28s;
     transition-timing-function: cubic-bezier(.4,0,.2,1);

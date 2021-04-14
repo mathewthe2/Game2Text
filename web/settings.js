@@ -96,7 +96,7 @@ async function initSetLogImageTypeAndQuality() {
 async function initIsLogAudio() {
     const isLogAudio = await eel.read_config(LOG_CONFIG, 'logaudio')();
     if (isLogAudio === 'true') {
-        toggleLogImages();
+        toggleLogAudio();
         document.getElementById("log-audio-switch").parentElement.MaterialSwitch.on();
     }
 }

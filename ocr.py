@@ -32,16 +32,25 @@ def base64_to_image_path(base64string, path):
         fh.write(base64.b64decode(base64string))
     return path
 
-def detect_and_log(engine, cropped_image,  text_orientation, session_start_time, request_time, log_images=True):
+def detect_and_log(engine, cropped_image,  text_orientation, session_start_time, request_time, audio_recorder):
     result = recognize_japanese(engine, cropped_image, text_orientation)
+    is_log_images = r_config(LOG_CONFIG, "logimages").lower() == "true"
+    is_log_audio = r_config(LOG_CONFIG, "logaudio").lower() == "true"
+    audio_duration = float(r_config(LOG_CONFIG, "logaudioduration"))
     if result is not None:
         log_text(session_start_time, request_time, result)
-        if log_images:
+        if is_log_images:
             image_extension = r_config(LOG_CONFIG, "logimagetype")
             file_name = request_time + "." + image_extension
             full_image_path = str(Path(SCRIPT_DIR,"logs", "images", session_start_time, file_name))
             thread = threading.Thread(target = log_video_image,  args=[full_image_path])
             thread.start()
+        if is_log_audio:
+            file_name = request_time + ".wav"
+            audio_file_path = str(Path(SCRIPT_DIR,"logs", "audio", session_start_time, file_name))
+            create_directory_if_not_exists(audio_file_path)
+            audio_recorder.stop_recording(audio_file_path, audio_duration)
+            eel.restartAudioRecording()()
         return result
     else:
         return "Error: OCR Failed"

@@ -22,6 +22,7 @@ const audioHostSelector = document.getElementById("audio_host_selector");
 const audioHostSelect = document.getElementById("audio_host_select");
 const audioDeviceSelector = document.getElementById("audio_device_selector");
 const audioDeviceSelect = document.getElementById("audio_device_select");
+const audioDurationInput = document.getElementById("audio_duration_input");
 
 initConfig();
 
@@ -37,6 +38,7 @@ function initConfig () {
         initIsLogImages();
         initSetLogImageTypeAndQuality();
         initSetAudioSources();
+        initSetAudioDuration();
     })()
 }
 
@@ -199,10 +201,14 @@ function toggleLogImages() {
 }
 function toggleLogImagesAndPersist() {
     isLogImages = toggleLogImages();
-    eel.update_config(LOG_CONFIG, {'logimages': isLogImages ? 'true' : 'false'})();
+    eel.update_config(LOG_CONFIG, {'logimages': isLogImages ? 'True' : 'False'})();
 }
 function openFolder(relative_path) {
     eel.open_folder(relative_path);
+}
+async function initSetAudioDuration() {
+    audioDuration = await eel.read_config(LOG_CONFIG, 'logaudioduration')(); 
+    audioDurationInput.parentElement.MaterialTextfield.change(parseInt(audioDuration, 10));
 }
 async function initSetAudioSources() {
     const default_audio_host = await eel.read_config(LOG_CONFIG, 'logaudiohost')();
@@ -249,12 +255,19 @@ function setAudioDevices(audio_host) {
 function changeAudioHost() {
     setAudioDevices(audioHostSelect.value);
 }
-function changeAudioDevice() {
-    // do nothing
-    //console.log(audioDevices[audioDeviceSelect.value]);
-}
-function testRecord() {
+eel.expose(restartAudioRecording)
+function restartAudioRecording() {
     deviceIndex = parseInt(audioDevices[audioDeviceSelect.value], 10)
-    console.log(deviceIndex)
-    eel.record_audio(deviceIndex, 10);
+    eel.restart_audio_recording(deviceIndex); 
+}
+function changeAudioDevice() {
+    // restartAudioRecording();
+}
+function changeAudioDuration() {
+    const duration = parseFloat(audioDurationInput.value, 10)
+    if (typeof duration === 'number') {
+        if (duration > 0) {
+            eel.update_config(LOG_CONFIG, {'logaudioduration':duration.toString()})();
+        }
+    }
 }

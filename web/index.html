@@ -253,10 +253,11 @@
                         </div>
 
                         <div style="padding-left: 16px">
-                          <button onclick="testRecord()">
-                            Test Record
-                          </button>
-
+                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input onchange="changeAudioDuration()" class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="audio_duration_input">
+                            <label class="mdl-textfield__label" for="sample4">Audio Duration (seconds)</label>
+                            <span class="mdl-textfield__error">Input is not a number!</span>
+                          </div>
                         </div>
                         
                     </ul>

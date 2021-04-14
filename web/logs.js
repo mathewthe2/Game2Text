@@ -49,14 +49,14 @@ function addLogs(logs) {
     const logItem = logToHtml(log);
     logsContainer.append(logItem);
    })
-   results.prepend(logsContainer);
-   setTimeout(function(){ 
-    NodeList.prototype.forEach = Array.prototype.forEach
-    const logs = logsContainer.childNodes;
-    logs.forEach(function(log){
-      log.classList.remove('hide');
-    });
-   }, 300);
+  //  results.prepend(logsContainer);
+  //  setTimeout(function(){ 
+  //   NodeList.prototype.forEach = Array.prototype.forEach
+  //   const logs = logsContainer.childNodes;
+  //   logs.forEach(function(log){
+  //     log.classList.remove('hide');
+  //   });
+  //  }, 300);
 }
 
 function logToHtml(log) {
@@ -64,6 +64,12 @@ function logToHtml(log) {
   const logItemClone = logItem.cloneNode(true);
   logItemClone.id = `logItem-${log.id}`;
   const logText = logItemClone.getElementsByClassName('logText')[0];
+  const playAudioButton = logItemClone.getElementsByClassName('playAudioButton')[0];
+  console.log("audiobutton?", playAudioButton)
+  playAudioButton.onclick = function() {
+    const folder_name = log.file.replace(/\.[^.]*$/,'')
+    eel.play_log_audio(log.id, folder_name)();
+  }
   logText.innerText = log.text;
   logItemClone.hidden = false;
   return logItemClone

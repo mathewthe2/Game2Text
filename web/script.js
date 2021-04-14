@@ -388,7 +388,7 @@ function recognize_image(image) {
   OCRrequests += 1;
   (async() => {
     const textOrientation = verticalText && (OCREngine === 'Tesseract') ? 'vertical' : 'horizontal';
-    let text = await eel.recognize_image(OCREngine, image, textOrientation, logImages)();
+    let text = await eel.recognize_image(OCREngine, image, textOrientation)();
     OCRrequests -= 1;
     if (logMode) {
       const logs = await eel.show_logs()();

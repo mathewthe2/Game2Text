@@ -4,11 +4,12 @@ from ocr import detect_and_log
 from translate import deepl_translate
 from hotkeys import refresh_ocr_hotkey, esc_hotkey
 from util import RepeatedTimer, open_folder_by_relative_path
-from audio import get_audio_objects, record_audio_by_device_index
+from audio import get_default_device_index, get_audio_objects
+from recordaudio import RecordThread
 from pynput import keyboard
 from clipboard import clipboard_to_output, text_to_clipboard
 from logger import get_time_string
-from config import r_config, w_config, WINDOWS_HOTKEYS_CONFIG, APP_CONFIG
+from config import r_config, w_config, WINDOWS_HOTKEYS_CONFIG, APP_CONFIG, LOG_CONFIG
 
 session_start_time = get_time_string()
 
@@ -22,8 +23,8 @@ def close(page, sockets):
       os._exit(0)
 
 @eel.expose                         # Expose this function to Javascript
-def recognize_image(engine, image, orientation, log_images):
-    return detect_and_log(engine, image, orientation, session_start_time, get_time_string(), log_images)
+def recognize_image(engine, image, orientation):
+    return detect_and_log(engine, image, orientation, session_start_time, get_time_string(), audio_recorder)
 
 @eel.expose                         # Expose this function to Javascript
 def translate(text):
@@ -35,6 +36,14 @@ def monitor_clipboard():
         clipboard_timer.stop()
     else:
         clipboard_timer.start()
+
+@eel.expose
+def restart_audio_recording(device_index=get_default_device_index()):
+    global audio_recorder
+    if not audio_recorder.bRecord:
+        audio_recorder.stop_recording(None, -1)
+    audio_recorder = RecordThread(device_index, int(r_config(LOG_CONFIG, "logaudioframes")))
+    audio_recorder.start()
 
 @eel.expose
 def copy_text_to_clipboard(text):
@@ -57,10 +66,6 @@ def get_audio_sources():
     return get_audio_objects()
 
 @eel.expose
-def record_audio(device_index, duration):
-    return record_audio_by_device_index(device_index, duration)
-
-@eel.expose
 def open_new_window(html_file, height=800, width=600):
     eel.start(html_file, 
     close_callback=close, 
@@ -81,8 +86,14 @@ def run_eel():
 
 main_thread = threading.Thread(target=run_eel, args=())
 main_thread.start()
+
+# Thread to export clipboard text continuously
 clipboard_timer = RepeatedTimer(1, clipboard_to_output)
 clipboard_timer.stop() # stop the initial timer
+
+# Thread to record audio continuously
+audio_recorder = RecordThread(get_default_device_index(), int(r_config(LOG_CONFIG, "logaudioframes")))
+audio_recorder.start()
 
 refresh_hotkey_string = {
     "Linux" : "<ctrl>+q",

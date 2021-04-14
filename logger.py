@@ -8,9 +8,11 @@ import base64
 from pathlib import Path
 from datetime import datetime
 from util import create_directory_if_not_exists
+from audio import play_audio_from_file
 
 SCRIPT_DIR = Path(__file__).parent 
 TEXT_LOG_PATH = Path(SCRIPT_DIR, "logs", "text")
+AUDIO_LOG_PATH = Path(SCRIPT_DIR, "logs", "audio")
 
 def get_time_string():
     return time.strftime("%Y%m%d-%H%M%S")
@@ -72,3 +74,14 @@ def show_logs():
             output.append(log)
         f.close()
     return output
+
+@eel.expose
+def play_log_audio(log_id, folder_name):
+    path = Path(AUDIO_LOG_PATH, folder_name)
+    if not path.is_dir():
+        return None
+    file_name = next((f for f in os.listdir(path) if re.match('{}.(?:wav|mp3|m4a|flac)$'.format(log_id), f)), None)
+    print("gonna play log file", file_name)
+    if not file_name:
+        return None
+    play_audio_from_file(str(Path(AUDIO_LOG_PATH, folder_name, file_name)))

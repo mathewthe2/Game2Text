@@ -211,7 +211,7 @@ function toggleLogImages() {
 }
 function toggleLogImagesAndPersist() {
     isLogImages = toggleLogImages();
-    eel.update_config(LOG_CONFIG, {'logimages': isLogImages ? 'True' : 'False'})();
+    eel.update_config(LOG_CONFIG, {'logimages': isLogImages ? 'true' : 'false'})();
 }
 function openFolder(relative_path) {
     eel.open_folder_by_relative_path(relative_path);
@@ -222,7 +222,7 @@ function toggleLogAudio() {
 }
 function toggleLogAudioAndPersist() {
     isLogAudio = toggleLogAudio();
-    eel.update_config(LOG_CONFIG, {'logaudio': isLogAudio ? 'True' : 'False'})();
+    eel.update_config(LOG_CONFIG, {'logaudio': isLogAudio ? 'true' : 'false'})();
 }
 async function initSetAudioDuration() {
     audioDuration = await eel.read_config(LOG_CONFIG, 'logaudioduration')(); 

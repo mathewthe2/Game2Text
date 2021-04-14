@@ -2,6 +2,8 @@ from threading import Timer
 from pathlib import Path
 import os
 import platform
+import base64
+import cv2
 
 SCRIPT_DIR = Path(__file__).parent 
 
@@ -43,3 +45,14 @@ def open_folder_by_relative_path(relative_path):
     if platform_name == 'Windows':
         path = os.path.realpath(str(Path(SCRIPT_DIR, relative_path)))
         os.startfile(path)
+
+def base64_to_image(base64string, path):
+    image_path = base64_to_image_path(base64string, path)
+    img = cv2.imread(image_path)
+    return img
+
+# Saves base64 image string and returns path
+def base64_to_image_path(base64string, path):
+    with open(path, "wb") as fh:
+        fh.write(base64.b64decode(base64string))
+    return path

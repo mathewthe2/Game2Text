@@ -45,7 +45,6 @@ def valid_output_device(deviceIndex):
     return True
 
 def play_audio_from_file(filename):
-    print("gonna play some", filename)
     # length of data to read.
     chunk = 1024
    # open the file for reading.
@@ -75,38 +74,3 @@ def play_audio_from_file(filename):
     # cleanup stuff.
     stream.close()    
     p.terminate()
-
-# def record_audio_by_device_index(deviceIndex, duration):
-#     frames = int(r_config(LOG_CONFIG, "logaudioframes"))
-#     device_info = p.get_device_info_by_index(deviceIndex)
-#     is_input = device_info["maxInputChannels"] > 0
-#     is_wasapi = (p.get_host_api_info_by_index(device_info["hostApi"])["name"]).find("WASAPI") != -1
-#     useloopback = is_wasapi and not is_input
-#     recorded_frames = []
-#     # Open stream
-#     channelcount = device_info["maxInputChannels"] if (device_info["maxOutputChannels"] < device_info["maxInputChannels"]) else device_info["maxOutputChannels"]
-#     stream = p.open(format = pyaudio.paInt16,   
-#                 channels = channelcount,
-#                 rate = int(device_info["defaultSampleRate"]),
-#                 input = True,
-#                 frames_per_buffer = frames,
-#                 input_device_index = device_info["index"],
-#                 as_loopback = useloopback)
-
-#     # Start recording
-#     print("started record")
-#     for i in range(0, int(int(device_info["defaultSampleRate"]) / frames * duration)):
-#         recorded_frames.append(stream.read(frames))
-
-#     # Stop Recording
-#     print("stopped record")
-#     stream.stop_stream()
-#     stream.close()
-
-#     filename = "out.wav"
-#     waveFile = wave.open(filename, 'wb')
-#     waveFile.setnchannels(channelcount)
-#     waveFile.setsampwidth(p.get_sample_size(pyaudio.paInt16))
-#     waveFile.setframerate(int(device_info["defaultSampleRate"]))
-#     waveFile.writeframes(b''.join(recorded_frames))
-#     waveFile.close()

@@ -28,35 +28,10 @@ function removeLogs(logsContainer) {
 function addLogs(logs) {
   const logsContainer = document.getElementById('logsContainer');
   logs.forEach(log=>{
-    //  const div = document.createElement('div');
-    //  div.setAttribute("id", log.id);
-    //  div.setAttribute("image", log.image);
-    //  div.onmouseover = function() {
-    //     showImageForLog(log);
-    //   }
-    //  div.onclick = function () {
-    //    showImageForLog(log);
-    //  } 
-    //  div.onmouseup = showSimilarKanji;
-    //  div.onkeyup = showSimilarKanji;
-    //  div.input = updateLog;
-    //  div.addEventListener('input', function(e) {
-    //    updateLog()
-    //  })
-    //  div.innerText = log.text;
-    //  div.classList.add('logText');
-    //  div.classList.add('hide');\
     const logItem = logToHtml(log);
     logsContainer.append(logItem);
    })
-  //  results.prepend(logsContainer);
-  //  setTimeout(function(){ 
-  //   NodeList.prototype.forEach = Array.prototype.forEach
-  //   const logs = logsContainer.childNodes;
-  //   logs.forEach(function(log){
-  //     log.classList.remove('hide');
-  //   });
-  //  }, 300);
+ // TODO: add fade in fade out when loading logs and when new log is added
 }
 
 function logToHtml(log) {
@@ -65,10 +40,13 @@ function logToHtml(log) {
   logItemClone.id = `logItem-${log.id}`;
   const logText = logItemClone.getElementsByClassName('logText')[0];
   const playAudioButton = logItemClone.getElementsByClassName('playAudioButton')[0];
-  console.log("audiobutton?", playAudioButton)
-  playAudioButton.onclick = function() {
-    const folder_name = log.file.replace(/\.[^.]*$/,'')
-    eel.play_log_audio(log.id, folder_name)();
+  if (log.audio) {
+    playAudioButton.onclick = function() {
+      const folder_name = log.file.replace(/\.[^.]*$/,'')
+      eel.play_log_audio(log.audio, folder_name)();
+    }
+  } else {
+    playAudioButton.style.visibility = "hidden";
   }
   logText.innerText = log.text;
   logItemClone.hidden = false;

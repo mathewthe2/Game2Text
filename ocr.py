@@ -1,15 +1,10 @@
-import cv2
 import pytesseract
-import numpy as np
 from pathlib import Path
 import os
 import platform
-import threading
-import subprocess
-import base64
-from logger import log_text, get_time_string
-from config import r_config, LOG_CONFIG, OCR_CONFIG
-from util import create_directory_if_not_exists
+from logger import log_text, log_media, get_time_string
+from config import r_config, OCR_CONFIG
+from util import create_directory_if_not_exists, base64_to_image, base64_to_image_path
 import requests
 import eel
 from ocr_space import ocr_space_file, OCRSPACE_API_URL_USA, OCRSPACE_API_URL_EU
@@ -21,46 +16,16 @@ OSX_TESSERACT_VERSION = "4.1.1"
 def get_temp_image_path():
     return str(Path(SCRIPT_DIR,"logs", "images", "temp.png"))
 
-def base64_to_image(base64string, path):
-    image_path = base64_to_image_path(base64string, path)
-    img = cv2.imread(image_path)
-    return img
-
-# Saves base64 image string and returns path
-def base64_to_image_path(base64string, path):
-    with open(path, "wb") as fh:
-        fh.write(base64.b64decode(base64string))
-    return path
-
 def detect_and_log(engine, cropped_image,  text_orientation, session_start_time, request_time, audio_recorder):
-    result = recognize_japanese(engine, cropped_image, text_orientation)
-    is_log_images = r_config(LOG_CONFIG, "logimages").lower() == "true"
-    is_log_audio = r_config(LOG_CONFIG, "logaudio").lower() == "true"
-    audio_duration = float(r_config(LOG_CONFIG, "logaudioduration"))
+    result = image_to_text(engine, cropped_image, text_orientation)
     if result is not None:
         log_text(session_start_time, request_time, result)
-        if is_log_images:
-            image_extension = r_config(LOG_CONFIG, "logimagetype")
-            file_name = request_time + "." + image_extension
-            full_image_path = str(Path(SCRIPT_DIR,"logs", "images", session_start_time, file_name))
-            thread = threading.Thread(target = log_video_image,  args=[full_image_path])
-            thread.start()
-        if is_log_audio:
-            file_name = request_time + ".wav"
-            audio_file_path = str(Path(SCRIPT_DIR,"logs", "audio", session_start_time, file_name))
-            create_directory_if_not_exists(audio_file_path)
-            audio_recorder.stop_recording(audio_file_path, audio_duration)
-            eel.restartAudioRecording()()
+        log_media(session_start_time, request_time, audio_recorder)
         return result
     else:
         return "Error: OCR Failed"
 
-def log_video_image(image_path):
-    create_directory_if_not_exists(image_path)
-    base64_image = eel.getVideoImage()()
-    base64_to_image_path(base64_image, image_path)
-
-def recognize_japanese(engine, base64img, text_orientation):
+def image_to_text(engine, base64img, text_orientation):
     if engine == "OCR Space USA" or engine == "OCR Space EU":
         api_url = OCRSPACE_API_URL_USA if engine == "OCR Space USA" else OCRSPACE_API_URL_EU
         image_path = base64_to_image_path(base64img, get_temp_image_path())

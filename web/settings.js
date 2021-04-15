@@ -1,5 +1,6 @@
 const APPEARANCE_CONFIG = 'APPEARANCE';
 const OCR_CONFIG = 'OCRCONFIG';
+const TRANSLATION_CONFIG = 'TRANSLATIONCONFIG';
 const LOG_CONFIG = 'LOGCONFIG';
 
 const OEM_CONFIG = {
@@ -16,6 +17,8 @@ const outputToClipboardSwitch = document.getElementById("output-to-clipboard-mod
 const clipboardModeSwitch = document.getElementById("clipboard-mode-switch");
 const OCREngineSelect = document.getElementById("ocr_engine_select");
 const OCREngineSelectContainer = document.getElementById("ocr_engine_select_container");
+const translationSelect = document.getElementById("translation_select");
+const translationSelectContainer = document.getElementById("translation_select_container");
 const preprocessSwitch = document.getElementById("preprocess-switch");
 const textOrientationSwitch = document.getElementById("text-orientation-switch");
 const audioHostSelector = document.getElementById("audio_host_selector");
@@ -34,6 +37,8 @@ function initConfig () {
         initSelection();
         // OCR
         initOCREngine();
+        // Translation
+        initTranslation();  
         // Logs
         initIsLogImages();
         initSetLogImageTypeAndQuality();
@@ -77,6 +82,25 @@ async function initOCREngine() {
             defaultOption.setAttribute('data-selected', true);
         }
         getmdlSelect.init('#ocr_engine_select_container');
+    }
+}
+
+
+async function initTranslation() {
+    const service = await eel.read_config(TRANSLATION_CONFIG, 'translation_service')();
+    if (service) {
+        translationService = service;
+        console.log(service);
+        const translationOptions = translationSelectContainer.querySelectorAll("li");
+        const selectedOption = Array.from(translationOptions).find(child=>child.innerText === service);
+        if (selectedOption) {
+            selectedOption.setAttribute('data-selected', true);
+        } else { 
+            // Fallback to default Papago if option not found
+            const defaultOption = Array.from(translationOptions).find(child => child.innerText == "Papago") 
+            defaultOption.setAttribute('data-selected', true);
+        }
+        getmdlSelect.init('#translation_select_container');
     }
 }
 
@@ -154,6 +178,11 @@ function updateOCREngineAndPersist() {
     if (OCREngine.includes('Tesseract')) {
         eel.update_config(OCR_CONFIG, {'oem': OEM_CONFIG[OCREngine]})();
     }
+}
+
+function updateTranslationServiceAndPersist() {
+    translationService = translationSelect.value;
+    eel.update_config(TRANSLATION_CONFIG, {'translation_service':translationService})();
 }
 
 function togglePreprocess() {
@@ -297,3 +326,5 @@ function changeAudioDuration() {
         }
     }
 }
+
+openSettings()

@@ -14,6 +14,7 @@ let clipboardMode = false;
 let outputToClipboard = false;
 let verticalText = false;
 let OCREngine = "Tesseract";
+let translationService;
 let translation = {
   sourceText : '',
   translatedText: ''

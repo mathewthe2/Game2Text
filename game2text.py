@@ -2,7 +2,7 @@ import eel
 import threading, os, platform
 from pathlib import Path
 from ocr import detect_and_log
-from translate import deepl_translate
+from translate import multi_translate
 from hotkeys import refresh_ocr_hotkey, esc_hotkey
 from util import RepeatedTimer, open_folder_by_relative_path, create_directory_if_not_exists
 from audio import get_recommended_device_index, get_audio_objects
@@ -30,7 +30,7 @@ def recognize_image(engine, image, orientation):
 
 @eel.expose        
 def translate(text):
-    return deepl_translate(text)
+    return multi_translate(text)
 
 @eel.expose
 def monitor_clipboard():

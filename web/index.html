@@ -102,6 +102,7 @@
               <div class="mdl-tabs__tab-bar">
                 <a href="#appearance" class="mdl-tabs__tab is-active">Appearance</a>
                 <a href="#ocr" class="mdl-tabs__tab">OCR</a> 
+                <a href="#translation" class="mdl-tabs__tab">Translation</a> 
                 <a href="#clipboard" class="mdl-tabs__tab">Clipboard</a> 
                 <a href="#logs" class="mdl-tabs__tab">Logs</a> 
               </div>
@@ -183,6 +184,25 @@
                         </span>
                       </li>
                   </ul>
+              </div>
+
+              
+              <div class="mdl-tabs__panel" id="translation">
+  
+                <ul class="demo-list-control mdl-list">
+                  <div style="padding-left: 16px">
+                    <div id="translation_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
+                      <input onchange="updateTranslationServiceAndPersist()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="translation_select" readonly>
+                      <input type="hidden" value=""  name="translation_select">
+                      <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                      <label for="translation_select" class="mdl-textfield__label">Translation Service</label>
+                      <ul for="translation_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                          <li class="mdl-menu__item" data-val="tesseract_default">Papago</li>
+                          <li class="mdl-menu__item" data-val="tesseract_lstm">DeepL Translate</li>
+                          <li class="mdl-menu__item" data-val="tesseract_legacy">Google Translate</li>
+                      </ul>
+                  </div>
+                  </div>
               </div>
 
               <div class="mdl-tabs__panel" id="clipboard">

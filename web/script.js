@@ -415,7 +415,7 @@ function recognize_image(image) {
     if (response.result) {
       OCRrequests -= 1; // counter for auto-mode
 
-      updateText(output, response.text);
+      updateText(output, response.result);
 
       // Temporary fix: Cache screenshots before log window is opened. To remove in the future
       if (isCacheScreenshots) {

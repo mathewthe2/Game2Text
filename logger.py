@@ -124,13 +124,11 @@ def get_logs():
     return output
 
 def insert_newest_log_with_image(base64_image_string, image_type):
-    print("trying to insert with image")
     saved_logs = get_logs()
     saved_logs[-1]['image'] = 'data:image/{};base64, {}'.format(image_type, base64_image_string)
     eel.addLogs([saved_logs[-1]])()
 
 def insert_newest_log_without_image():
-    print("trying to insert without image")
     saved_logs = get_logs()
     eel.addLogs([saved_logs[-1]])()
 

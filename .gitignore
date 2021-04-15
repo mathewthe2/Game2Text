@@ -5,6 +5,7 @@
 
 # Logs
 logs/text/*.txt
+logs/audio/
 
 # Debian Build
 build/

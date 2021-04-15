@@ -10,6 +10,7 @@ const OEM_CONFIG = {
 
 let logImageType = 'jpg';
 let logImageQuality = 1.0;
+let audioDevices = {};
 
 const outputToClipboardSwitch = document.getElementById("output-to-clipboard-mode-switch");
 const clipboardModeSwitch = document.getElementById("clipboard-mode-switch");
@@ -17,6 +18,11 @@ const OCREngineSelect = document.getElementById("ocr_engine_select");
 const OCREngineSelectContainer = document.getElementById("ocr_engine_select_container");
 const preprocessSwitch = document.getElementById("preprocess-switch");
 const textOrientationSwitch = document.getElementById("text-orientation-switch");
+const audioHostSelector = document.getElementById("audio_host_selector");
+const audioHostSelect = document.getElementById("audio_host_select");
+const audioDeviceSelector = document.getElementById("audio_device_selector");
+const audioDeviceSelect = document.getElementById("audio_device_select");
+const audioDurationInput = document.getElementById("audio_duration_input");
 
 initConfig();
 
@@ -31,6 +37,9 @@ function initConfig () {
         // Logs
         initIsLogImages();
         initSetLogImageTypeAndQuality();
+        initIsLogAudio();
+        initSetAudioSources();
+        initSetAudioDuration();
     })()
 }
 
@@ -84,6 +93,15 @@ async function initSetLogImageTypeAndQuality() {
     logImageQuality = await eel.read_config(LOG_CONFIG, 'logimagequality')(); 
 }
 
+async function initIsLogAudio() {
+    const isLogAudio = await eel.read_config(LOG_CONFIG, 'logaudio')();
+    if (isLogAudio === 'true') {
+        toggleLogAudio();
+        document.getElementById("log-audio-switch").parentElement.MaterialSwitch.on();
+    }
+}
+
+
 /*
  *
  Appearance Settings 
@@ -134,7 +152,6 @@ function updateOCREngineAndPersist() {
     const OCREngine = updateOCREngine();
     eel.update_config(OCR_CONFIG, {'engine':OCREngine})();
     if (OCREngine.includes('Tesseract')) {
-        console.log('changing tess oem')
         eel.update_config(OCR_CONFIG, {'oem': OEM_CONFIG[OCREngine]})();
     }
 }
@@ -195,4 +212,88 @@ function toggleLogImages() {
 function toggleLogImagesAndPersist() {
     isLogImages = toggleLogImages();
     eel.update_config(LOG_CONFIG, {'logimages': isLogImages ? 'true' : 'false'})();
+}
+function openFolder(relative_path) {
+    eel.open_folder_by_relative_path(relative_path);
+}
+function toggleLogAudio() {
+    logAudio = !logAudio;
+    return logAudio;
+}
+function toggleLogAudioAndPersist() {
+    isLogAudio = toggleLogAudio();
+    eel.update_config(LOG_CONFIG, {'logaudio': isLogAudio ? 'true' : 'false'})();
+}
+async function initSetAudioDuration() {
+    audioDuration = await eel.read_config(LOG_CONFIG, 'logaudioduration')(); 
+    audioDurationInput.parentElement.MaterialTextfield.change(parseInt(audioDuration, 10));
+}
+async function initSetAudioSources() {
+    const default_audio_host = await eel.read_config(LOG_CONFIG, 'logaudiohost')();
+    audio_sources = await eel.get_audio_objects()();
+    console.log(audio_sources)
+    for (const source in audio_sources) {
+        const audioHostItem = document.createElement("li");
+        audioHostItem.classList.add("mdl-menu__item")
+        audioHostItem.data_val = source.replace(' ', '_');
+        audioHostItem.innerHTML = source;
+        if (source === default_audio_host) {
+            audioHostItem.setAttribute("data-selected", "true");
+            // setAudioDevices(source);
+        }
+        audioHostSelector.append(audioHostItem);
+    }
+    getmdlSelect.init('#audio_host_select_container'); // Refresh mdl-select after dynamically inserting options
+}
+async function setAudioDevices(audio_host) {
+    const recommended_audio_device = await eel.get_recommended_device_index(audio_host)();
+    if (recommended_audio_device == -1) {
+        if (logAudio) {
+            alert('Unable to find audio recording device. Please select audio device in settings.')
+        }
+        audioDeviceSelect.value = '';
+    }
+    const deviceList = audio_sources[audio_host]
+    if (deviceList) {
+        // Remove previous options
+        audioDeviceSelector.innerHTML = '';
+        audioDevices = {};
+
+        // Add new options
+        deviceList.forEach(deviceObject => {
+            deviceIndex = Object.entries(deviceObject).flat()[0];
+            deviceName = Object.entries(deviceObject).flat()[1];
+            audioDevices[deviceName.trim()] = deviceIndex;
+            const audioDeviceItem = document.createElement("li");
+            audioDeviceItem.classList.add("mdl-menu__item")
+            audioDeviceItem.data_val = deviceIndex;
+            audioDeviceItem.innerHTML = deviceName;
+            if (recommended_audio_device === parseInt(deviceIndex, 10)) {
+                audioDeviceItem.setAttribute("data-selected", "true");
+                audioDeviceIndex = deviceIndex;
+            }
+            audioDeviceSelector.append(audioDeviceItem);
+        })
+        getmdlSelect.init('#audio_device_select_container'); // Refresh mdl-select after dynamically inserting options
+    }
+}
+function changeAudioHost () {
+    setAudioDevices(audioHostSelect.value);
+}
+eel.expose(restartAudioRecording)
+function restartAudioRecording() {
+    deviceIndex = parseInt(audioDevices[audioDeviceSelect.value], 10)
+    eel.restart_audio_recording(deviceIndex); 
+}
+function changeAudioDevice() {
+    eel.update_config(LOG_CONFIG, {'logaudiodevice':audioDeviceSelect.value})();
+    restartAudioRecording();
+}
+function changeAudioDuration() {
+    const duration = parseFloat(audioDurationInput.value, 10)
+    if (typeof duration === 'number') {
+        if (duration > 0) {
+            eel.update_config(LOG_CONFIG, {'logaudioduration':duration.toString()})();
+        }
+    }
 }

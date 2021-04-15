@@ -3,6 +3,7 @@ const autoModeSpeed = 500;
 let autoMode = false;
 let logMode = false;
 let logImages = false;
+let logAudio = false;
 let selectionMode = 'ocr';
 let selectionLineWidth = 1;
 let selectionColor = 'red';
@@ -29,6 +30,12 @@ let dialogWindow;
 let autoModeTimer;
 let croppedVideoTimer;
 let currentText;
+let audioSources;
+let audioDeviceIndex;
+
+// Temporary screenshot cache before log window is launched
+let cachedScreenshots = {};
+let isCacheScreenshots = true;
 
 const videoElement = document.getElementById("video");
 // const myImg = document.getElementById("my_img");
@@ -204,6 +211,12 @@ function toggleTranslation() {
   }
 }
 
+function openLogWindow() {
+  (async() => {
+  eel.open_new_window('logs.html')();
+  })();
+}
+
 eel.expose(getOutputText);
 function getOutputText() {
   return output.innerText;
@@ -301,6 +314,23 @@ function refreshOCR() {
   }
 }
 
+eel.expose(getCachedScreenshots)
+function getCachedScreenshots() {
+  return cachedScreenshots
+}
+
+eel.expose(removeCachedScreenshot)
+function removeCachedScreenshot(key) {
+  delete cachedScreenshots[key]; 
+}
+
+eel.expose(stopCachingScreenshots)
+function stopCachingScreenshots() {
+  cachedScreenshots = {}
+  isCacheScreenshots = false;
+}
+
+
 function toggleAutoMode() {
   autoMode = !autoMode;
   if (autoMode) {
@@ -377,22 +407,27 @@ function getVideoImage() {
 }
 
 function recognize_image(image) {
-  OCRrequests += 1;
+  OCRrequests += 1; // counter for auto-mode
   (async() => {
     const textOrientation = verticalText && (OCREngine === 'Tesseract') ? 'vertical' : 'horizontal';
-    let text = await eel.recognize_image(OCREngine, image, textOrientation, logImages)();
-    OCRrequests -= 1;
-    if (logMode) {
-      const logs = await eel.show_logs()();
-      updateText(output, logs);
-    } else {
-      updateText(output, text);
-    }
-    if (outputToClipboard) {
-      eel.copy_text_to_clipboard(text)();
-    }
-    if (showTranslation) {
-      translate(text)
+    const imageData = isCacheScreenshots ? getVideoImage() : '';
+    let response = await eel.recognize_image(OCREngine, image, textOrientation)();
+    if (response.result) {
+      OCRrequests -= 1; // counter for auto-mode
+
+      updateText(output, response.text);
+
+      // Temporary fix: Cache screenshots before log window is opened. To remove in the future
+      if (isCacheScreenshots) {
+        cachedScreenshots[response.id] = {'base64ImageString': imageData, 'imageType': logImageType}
+      }
+  
+      if (outputToClipboard) {
+        eel.copy_text_to_clipboard(text)();
+      }
+      if (showTranslation) {
+        translate(text)
+      }
     }
   })()
 }

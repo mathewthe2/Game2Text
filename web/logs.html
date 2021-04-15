@@ -6,10 +6,14 @@
         <!-- MDL Material Design Lite -->
         <link rel="stylesheet" href="static/icon.css">
         <link rel="stylesheet" href="static/material.indigo-pink.min.css">
+        <link rel="stylesheet" href="static/tooltip.css">
         <script defer src="static/material.min.js"></script>
-        <!-- MDL Select -->
-        <link rel="stylesheet" href="static/getmdl-select.min.css">
-        <script defer src="static/getmdl-select.min.js"></script>
+        <!-- Tippy -->
+        <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+        <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
+        <!-- <script src="static/popper.min.js"></script>
+        <script src="static/tippy-bundle.umd.min.js"></script>
+        <link rel="stylesheet" href="static/tippy.css"> -->
         <!-- eel -->
         <script type="text/javascript" src="/eel.js"></script>
         <!-- similiar kanji -->
@@ -20,15 +24,39 @@
         <div id="logsContainer" class="mdl-list">
             <div hidden id="logItemTemplate" class="mdl-list__item logItem">
                 <span class="mdl-list__item-primary-content">
-                    <button class="playAudioButton mdl-button mdl-js-button mdl-button--icon" >
+                    <button class="playAudioButton mdl-button mdl-js-button mdl-button--icon mdl-button--colored" >
                         <i class="material-icons playAudio">play_circle_filled</i>
+                    </button>
+                    <button hidden class="recordAudioButton mdl-button mdl-js-button mdl-button--icon mdl-button--colored" >
+                        <i class="material-icons">mic</i>
                     </button>
                     <span contenteditable class="logText"></span>
                 </span>
                 <span class="mdl-list__item-secondary-action">
-                    <button class="mdl-button mdl-js-button mdl-button--icon" >
-                        <i class="material-icons">library_add_rounded</i>
+                    <button class="showAnkiFormButton mdl-button mdl-js-button mdl-button--icon mdl-button--colored" >
+                        <i class="note-add-icon material-icons">note_add</i>
                     </button>
+                    <div hidden id="addCardForm">
+                        <img class="addCardScreenshot" src="static/test.jpg" alt="Girl in a jacket"> 
+                        <div class="demo-card-event mdl-card mdl-shadow--2dp">
+                            <div class="addCardBody mdl-card__title mdl-card--expand">
+                                <ul class="addCardBodyList demo-list-icon mdl-list">
+                                  </ul> 
+                            </div>
+
+                                <div class="mdl-card__actions mdl-card--border">
+                                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                                    Save to Anki
+                                    </a>
+                                    <div class="mdl-layout-spacer"></div>
+                                    
+                                    <button disabled id="demo-menu-lower-left"
+                                    class="mdl-button mdl-js-button mdl-button--icon">
+                                    <i class="material-icons">more_vert</i>
+                                    </button>
+                                </div>
+                          </div>
+                    </div>
                 </span>
                 </div>
             </div>

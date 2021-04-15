@@ -7,16 +7,50 @@ html {
     transition-property: background-color;  
     -webkit-animation: fadein 0.6s; /* Safari, Chrome and Opera > 12.1 */
     animation: fadein 0.6s;
+
+    /* -webkit-transition: opacity 0.3s;
+    transition: opacity 0.3s; */
 }
 .logItem:hover {
     background-color: #eee;
 }
-.playAudio {
-    color: #757575
+.note-add-icon:hover {
+    color: #E21549
 }
-.playAudioButton {
+/* .playAudio:not(.mdl-button--colored) {
+    color: #757575
+} */
+.playAudioButton .recordAudioButton {
     margin-right: 0.2em;
 }
+.addCardScreenshot {
+   width: 100%;
+   display: block;
+}
+.addCardFormField {
+    font-size: 22px;
+}
+.addToAnkiButton:hover {
+    filter: brightness(150%);
+}
+.tippy-box[data-theme~='material-light'] {
+    background-color: white;
+    color: black;
+}
+.demo-card-square.mdl-card {
+    height: 400px;
+}
+/* .demo-card-event > .mdl-card__title {
+    color: #fff;
+} */
+.addCardBody {
+    padding: 0px
+}
+.demo-card-event > .mdl-card__actions {
+    display: flex;
+    box-sizing:border-box;
+    align-items: center;
+  }
 @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }

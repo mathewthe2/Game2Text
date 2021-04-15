@@ -1,17 +1,16 @@
 import pytesseract
 from pathlib import Path
-import os
 import platform
 from logger import log_text, log_media, get_time_string
 from config import r_config, OCR_CONFIG
 from util import create_directory_if_not_exists, base64_to_image, base64_to_image_path
+from tools import path_to_tesseract, get_tessdata_dir
 import requests
 import eel
 from ocr_space import ocr_space_file, OCRSPACE_API_URL_USA, OCRSPACE_API_URL_EU
 
 HORIZONTAL_TEXT_DETECTION = 6
 VERTICAL_TEXT_DETECTON = 5
-OSX_TESSERACT_VERSION = "4.1.1"
 
 def get_temp_image_path():
     return str(Path(SCRIPT_DIR,"logs", "images", "temp.png"))
@@ -21,9 +20,9 @@ def detect_and_log(engine, cropped_image,  text_orientation, session_start_time,
     if result is not None:
         log_text(session_start_time, request_time, result)
         log_media(session_start_time, request_time, audio_recorder)
-        return result
+        return {'id': request_time, 'result': result }
     else:
-        return "Error: OCR Failed"
+        return {'error': 'OCR Failed'}
 
 def image_to_text(engine, base64img, text_orientation):
     if engine == "OCR Space USA" or engine == "OCR Space EU":
@@ -45,32 +44,6 @@ def tesseract_ocr(image, text_orientation):
     custom_config = r'{} --oem {} --psm {} -c preserve_interword_spaces=1 {}'.format(get_tessdata_dir(), r_config(OCR_CONFIG, "oem"), psm, r_config(OCR_CONFIG, "extra_options").strip('"'))
     result = pytesseract.image_to_string(image, config=custom_config, lang=language)
     return result
-
-def path_to_tesseract():
-    exec_data = {"Windows": str(Path(SCRIPT_DIR, "win", "tesseract", "tesseract.exe")),
-                    "Darwin": str(Path(SCRIPT_DIR, "mac", "tesseract", OSX_TESSERACT_VERSION, "bin", "tesseract")),
-                    "Linux": "/usr/local/bin/tesseract"}
-    platform_name = platform.system()  # E.g. 'Windows'
-    return exec_data[platform_name], platform_name
-
-def get_tessdata_dir():
-    platform_name = platform.system() 
-    if platform_name == 'Darwin':
-        if r_config(OCR_CONFIG, "oem") == '0': 
-            # legacy tesseract
-            return '--tessdata-dir {}'.format(str(Path(SCRIPT_DIR, "mac", "tesseract", OSX_TESSERACT_VERSION, "share", "legacy", "tessdata")))
-        else:
-            return '--tessdata-dir {}'.format(str(Path(SCRIPT_DIR, "mac", "tesseract", OSX_TESSERACT_VERSION, "share", "tessdata")))
-    elif platform_name == 'Windows':
-        if (r_config(OCR_CONFIG, "oem") == '0' and Path(SCRIPT_DIR, "win", "tesseract", "tessdata-legacy").exists()): 
-            # legacy tesseract by renaming tessdata folders
-            os.rename(Path(SCRIPT_DIR, "win", "tesseract", "tessdata"), Path(SCRIPT_DIR, "win", "tesseract", "tessdata-new"))
-            os.rename(Path(SCRIPT_DIR, "win", "tesseract", "tessdata-legacy"), Path(SCRIPT_DIR, "win", "tesseract", "tessdata"))
-        elif (r_config(OCR_CONFIG, "oem") != '0' and Path(SCRIPT_DIR, "win", "tesseract", "tessdata-new").exists()):  
-            # revert to default tessdata folder
-            os.rename(Path(SCRIPT_DIR, "win", "tesseract", "tessdata"), Path(SCRIPT_DIR, "win", "tesseract", "tessdata-legacy"))
-            os.rename(Path(SCRIPT_DIR, "win", "tesseract", "tessdata-new"), Path(SCRIPT_DIR, "win", "tesseract", "tessdata"))
-    return ''
 
 SCRIPT_DIR = Path(__file__).parent 
 tesseract_cmd, platform_name = path_to_tesseract()

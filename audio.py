@@ -1,9 +1,15 @@
+from pydub import AudioSegment
+from pydub.playback import play
 import pyaudio
 import wave 
 import os
+from shutil import copyfile
 import eel
 from config import r_config, LOG_CONFIG
-from time import sleep
+from tools import path_to_ffmpeg, path_to_ffmpeg_folder
+
+AudioSegment.ffmpeg = path_to_ffmpeg()
+os.environ["PATH"] += os.pathsep + path_to_ffmpeg_folder()
 
  # User config device exists? use config device, if not check if (1) valid, use (1), if not no audio
 @eel.expose
@@ -69,33 +75,11 @@ def valid_output_device(deviceIndex):
             return False
     return True
 
-def play_audio_from_file(filename):
-    # length of data to read.
-    chunk = 1024
-   # open the file for reading.
-    wf = wave.open(filename, 'rb')
+def play_audio_from_file(file):
+    filename, file_extension = os.path.splitext(file)
+    song = AudioSegment.from_file(file, file_extension[1:])
+    play(song)
 
-    # create an audio object
-    p = pyaudio.PyAudio()
-
-    # open stream based on the wave object which has been input.
-    stream = p.open(format =
-                    p.get_format_from_width(wf.getsampwidth()),
-                    channels = wf.getnchannels(),
-                    rate = wf.getframerate(),
-                    output = True)
-
-    # read data (based on the chunk size)
-    data = wf.readframes(chunk)
-
-    while True:
-        if data != '':
-            stream.write(data)
-            data = wf.readframes(chunk)
-
-        if data == b'':
-            break
-
-    # cleanup stuff.
-    stream.close()    
-    p.terminate()
+def convert_audio(in_file, out_file):
+    filename, file_extension = os.path.splitext(out_file)
+    AudioSegment.from_mp3(in_file).export(out_file, format=file_extension[1:])

@@ -423,10 +423,10 @@ function recognize_image(image) {
       }
   
       if (outputToClipboard) {
-        eel.copy_text_to_clipboard(text)();
+        eel.copy_text_to_clipboard(response.result)();
       }
       if (showTranslation) {
-        translate(text)
+        translate(response.result)
       }
     }
   })()

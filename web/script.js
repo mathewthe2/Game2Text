@@ -260,7 +260,14 @@ function updateOutput(text) {
 
 cv1.addEventListener("mouseup", function (e) {
   mousedown = false;
-  if (rect.width > 0 && !clipboardMode) {
+  if (rect.width !== 0 && !clipboardMode) {
+    // Invert selection if selection is from bottom right to top left
+    if (rect.width < 0 && rect.height < 0) {
+      rect.x += rect.width;
+      rect.y += rect.height;
+      rect.width *= -1;
+      rect.height *= -1;
+    }
     switch(selectionMode) {
       case 'crop':
         cropVideo();
@@ -307,7 +314,7 @@ cv1.addEventListener("mousemove", function (e) {
 
 eel.expose(refreshOCR);
 function refreshOCR() {
-  if (rect.width > 0) {
+  if (rect.width !== 0) {
     showStuff(rect);
     if (!showSelection) {
       ctx.clearRect(0,0,cv1.width,cv1.height); // clear canvas

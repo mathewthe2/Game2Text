@@ -326,5 +326,3 @@ function changeAudioDuration() {
         }
     }
 }
-
-openSettings()

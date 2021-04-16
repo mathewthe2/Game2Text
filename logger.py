@@ -96,7 +96,7 @@ def show_logs():
                     else:
                         image_data = image_data_list[log['id']]
                         log['image'] =  'data:image/{};base64, {}'.format(image_data['imageType'], image_data['base64ImageString'])
-        eel.addLogs(saved_logs)()
+        return saved_logs
     
 def get_logs():
     output = []
@@ -114,6 +114,7 @@ def get_logs():
             log = {
                 'id': log_id,
                 'file': Path(latest_file).name,
+                'folder': Path(latest_file).stem,
                 'image': image,
                 'audio': get_audio_file_name(log_id, Path(latest_file).stem),
                 'hours': get_hours_string(date),
@@ -135,6 +136,16 @@ def insert_newest_log_without_image():
 @eel.expose
 def play_log_audio(file_name, folder_name):
     play_audio_from_file(str(Path(AUDIO_LOG_PATH, folder_name, file_name)))
+
+@eel.expose
+def delete_audio_file(log_id, folder_name):
+    file = get_audio_file_name(log_id, folder_name)
+    if (file):
+        full_path = Path(AUDIO_LOG_PATH, folder_name, file)
+        os.remove(full_path)
+        return True
+    else:
+        return False
 
 def get_audio_file_name(log_id, folder_name):
     path = Path(AUDIO_LOG_PATH, folder_name)

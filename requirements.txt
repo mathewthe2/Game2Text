@@ -38,10 +38,12 @@ pyperclip==1.8.1
 pytesseract==0.3.6
 python-xlib==0.29
 pywin32-ctypes==0.2.0
+PyYAML==5.4.1
 requests==2.25.0
 rfc3986==1.4.0
 six==1.15.0
 sniffio==1.2.0
+tk==0.1.0
 urllib3==1.26.2
 Werkzeug==1.0.1
 whichcraft==0.6.1

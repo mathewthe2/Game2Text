@@ -135,7 +135,7 @@ def insert_newest_log_without_image():
 
 @eel.expose
 def play_log_audio(file_name, folder_name):
-    play_audio_from_file(str(Path(AUDIO_LOG_PATH, folder_name, file_name)))
+    return play_audio_from_file(str(Path(AUDIO_LOG_PATH, folder_name, file_name)))
 
 @eel.expose
 def delete_audio_file(log_id, folder_name):

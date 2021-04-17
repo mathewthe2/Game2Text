@@ -11,6 +11,7 @@ from pynput import keyboard
 from clipboard import clipboard_to_output, text_to_clipboard
 from logger import get_time_string, AUDIO_LOG_PATH
 from ankiconnect import invoke
+from imageprofile import export_image_profile, load_image_profiles, open_image_profile
 from config import r_config, w_config, WINDOWS_HOTKEYS_CONFIG, APP_CONFIG, LOG_CONFIG
 
 session_start_time = get_time_string()
@@ -27,6 +28,18 @@ def close(page, sockets):
 @eel.expose     
 def recognize_image(engine, image, orientation):
     return detect_and_log(engine, image, orientation, session_start_time, get_time_string(), audio_recorder)
+
+@eel.expose
+def export_image_filter_profile(profile):
+    return export_image_profile(profile)
+
+@eel.expose
+def load_image_filter_profiles():
+    return load_image_profiles()
+
+@eel.expose
+def open_image_filter_profile():
+    return open_image_profile()
 
 @eel.expose        
 def translate(text):

@@ -103,8 +103,31 @@ video, canvas {
   grid-row-end: 4;
 }
 #cv1 {
-  cursor: pointer;
+  cursor: crosshair;
   z-index: 10;
+}
+.tippy-content {
+  padding: 0px;
+}
+.canvasContextMenu {
+  padding: 0px;
+  min-width: 280px;
+  background: rgba(28,28,28,0.9);
+}
+.canvasContextMenuItem {
+  color: #eee;
+  background: rgba(28,28,28,0.9);
+  cursor: pointer;
+}
+.canvasContextMenuItem:hover {
+  background: rgba(255,255,255,0.1)
+}
+.canvasContextMenuItem > .mdl-list__item-primary-content > .mdl-list__item-icon {
+  color: white;
+}
+.canvasContextSelectionImage {
+  width: 100%;
+  display: block;
 }
 .welcome-card-wide.mdl-card {
   width: 100vw;
@@ -120,4 +143,44 @@ video, canvas {
 .dark-theme {
   background-color: #121212;
   color: white !important; 
+}
+.canvasContextMenu {
+/*   grid-template-areas:
+  'label select select select iconbutton'
+  'image image image image image'; */
+   padding: 10px;
+   grid-gap: 50px;
+}
+.canvasContextMenu > .profileSelect {
+   min-width: 220px; 
+}
+.canvasContextMenu > .profileSelectImport {
+  padding: 0;
+}
+.canvasContextMenu > .profileSelectLabel {
+  font-size: 16px;
+  padding-right: 15px;
+}
+.canvasContextMenu > .mdl-slider {
+  margin-top: 14px;
+  margin-bottom: 14px;
+}
+ .canvasContextMenu > .binarizeSliderLabel {
+  font-size: 16px;
+}
+.canvasContextMenu > .blurSliderLabel { 
+  font-size: 16px;
+}
+.checkBoxContainer {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+.checkBoxContainer > .mdl-checkbox__label {
+  width: 30%;
+}
+.checkBoxContainer > .mdl-checkbox  {
+  width: 10%;
+  padding-top: 3px;
 }

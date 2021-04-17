@@ -2,6 +2,7 @@ showLogs();
 let currentLogs = [];
 window.tippyInstances = [];
 let isRecording = false;
+let isPlayingAudio = false;
 const loadingScreenDelay = setTimeout("showLoadingScreen()", 500);
 
 function showLogs() {
@@ -47,10 +48,10 @@ function addLogs(newLogs) {
     content: 'Play Audio',
     delay: [300, null]
   });
-  tippy(document.querySelectorAll('.playAudioIcon'), {
-    content: 'Audio',
-    delay: [300, null]
-  });
+  // const playAudioTippy = tippy(document.querySelectorAll('.playAudioIcon'), {
+  //   content: 'Audio',
+  //   delay: [300, null]
+  // });
   createLogMenu();
   createAnkiFormCard();
   window.scrollTo(0,document.body.scrollHeight);
@@ -60,6 +61,7 @@ function createLogMenu() {
   tippy(document.querySelectorAll('.logMenuButton'), {
     delay: [100, null],
     theme: 'material-light',
+    placement: 'bottom',
     arrow: false,
     animation: 'shift-away',
     trigger:'click',
@@ -112,6 +114,11 @@ function formatCard(logId, cardElement) {
     cardImage.style.width = '100%';
   }
   const cardBodyList = cardElement.getElementsByClassName('addCardBodyList')[0];
+
+  const addCardToAnkiButton = cardElement.getElementsByClassName('addCardToAnkiButton')[0];
+  addCardToAnkiButton.id = `add_card_to_anki_button_${logId}`
+  addCardToAnkiButton.setAttribute("log_id", logId);
+
   if (log.text) {
     const cardSentence = createCardSectionElement('short_text', 'card_sentence', log.text);
     cardBodyList.append(cardSentence);
@@ -124,6 +131,7 @@ function formatCard(logId, cardElement) {
   // cardSentence.innerHTML = log.text;
   // const cardAudioFileName = cardElement.getElementsByClassName('card_audio_file_name')[0];
   // cardAudioFileName.innerHTML = log.audio;
+
   return cardElement
 }
 
@@ -141,13 +149,23 @@ function createCardSectionElement(icon_name, field, value) {
 
 function formatLogMenu(logId, logMenuContent) {
   const log = getLogById(logId);
-  const deleteRecordingButtonLabel = logMenuContent.getElementsByClassName('deleteRecordingButtonLabel')[0];
-  const deleteRecordingButton = deleteRecordingButtonLabel.parentNode;
+
+  // Set logId as button attribute
+  const deleteRecordingButton = logMenuContent.getElementsByClassName('deleteRecordingButton')[0];
   deleteRecordingButton.setAttribute('log_id', logId);
   if (!log.audio) {
     // Disable deleteRecordingButton if there is no audio
     deleteRecordingButton.classList.add('disabled_list__item');
   }
+
+  // Set logId as button attribute
+  const copyScreenshotButton = logMenuContent.getElementsByClassName('copyScreenshotButton')[0];
+  copyScreenshotButton.setAttribute('log_id', logId);
+  if (!log.image) {
+    // Disable copyScreenshotButton if there is no screenshot
+    copyScreenshotButton.classList.add('disabled_list__item');
+  }
+
   return logMenuContent
 }
 
@@ -160,14 +178,13 @@ function logToHtml(log) {
   // Init play audio button
   const playAudioButton = logItemClone.getElementsByClassName('playAudioButton')[0];
   playAudioButton.id = `play_audio_button_${log.id}`;
-  playAudioButton.onclick = () => eel.play_log_audio(log.audio, log.folder)();
+  playAudioButton.onclick = () => playRecording(log, playAudioButton.firstElementChild);
 
   
   // Init record audio button
   const recordAudioButton = logItemClone.getElementsByClassName('recordAudioButton')[0];
   recordAudioButton.id = `record_audio_button_${log.id}`;
-  const recordAudioIcon = recordAudioButton.getElementsByClassName('material-icons')[0];
-  recordAudioButton.onclick = () => startManualRecording(log, recordAudioIcon);
+  recordAudioButton.onclick = () => startManualRecording(log, recordAudioButton.firstElementChild);
 
   if (log.audio) {
     playAudioButton.hidden = false;
@@ -186,11 +203,29 @@ function logToHtml(log) {
   const showAnkiFormButton = logItemClone.getElementsByClassName('showAnkiFormButton')[0];
   showAnkiFormButton.id = `show_anki_form_button_${log.id}`
   showAnkiFormButton.setAttribute("log_id", log.id);
-
+  
   logText.innerText = log.text;
   logItemClone.hidden = false;
   return logItemClone
 }
+
+async function playRecording(log, playAudioIcon) {
+  // TODO: allow pause and play from another file. Currently only support playing one at a time
+  if (!isPlayingAudio) {
+    isPlayingAudio = true;
+    playAudioIcon.innerHTML = 'pause_circle_filled';
+    audioDurationSeconds = await eel.play_log_audio(log.audio, log.folder)();
+    setTimeout(()=>finishPlayingAudio(log.id), audioDurationSeconds)
+  }
+
+}
+
+function finishPlayingAudio(logId) {
+  const playAudioButton = document.getElementById(`play_audio_button_${logId}`);
+  playAudioButton.firstElementChild.innerHTML = 'play_circle_filled';
+  isPlayingAudio = false;
+}
+
 
 async function startManualRecording(log, recordAudioIcon) {
   // Manual Recording: first click to record, second click to stop recording
@@ -212,16 +247,31 @@ async function stopManualRecording() {
     const log = getLogById(logId);
     const recordAudioButton = document.getElementById(`record_audio_button_${logId}`);
     recordAudioButton.hidden = true;
-    const playAudioButton = recordAudioButton.parentNode.getElementsByClassName('playAudioButton')[0];
-    playAudioButton.id = `play_audio_button_${logId}`;
-      playAudioButton.onclick = function() {
-        eel.play_log_audio(audioFileName, log.folder)();
-      }
+    const playAudioButton = document.getElementById(`play_audio_button_${logId}`);
     playAudioButton.hidden = false;
     updateLogAudioById(logId, audioFileName);
     refreshLogMenuContent(logId);
     refreshCardContent(logId);
   }
+}
+
+function copyScreenshot(logId) {
+  const log = getLogById(logId);
+  if (log.image) {
+    const img = document.createElement('img');
+    img.src = log.image
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext("2d");     
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    canvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({'image/png': blob})]));
+  }
+  // Hide menu
+  const logElement = getLogElementById(logId);
+  const logMenuButton = logElement.getElementsByClassName('logMenuButton')[0];
+  const menu = logMenuButton._tippy;
+  menu.hide()
 }
 
 async function deleteRecording(logId) {
@@ -305,4 +355,6 @@ function refreshCardContent(logId) {
 
 function addCardToAnki(logId) {
   // todo: add card to anki
+  const log = getLogById(logId);
+  console.log('log2anki', log)
 }

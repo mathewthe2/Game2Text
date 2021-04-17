@@ -79,6 +79,7 @@ def play_audio_from_file(file):
     filename, file_extension = os.path.splitext(file)
     song = AudioSegment.from_file(file, file_extension[1:])
     play(song)
+    return song.duration_seconds
 
 def convert_audio(in_file, out_file):
     filename, file_extension = os.path.splitext(out_file)

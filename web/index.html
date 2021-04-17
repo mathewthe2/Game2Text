@@ -11,6 +11,11 @@
   <!-- MDL Select -->
   <link rel="stylesheet" href="static/getmdl-select.min.css">
   <script defer src="static/getmdl-select.min.js"></script>
+  <!-- Tippy -->
+  <script src="static/popper.min.js"></script>
+  <script src="static/tippy-bundle.umd.min.js"></script>
+  <link rel="stylesheet" href="static/tippy.css">
+  <link rel="stylesheet" href="static/shift-away.css">
   <!-- eel -->
   <script type="text/javascript" src="/eel.js"></script>
   <!-- similiar kanji -->
@@ -26,6 +31,74 @@
         <canvas class="canvas" id="cv1"></canvas>
         <canvas class="canvas" id="previewCanvas"></canvas>
         <canvas class="canvas" id="croppedVideoCanvas"></canvas>
+        <div hidden id="canvasContextMenuContainer">
+          <div id="canvasContextMenu" class="canvasContextMenu">
+          <!-- <div id="canvasMenuProfileSelectContainer" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
+            <input onchange="changeProfile()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="deck_select" readonly>
+            <input type="hidden" value=""  name="deck_select">
+            <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+            <label for="deck_select" class="mdl-textfield__label">Deck</label>
+            <ul id="profile_selector" for="profile_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+            </ul>
+          </div> -->
+            <span class="profileSelectLabel">Profile</span>
+            <select onchange="selectProfile(this)" class="profileSelect">
+              <option>None</option>
+            </select>
+            <!-- Icon button -->
+            <button class="profileSelectImport mdl-button mdl-js-button mdl-button--icon">
+              <i onclick="loadImageFilterFromFile()" class="material-icons">folder</i>
+            </button>
+            <img class="canvasContextSelectionImage" src="static/image-not-found.jpg" alt="image-not-found"> 
+            <!-- <canvas class="canvasContextSelectionCanvas"></canvas> -->
+
+            <div class="checkBoxContainer">
+              <span class="mdl-checkbox__label">Binarize</span>
+              <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="binarizeCheckbox">
+                <input onchange="binarize(this)" type="checkbox" id="binarizeCheckbox" class="mdl-checkbox__input">
+              </label> 
+            </div>
+
+            <input disabled onchange="changeBinarizeThreshold(this)"  id="binarizeSlider" class="mdl-slider mdl-js-slider" type="range"
+            min="0" max="100" value="50" tabindex="0">
+            <br>
+            <span class="blurSliderLabel">Gaussian Blur</span>
+            <input onchange="blurImage(this)" id="blurSlider" class="mdl-slider mdl-js-slider" type="range"
+            min="0" max="100" value="0" tabindex="0">
+            <br>
+            <div class="checkBoxContainer">
+              <span class="mdl-checkbox__label">Dilate</span>
+              <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="dilateCheckbox">
+                <input onchange="dilateImage(this)" type="checkbox" id="dilateCheckbox" class="mdl-checkbox__input">
+              </label> 
+            </div>
+            <div class="checkBoxContainer">
+              <span class="mdl-checkbox__label">Invert Color</span>
+              <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="invertColorCheckbox">
+                <input onchange="invertColor(this)" type="checkbox" id="invertColorCheckbox" class="mdl-checkbox__input">
+              </label>
+            </div>
+            <hr>
+            <button onclick="exportProfile()" class="mdl-button mdl-js-button mdl-button--accent">
+              Export
+            </button>
+
+          <!-- <ul class="canvasContextMenu mdl-list"></ul>
+            <li class="canvasContextMenuItem mdl-list__item">
+              <span onclick="copyImageToClipboard()" class="mdl-list__item-primary-content">
+                <i class="material-icons mdl-list__item-icon">content_copy</i>
+                Copy image
+              </span>
+            </li> -->
+            <!-- <li class="canvasContextMenuItem mdl-list__item">
+              <span onclick="toggleCropVideo()" class="mdl-list__item-primary-content">
+                <i class="material-icons mdl-list__item-icon">person</i>
+                Crop stream
+              </span>
+            </li> -->
+          <!-- <ul> -->
+          </div>
+        </div>
         <div id=startMessage>
           <div class="welcome-card-wide mdl-card mdl-shadow--2dp">
             <div class="mdl-card__title">
@@ -86,9 +159,6 @@
     <button style="float: right; margin-right: 12px" id="toggleLogsButton" onclick="openLogWindow()" class="mdl-button mdl-js-button mdl-button--icon">
       <i class="material-icons">view_list</i>
     </button>
-    <!-- <button disabled style="float: right; margin-right: 12px" id="toggleLogsButton" onclick="toggleLogs()" class="mdl-button mdl-js-button mdl-button--icon">
-      <i class="material-icons">view_list</i>
-    </button> -->
     <div id="settingsTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="toggleLogsButton">Logs</div>
   </div>
 </div>
@@ -292,15 +362,12 @@
                             <span class="mdl-textfield__error">Input is not a number!</span>
                           </div>
                         </div>
-                        
-                    </ul>
-
-                </div>
   
+                    </ul>
+                </div>
             </div>
 <!-- extra settings here-->
           <hr>
-      
       </div>
     </div>
     <div class="mdl-dialog__actions">
@@ -310,18 +377,17 @@
 
 <!-- Output -->
 
-<span class="results" id="results">
-  <span id="output" contenteditable>
-  </span>
-  <br><span id="translatedOutput" hidden></span>
-</span>
-<span id ="similarKanjiTooltip" class="tooltiptext"></span>
-  <script src="script.js"></script>
-  <!-- <script src="logs.js"></script> -->
-  <script src="similarkanji.js"></script>
-  <script src="settings.js"></script>
-  <script src="image.js"></script>
-</body>
+    <span class="results" id="results">
+      <span id="output" contenteditable>
+      </span>
+      <br><span id="translatedOutput" hidden></span>
+    </span>
+    <span id ="similarKanjiTooltip" class="tooltiptext"></span>
+    <script src="index.js"></script>
+    <script src="similarkanji.js"></script>
+    <script src="settings.js"></script>
+    <script src="image.js"></script>
+  </body>
 </html>
 
 

@@ -36,6 +36,9 @@
                                 <li onclick="deleteRecording(this.getAttribute('log_id'))" class="deleteRecordingButton mdl-list__item">
                                   <span class="deleteRecordingButtonLabel mdl-list__item-primary-content">Delete Recording</span>
                                 </li>
+                                <li onclick="copyScreenshot(this.getAttribute('log_id'))" class="copyScreenshotButton mdl-list__item">
+                                    <span class="copyScreenshotButtonLabel mdl-list__item-primary-content">Copy Screenshot</span>
+                                  </li>
                               </ul>
                         </div>
                     </div>
@@ -52,7 +55,7 @@
                         <i class="note-add-icon material-icons">note_add</i>
                     </button>
                     <div hidden id="addCardForm">
-                        <img class="addCardScreenshot" src="static/image-not-found.jpg" alt="Girl in a jacket"> 
+                        <img class="addCardScreenshot" src="static/image-not-found.jpg" alt="image-not-found"> 
                         <div class="addCardBodyContainer mdl-card mdl-shadow--2dp">
                             <div class="addCardBody mdl-card__title mdl-card--expand">
                                 <ul class="addCardBodyList mdl-list">
@@ -60,7 +63,7 @@
                             </div>
 
                                 <div class="mdl-card__actions mdl-card--border">
-                                    <a onclick="addCardToAnki(this.getAttribute('log_id'))" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Save to Anki</a>
+                                    <a onclick="addCardToAnki(this.getAttribute('log_id'))" class="addCardToAnkiButton mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Save to Anki</a>
                                     <div class="mdl-layout-spacer"></div>
                                     
                                     <button disabled id="anki-card-menu-lower-left"

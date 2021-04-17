@@ -38,6 +38,16 @@ let audioDeviceIndex;
 let cachedScreenshots = {};
 let isCacheScreenshots = true;
 
+// Preprocessing Filters
+let imageProfiles = []
+let previousCanvas = '';
+let isInvertColor = false;
+let isDilate = false;
+let isBinarize = false;
+let binarizeThreshold = 50;
+let blurImageRadius = 0;
+
+
 const videoElement = document.getElementById("video");
 // const myImg = document.getElementById("my_img");
 const cv1 = document.getElementById("cv1");
@@ -56,6 +66,14 @@ const croppedVideoCanvas = document.getElementById("croppedVideoCanvas");
 const croppedVideoCtx = croppedVideoCanvas.getContext("2d");
 const settingsDialog = document.getElementById("settingsDialog");
 const dialogCloseButton = document.getElementById("dialogCloseButton");
+
+init();
+
+function init() {
+  (async() => {
+    loadProfiles();
+  })();
+}
 
 function selectApplication() {
   startCapture();
@@ -260,7 +278,8 @@ function updateOutput(text) {
 
 cv1.addEventListener("mouseup", function (e) {
   mousedown = false;
-  if (rect.width !== 0 && !clipboardMode) {
+  const isRightClick = e.button === 0;
+  if (hasSelection() && !clipboardMode && isRightClick) {
     // Invert selection if selection is from bottom right to top left
     if (rect.width < 0 && rect.height < 0) {
       rect.x += rect.width;
@@ -268,13 +287,15 @@ cv1.addEventListener("mouseup", function (e) {
       rect.width *= -1;
       rect.height *= -1;
     }
-    switch(selectionMode) {
-      case 'crop':
-        cropVideo();
-        break;
-      case 'ocr':
-        refreshOCR();
-    }
+    refreshOCR();
+
+    // switch(selectionMode) {
+    //   case 'crop':
+    //     cropVideo();
+    //     break;
+    //   case 'ocr':
+    //     refreshOCR();
+    // }
   }
 }, false);
 
@@ -312,15 +333,33 @@ cv1.addEventListener("mousemove", function (e) {
     }
 }, false);
 
+function hasSelection() {
+  return rect && rect.width && rect.width !== 0 && rect.height && rect.height !== 0 ? true : false;
+}
+
+
+/*
+ *
+ Backend OCR functions
+ *
+*/
+
 eel.expose(refreshOCR);
 function refreshOCR() {
-  if (rect.width !== 0) {
+  if (hasSelection()) {
     showStuff(rect);
     if (!showSelection) {
       ctx.clearRect(0,0,cv1.width,cv1.height); // clear canvas
     }
   }
 }
+
+
+/*
+ *
+ Screenshot cache
+ *
+*/
 
 eel.expose(getCachedScreenshots)
 function getCachedScreenshots() {
@@ -337,7 +376,6 @@ function stopCachingScreenshots() {
   cachedScreenshots = {}
   isCacheScreenshots = false;
 }
-
 
 function toggleAutoMode() {
   autoMode = !autoMode;
@@ -364,18 +402,21 @@ function closeSettings() {
   settingsDialog.close();
 }
 
-function showStuff({width, height, x, y}) {
+function createCanvasWithSelection({width, height, x, y}) {
   aspectRatioY = videoElement.videoHeight / cv1.height;
   aspectRatioX = videoElement.videoWidth / cv1.width;
-
   const offsetY = 1.0 * aspectRatioY;
+  var selectionCv = document.createElement('canvas');
+  selectionCv.width = width*aspectRatioX;
+  selectionCv.height = height*aspectRatioY;
+  var selectionCtx = selectionCv.getContext('2d');
+  selectionCtx.drawImage(videoElement, x*aspectRatioX, (y+offsetY)*aspectRatioY, width*aspectRatioX, (height-offsetY)*aspectRatioY, 0, 0, selectionCv.width, selectionCv.height);
+  return selectionCv
+}
 
-  var cv2 = document.createElement('canvas');
-  cv2.width = width*aspectRatioX;
-  cv2.height = height*aspectRatioY;
+function showStuff(rect) {
+  var cv2 = createCanvasWithSelection(rect);
   var ctx2 = cv2.getContext('2d');
-  ctx2.drawImage(videoElement, x*aspectRatioX, (y+offsetY)*aspectRatioY, width*aspectRatioX, (height-offsetY)*aspectRatioY, 0, 0, cv2.width, cv2.height);
-    
     // check if is same as current image
     const newImageData = ctx2.getImageData(0, 0, cv2.width, cv2.height)
     let sameImage = false;
@@ -391,9 +432,7 @@ function showStuff({width, height, x, y}) {
       }
       if (!sameImage || !autoMode) {
         imageData = newImageData;
-        if (preprocess && OCREngine === 'Tesseract') {
-          ctx2.putImageData(preprocessImage(cv2), 0, 0);
-        }
+        ctx2.putImageData(preprocessImage(cv2), 0, 0);
         imageDataURL = cv2.toDataURL('image/png');
         imageb64 = imageDataURL.slice(imageDataURL.indexOf(',') + 1)
         recognize_image(imageb64, null);
@@ -440,14 +479,237 @@ function recognize_image(image) {
   })()
 }
 
+
+/*
+ *
+ Canvas Context Menu
+ *
+*/
+
+const canvasContextMenuElement =  document.getElementById('canvasContextMenu');
+canvasContextMenuElement.style.display = 'block';
+
+const canvasContextMenu = tippy(cv1, {
+  content: canvasContextMenuElement,
+  // onShow(instance) {
+  //   componentHandler.upgradeAllRegistered();
+  // },
+  allowHTML: true,
+  draggable: true,
+  placement: 'right-start',
+  trigger: 'manual',
+  interactive: true,
+  arrow: false,
+  offset: [0, 0],
+});
+
+cv1.addEventListener('contextmenu', (event) => {
+  event.preventDefault();
+
+  canvasContextMenu.setProps({
+    getReferenceClientRect: () => ({
+      width: 0,
+      height: 0,
+      top: event.clientY,
+      bottom: event.clientY,
+      left: event.clientX,
+      right: event.clientX,
+    }),
+  });
+  formatCanvasContextMenu();
+  canvasContextMenu.show();
+});
+
+function formatCanvasContextMenu(){
+  if (imageProfiles) {
+    const profileSelect = canvasContextMenuElement.getElementsByClassName('profileSelect')[0];
+    profileSelect.innerHTML = '<option>None</option>';
+    imageProfiles
+    .forEach(profile=>{
+      const profileOption = document.createElement('option');
+      profileOption.innerHTML = profile.name
+      profileSelect.append(profileOption);
+    })
+  }
+  if (hasSelection()) {
+    const selectionImage = canvasContextMenuElement.getElementsByClassName('canvasContextSelectionImage')[0];
+    const selectionCanvas = createCanvasWithSelection(rect);
+    const imageDataURL = selectionCanvas.toDataURL('image/png')
+    selectionImage.setAttribute('src', imageDataURL);
+    updatePreprocessedImage();
+  } 
+}
+
+function changeBinarizeThreshold(binarizeSlider) {
+  binarizeThreshold = binarizeSlider.value;
+  updatePreprocessedImage();
+}
+
+function binarize(binarizeCheckbox) {
+  isBinarize = binarizeCheckbox.checked;
+  binarizeSlider.disabled = !binarizeCheckbox.checked;
+  updatePreprocessedImage();
+}
+
+function invertColor(invertColorCheckbox) {
+  isInvertColor = invertColorCheckbox.checked;
+  updatePreprocessedImage();
+}
+
+function blurImage(blurSlider) {
+  blurImageRadius = blurSlider.value;
+  updatePreprocessedImage();
+}
+
+function dilateImage(dilateCheckbox) {
+  isDilate = dilateCheckbox.checked;
+  updatePreprocessedImage();
+}
+
+function updatePreprocessedImage() {
+  if (!hasSelection() && previousCanvas === '') {
+    return
+  }
+  const selectionImage = canvasContextMenuElement.getElementsByClassName('canvasContextSelectionImage')[0];
+  const selectionCanvas = hasSelection() ? createCanvasWithSelection(rect) : recoverBackUpCanvas();
+  const selectionCtx = selectionCanvas.getContext('2d');
+  if (hasSelection()) {
+    backUpCanvas(selectionCanvas);
+  }
+  let imageData = selectionCtx.getImageData(0, 0, selectionCanvas.width, selectionCanvas.height);
+  if (blurImageRadius > 0) {
+    blurARGB(imageData.data, selectionCanvas, radius=blurImageRadius/100)
+  }
+  if (isDilate) {
+    dilate(imageData.data, selectionCanvas);
+  };
+  if (isInvertColor) {
+    invertColors(imageData.data);
+  };
+  if (isBinarize) {
+    thresholdFilter(imageData.data, level=(binarizeThreshold/100));
+  }
+  selectionCtx.putImageData(imageData, 0, 0);
+  const imageDataURL = selectionCanvas.toDataURL('image/png')
+  selectionImage.setAttribute('src', imageDataURL);
+}
+function backUpCanvas(canvas) {
+  previousCanvas = document.createElement('canvas');
+  previousCanvas.width = canvas.width;
+  previousCanvas.height = canvas.height;
+  previousCanvas.getContext('2d').drawImage(canvas, 0, 0);
+}
+function recoverBackUpCanvas(canvas) {
+  const newCanvas = document.createElement('canvas');
+  newCanvas.width = previousCanvas.width;
+  newCanvas.height = previousCanvas.height;
+  newCanvas.getContext('2d').drawImage(previousCanvas, 0, 0);
+  return newCanvas
+}
+async function loadProfiles() {
+  imageProfiles = await eel.load_image_filter_profiles()();
+}
+
+function selectProfile(profileSelect) {
+  const profile = imageProfiles.find(profile=>profile.name === profileSelect.value);
+  if (profile) {
+    applyProfile(profile);
+  } else if (profileSelect.value === 'None') {
+    resetImageFilters();
+  }
+}
+
+function applyProfile(profile) {
+  blurImageRadius = profile.blurImageRadius ? parseInt(profile.blurImageRadius, 10) : 0;
+  binarizeThreshold = profile.binarizeThreshold ? parseInt(profile.binarizeThreshold, 10) : '50';
+  isBinarize = profile.binarizeThreshold ? true : false;
+  isDilate = profile.dilate ? true : false;
+  isInvertColor = profile.invertColor ? true : false;
+  refreshProfileElements();
+}
+
+function resetImageFilters() {
+  // When binarizethreshold is not filled in it is assumed no binarization and its default is 50
+  applyProfile({
+    blurImageRadius: '0',
+    isDilate: false,
+    isInvertColor: false
+  });
+}
+
+function refreshProfileElements() {
+  const binarizeCheckbox = document.getElementById('binarizeCheckbox');
+  binarizeCheckbox.checked = isBinarize;
+  const binarizeSlider = document.getElementById('binarizeSlider');
+  binarizeSlider.value = binarizeThreshold;
+  binarizeSlider.disabled = !isBinarize;
+  const blurSlider = document.getElementById('blurSlider');
+  blurSlider.value = blurImageRadius;
+  const dilateCheckbox = document.getElementById('dilateCheckbox');
+  dilateCheckbox.checked = isDilate;
+  const invertColorCheckbox = document.getElementById('invertColorCheckbox');
+  invertColorCheckbox.checked = isInvertColor;
+}
+
+
+async function exportProfile() {
+  const imageProfile = {
+    invertColor: isInvertColor,
+    dilate: isDilate,
+    blurImageRadius: blurImageRadius
+  }
+  if (isBinarize) {
+    imageProfile['binarizeThreshold'] = binarizeThreshold;
+  }
+  const profile = await eel.export_image_filter_profile(imageProfile)();
+  // Fetch profiles again after export
+  if (profile) {
+    loadProfiles();
+  }
+}
+
+async function loadImageFilterFromFile() {
+  const profile = await eel.open_image_filter_profile()();
+  if (profile) {
+    applyProfile(profile);
+    const profileSelect = document.getElementById('profileSelect');
+    profileSelect.value = profile.name;
+  }
+}
+
+/*
+ *
+ Preprocessing
+ *
+*/
+
 function preprocessImage(canvas) {
   const processedImageData = canvas.getContext('2d').getImageData(0,0,canvas.width, canvas.height);
-  blurARGB(processedImageData.data, canvas, radius=0.5);
-  dilate(processedImageData.data, canvas);
-  invertColors(processedImageData.data);
-  thresholdFilter(processedImageData.data, level=0.4);
+  if (blurImageRadius > 0) {
+    blurARGB(processedImageData.data, canvas, radius=blurImageRadius/100);
+  }
+  if (isDilate) {
+    dilate(processedImageData.data, canvas);
+  }
+  if (isInvertColor) {
+    invertColors(processedImageData.data);
+  }
+  if (isBinarize) {
+    thresholdFilter(processedImageData.data, binarizeThreshold/100);
+  }
   return processedImageData;
 }
+
+
+// function copyImageToClipboard() {
+//   canvasContextMenu.hide();
+//   var videoImageCanvas = document.createElement('canvas');
+//   videoImageCanvas.width = videoElement.videoWidth;
+//   videoImageCanvas.height = videoElement.videoHeight;
+//   var videoImageCtx = videoImageCanvas.getContext('2d');
+//   videoImageCtx.drawImage(videoElement, 0, 0, videoImageCanvas.width, videoImageCanvas.height);
+//   videoImageCanvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({'image/png': blob})]));
+// }
 
 function toggleCropVideo() {
   const isCropEnabled = cropVideoButton.classList.contains("mdl-button--colored");

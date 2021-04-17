@@ -27,6 +27,11 @@ Update *config.ini* file for the following configurations:
 - **logimagetype**: file type to save logged images
 - **refresh**: hotkey to execute OCR
 
+## Image Filter Profiles ##
+
+You can import and export image filter profiles to improve the accuracy of the OCR result. Image filtering controls can be accessed by right clicking on the game/video stream.    
+
+
 ## Getting Started ##
 
 Create a venv, then once activated install requirements:
@@ -39,7 +44,7 @@ python game2text.py
 
 Windows: 
 
-```python -m eel game2text.py web --windowed --icon "icon.ico" --add-data "logs;logs/" --add-data "win;win/" --add-data "config.ini;."```
+```python -m eel game2text.py web --windowed --icon "icon.ico" --add-data "logs;logs/" --add-data "profiles;profiles/"  --add-data "win;win/" --add-data "config.ini;."```
 
 Mac:
 

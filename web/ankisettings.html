@@ -1,0 +1,72 @@
+<html>
+    <head>
+        <title>Anki Settings</title>
+        <!-- Icon -->
+        <link rel="shortcut icon" href="static/favicon.ico">
+        <!-- MDL Material Design Lite -->
+        <link rel="stylesheet" href="static/icon.css">
+        <link rel="stylesheet" href="static/material.indigo-pink.min.css">
+        <script defer src="static/material.min.js"></script>
+        <!-- MDL Select -->
+        <link rel="stylesheet" href="static/getmdl-select.min.css">
+        <script defer src="static/getmdl-select.min.js"></script>
+        <!-- eel -->
+        <script type="text/javascript" src="/eel.js"></script>
+    </head>
+    <link rel="stylesheet" href="ankisettings.css">
+    <body>
+        <div id="loading-spinner" class="mdl-spinner mdl-js-spinner is-active"></div>
+       
+        <div hidden id="deck_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
+            <input onchange="changeDeck()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="deck_select" readonly>
+            <input type="hidden" value=""  name="deck_select">
+            <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+            <label for="deck_select" class="mdl-textfield__label">Deck</label>
+            <ul id="deck_selector" for="deck_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+            </ul>
+          </div>
+
+          <div hidden id="card_model_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
+            <input onchange="changeCardModel()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="card_model_select" readonly>
+            <input type="hidden" value=""  name="card_model_select">
+            <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+            <label for="card_model_select" class="mdl-textfield__label">Model</label>
+            <ul id="card_model_selector" for="card_model_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+            </ul>
+          </div>
+
+          <!-- Fields and Values -->
+          <table id="field_values_table" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Field</th>
+                <th class="mdl-data-table__cell--non-numeric">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr hidden id="field_values_tuple_template">
+                <td class="mdl-data-table__cell--non-numeric tuple_label">Front</td>
+                <td>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
+                        <input style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="field_value_select" readonly>
+                        <input type="hidden" value="" class="field_value_select"  name="field_value_select">
+                        <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                        <ul for="field_value_select" class="field_value_selector mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                            <li class="mdl-menu__item" data-val="word">Word</li>
+                            <li class="mdl-menu__item" data-val="sentence">Sentence</li>
+                            <li class="mdl-menu__item" data-val="screenshot">Screenshot</li>
+                            <li class="mdl-menu__item" data-val="audio">Audio</li>
+                        </ul>
+                      </div>
+                </td>
+              </tr>
+              <!-- <tr>
+                <td class="mdl-data-table__cell--non-numeric">Back</td>
+                <td class="mdl-data-table__cell--non-numeric">{word}</td>
+              </tr> -->
+            </tbody>
+          </table>
+
+    <script src="ankisettings.js"></script>
+    </body>
+</html>

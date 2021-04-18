@@ -541,7 +541,7 @@ function formatCanvasContextMenu(){
 }
 
 function changeBinarizeThreshold(binarizeSlider) {
-  binarizeThreshold = binarizeSlider.value;
+  binarizeThreshold = parseInt(binarizeSlider.value, 10);
   updatePreprocessedImage();
 }
 
@@ -557,7 +557,7 @@ function invertColor(invertColorCheckbox) {
 }
 
 function blurImage(blurSlider) {
-  blurImageRadius = blurSlider.value;
+  blurImageRadius = parseInt(blurSlider.value, 10);
   updatePreprocessedImage();
 }
 
@@ -608,8 +608,8 @@ function selectProfile(profileSelect) {
 }
 
 function applyProfile(profile) {
-  blurImageRadius = profile.blurImageRadius ? parseInt(profile.blurImageRadius, 10) : 0;
-  binarizeThreshold = profile.binarizeThreshold ? parseInt(profile.binarizeThreshold, 10) : '50';
+  blurImageRadius = profile.blurImageRadius ? profile.blurImageRadius : 0;
+  binarizeThreshold = profile.binarizeThreshold ? profile.binarizeThreshold : 50;
   isBinarize = profile.binarizeThreshold ? true : false;
   isDilate = profile.dilate ? true : false;
   isInvertColor = profile.invertColor ? true : false;

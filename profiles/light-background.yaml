@@ -1,4 +1,4 @@
-blurImageRadius: '50'
-binarizeThreshold: '40'
+blurImageRadius: 50
+binarizeThreshold: 40
 dilate: true
 invertColor: true

@@ -417,7 +417,7 @@ function createCanvasWithSelection({width, height, x, y}) {
 function showStuff(rect) {
   var cv2 = createCanvasWithSelection(rect);
   var ctx2 = cv2.getContext('2d');
-    // check if is same as current image
+    // check if previous image is same as current image
     const newImageData = ctx2.getImageData(0, 0, cv2.width, cv2.height)
     let sameImage = false;
     if (imageData !== undefined) {
@@ -466,14 +466,14 @@ function recognize_image(image) {
 
       // Temporary fix: Cache screenshots before log window is opened. To remove in the future
       if (isCacheScreenshots) {
-        cachedScreenshots[response.id] = {'base64ImageString': imageData, 'imageType': logImageType}
+        cachedScreenshots[response.id] = {'base64ImageString': imageData, 'imageType': logImageType};
       }
   
       if (outputToClipboard) {
         eel.copy_text_to_clipboard(response.result)();
       }
       if (showTranslation) {
-        translate(response.result)
+        translate(response.result);
       }
     }
   })()
@@ -527,7 +527,7 @@ function formatCanvasContextMenu(){
     imageProfiles
     .forEach(profile=>{
       const profileOption = document.createElement('option');
-      profileOption.innerHTML = profile.name
+      profileOption.innerHTML = profile.name;
       profileSelect.append(profileOption);
     })
   }
@@ -576,19 +576,7 @@ function updatePreprocessedImage() {
   if (hasSelection()) {
     backUpCanvas(selectionCanvas);
   }
-  let imageData = selectionCtx.getImageData(0, 0, selectionCanvas.width, selectionCanvas.height);
-  if (blurImageRadius > 0) {
-    blurARGB(imageData.data, selectionCanvas, radius=blurImageRadius/100)
-  }
-  if (isDilate) {
-    dilate(imageData.data, selectionCanvas);
-  };
-  if (isInvertColor) {
-    invertColors(imageData.data);
-  };
-  if (isBinarize) {
-    thresholdFilter(imageData.data, level=(binarizeThreshold/100));
-  }
+  const imageData = preprocessImage(selectionCanvas);
   selectionCtx.putImageData(imageData, 0, 0);
   const imageDataURL = selectionCanvas.toDataURL('image/png')
   selectionImage.setAttribute('src', imageDataURL);
@@ -626,6 +614,7 @@ function applyProfile(profile) {
   isDilate = profile.dilate ? true : false;
   isInvertColor = profile.invertColor ? true : false;
   refreshProfileElements();
+  updatePreprocessedImage();
 }
 
 function resetImageFilters() {
@@ -699,17 +688,6 @@ function preprocessImage(canvas) {
   }
   return processedImageData;
 }
-
-
-// function copyImageToClipboard() {
-//   canvasContextMenu.hide();
-//   var videoImageCanvas = document.createElement('canvas');
-//   videoImageCanvas.width = videoElement.videoWidth;
-//   videoImageCanvas.height = videoElement.videoHeight;
-//   var videoImageCtx = videoImageCanvas.getContext('2d');
-//   videoImageCtx.drawImage(videoElement, 0, 0, videoImageCanvas.width, videoImageCanvas.height);
-//   videoImageCanvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({'image/png': blob})]));
-// }
 
 function toggleCropVideo() {
   const isCropEnabled = cropVideoButton.classList.contains("mdl-button--colored");

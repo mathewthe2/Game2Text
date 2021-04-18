@@ -1,19 +1,14 @@
 // Default Settings
 const autoModeSpeed = 500;
 let autoMode = false;
-let logMode = false;
-let logImages = false;
-let logAudio = false;
+let logMode = false, logImages = false, logAudio = false;
 let selectionMode = 'ocr';
-let selectionLineWidth = 1;
-let selectionColor = 'red';
+let selectionLineWidth = 1, selectionColor = 'red';
 let OCRrequests = 0;
 let showSelection = true;
-let preprocess = false;
 let clipboardMode = false;
 let outputToClipboard = false;
-let verticalText = false;
-let OCREngine = "Tesseract";
+let OCREngine = "Tesseract", verticalText = false;
 let translationService;
 let translation = {
   sourceText : '',
@@ -27,25 +22,23 @@ const displayMediaOptions = {
   },
   audio: false
 }
-let dialogWindow;
-let autoModeTimer;
-let croppedVideoTimer;
-let currentText;
-let audioSources;
-let audioDeviceIndex;
+let dialogWindow, autoModeTimer, croppedVideoTimer, currentText;
+let audioSources, audioDeviceIndex;
 
 // Temporary screenshot cache before log window is launched
-let cachedScreenshots = {};
-let isCacheScreenshots = true;
+let cachedScreenshots = {}, isCacheScreenshots = true;
 
 // Preprocessing Filters
 let imageProfiles = []
 let previousCanvas = '';
-let isInvertColor = false;
-let isDilate = false;
-let isBinarize = false;
+let isInvertColor = false, isDilate = false, isBinarize = false;
 let binarizeThreshold = 50;
 let blurImageRadius = 0;
+
+// Anki
+let ankiModelFieldMap = {}, fieldValueMap = {};
+let ankiModelObjectList = [];
+let ankiDecks, ankiModels, ankitags, selectedDeck, selectedModel;
 
 
 const videoElement = document.getElementById("video");
@@ -72,6 +65,7 @@ init();
 function init() {
   (async() => {
     loadProfiles();
+    loadAnki();
   })();
 }
 
@@ -185,10 +179,7 @@ function toggleCollapse(element) {
 }
 
 function toggleCollapseVideo() {
-  toggleCollapse(videoElement);
-  toggleCollapse(cv1);
-  toggleCollapse(previewCanvas);
-  toggleCollapse(croppedVideoCanvas);
+  [videoElement, cv1, previewCanvas, croppedVideoCanvas].forEach(element=>toggleCollapse(element));
   minimizeButton.hidden = !minimizeButton.hidden;
   maximizeButton.hidden = !maximizeButton.hidden;
 }
@@ -640,7 +631,6 @@ function refreshProfileElements() {
   invertColorCheckbox.checked = isInvertColor;
 }
 
-
 async function exportProfile() {
   const imageProfile = {
     invertColor: isInvertColor,
@@ -688,6 +678,49 @@ function preprocessImage(canvas) {
   }
   return processedImageData;
 }
+
+/*
+ *
+ Anki Integration
+ *
+*/
+
+async function loadAnki() {
+  ankiDecks = await initDecks();
+  ankiModels = await initCardModels();
+  if (ankiDecks) {
+    setDeck();
+  }
+  if (ankiModels) {
+    cardModel = await setCardModel();
+    ankiModelObjectList = await eel.getAnkiCardModels()();
+    const existingModelIndex = ankiModelObjectList.findIndex(obj=>obj['model'] === cardModel)
+    if (existingModelIndex !== -1) {
+      // update table to saved settings
+      const fieldValueMap =  {...ankiModelObjectList[existingModelIndex]}; // clone object
+      delete fieldValueMap['model']; //remove model name from object
+      applyFieldAndValuesToTable(ankiModelObjectList[existingModelIndex]);
+    }
+    for(const modelName of ankiModels) {
+      ankiModelFieldMap[modelName] = await getFieldNamesForModel(modelName);
+    }
+    return true
+  }
+  return true
+}
+
+async function reloadAnki() {
+  const fieldValuesTable = document.getElementById('field_values_table');
+  fieldValuesTable.hidden = true;
+  const result = await loadAnki();
+  fieldValuesTable.hidden = false;
+}
+
+/*
+ *
+ Not yet implemented
+ *
+*/
 
 function toggleCropVideo() {
   const isCropEnabled = cropVideoButton.classList.contains("mdl-button--colored");
@@ -738,3 +771,4 @@ function cropVideo() {
     }, 20);
   }
 }
+openSettings();

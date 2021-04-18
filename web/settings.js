@@ -1,4 +1,5 @@
 const APPEARANCE_CONFIG = 'APPEARANCE';
+const ANKI_CONFIG = 'ANKICONFIG';
 const OCR_CONFIG = 'OCRCONFIG';
 const TRANSLATION_CONFIG = 'TRANSLATIONCONFIG';
 const LOG_CONFIG = 'LOGCONFIG';
@@ -19,13 +20,19 @@ const OCREngineSelect = document.getElementById("ocr_engine_select");
 const OCREngineSelectContainer = document.getElementById("ocr_engine_select_container");
 const translationSelect = document.getElementById("translation_select");
 const translationSelectContainer = document.getElementById("translation_select_container");
-const preprocessSwitch = document.getElementById("preprocess-switch");
 const textOrientationSwitch = document.getElementById("text-orientation-switch");
 const audioHostSelector = document.getElementById("audio_host_selector");
 const audioHostSelect = document.getElementById("audio_host_select");
 const audioDeviceSelector = document.getElementById("audio_device_selector");
 const audioDeviceSelect = document.getElementById("audio_device_select");
 const audioDurationInput = document.getElementById("audio_duration_input");
+
+// Anki
+const ankiTagsInput = document.getElementById('anki_tags_input');
+const deckSelect = document.getElementById('deck_select');
+const deckSelectContainer = document.getElementById('deck_select_container');
+const cardModelSelect = document.getElementById('card_model_select');
+const cardModelSelectContainer = document.getElementById('card_model_select_container');
 
 initConfig();
 
@@ -45,6 +52,8 @@ function initConfig () {
         initIsLogAudio();
         initSetAudioSources();
         initSetAudioDuration();
+        //Anki
+        initSetAnkiTags();
     })()
 }
 
@@ -73,7 +82,7 @@ async function initOCREngine() {
     if (engine) {
         OCREngine = engine;
         const engineOptions = OCREngineSelectContainer.querySelectorAll("li");
-        const selectedOption = Array.from(engineOptions).find(child=>child.innerText === engine);
+        const selectedOption = Array.from(engineOptions).find(child=>child.innerHTML === engine);
         if (selectedOption) {
             selectedOption.setAttribute('data-selected', true);
         } else { 
@@ -90,7 +99,6 @@ async function initTranslation() {
     const service = await eel.read_config(TRANSLATION_CONFIG, 'translation_service')();
     if (service) {
         translationService = service;
-        console.log(service);
         const translationOptions = translationSelectContainer.querySelectorAll("li");
         const selectedOption = Array.from(translationOptions).find(child=>child.innerText === service);
         if (selectedOption) {
@@ -158,14 +166,10 @@ function updateOCREngine() {
     OCREngine = OCREngineSelect.value;
     if (OCREngine.includes('Tesseract')) {
         // Enable Tesseract Features
-        preprocessSwitch.disabled = false;
-        preprocessSwitch.parentNode.classList.remove("is-disabled");
         textOrientationSwitch.disabled = false;
         textOrientationSwitch.parentNode.classList.remove("is-disabled");
     } else {
         // Incompatible Tesseract text recognition features
-        preprocessSwitch.disabled = true;
-        preprocessSwitch.parentNode.classList.add("is-disabled");
         textOrientationSwitch.disabled = true;
         textOrientationSwitch.parentNode.classList.add("is-disabled");
     }
@@ -183,10 +187,6 @@ function updateOCREngineAndPersist() {
 function updateTranslationServiceAndPersist() {
     translationService = translationSelect.value;
     eel.update_config(TRANSLATION_CONFIG, {'translation_service':translationService})();
-}
-
-function togglePreprocess() {
-    preprocess = !preprocess;
 }
   
 function toggleTextOrientation() {
@@ -260,7 +260,6 @@ async function initSetAudioDuration() {
 async function initSetAudioSources() {
     const default_audio_host = await eel.read_config(LOG_CONFIG, 'logaudiohost')();
     audio_sources = await eel.get_audio_objects()();
-    console.log(audio_sources)
     for (const source in audio_sources) {
         const audioHostItem = document.createElement("li");
         audioHostItem.classList.add("mdl-menu__item")
@@ -326,3 +325,87 @@ function changeAudioDuration() {
         }
     }
 }
+
+/*
+ *
+ Anki Settings 
+ *
+*/
+async function initSetAnkiTags() {
+    ankitags = await eel.read_config(ANKI_CONFIG, 'cardtags')(); 
+    ankiTagsInput.parentElement.MaterialTextfield.change(ankitags);
+}
+async function setDeck() {
+    defaultDeck = await eel.read_config(ANKI_CONFIG, 'deck')(); 
+    const deckOptions = deckSelectContainer.querySelectorAll("li");
+    const selectedOption = Array.from(deckOptions).find(child=>child.innerHTML === defaultDeck);
+    if (selectedOption) {
+        deck = defaultDeck;
+        selectedOption.setAttribute('data-selected', true);
+        getmdlSelect.init('#deck_select_container');
+    } 
+}
+async function setCardModel() {
+    defaultCardModel = await eel.read_config(ANKI_CONFIG, 'model')(); 
+    const cardModelOptions = cardModelSelectContainer.querySelectorAll("li");
+    const selectedOption = Array.from(cardModelOptions).find(child=>child.innerHTML === defaultCardModel);
+    if (selectedOption) {
+        selectedOption.setAttribute('data-selected', true);
+        getmdlSelect.init('#card_model_select_container');
+        return defaultCardModel
+    } 
+    return ''
+}
+function changeDeck() {
+    selectedDeck = deckSelect.value;
+    eel.update_config(ANKI_CONFIG, {'deck': selectedDeck})();
+}
+function changeCardModel() {
+    selectedModel = cardModelSelect.value;
+    updateFieldValuesTable(ankiModelFieldMap[selectedModel]);
+    const existingModelIndex = ankiModelObjectList.findIndex(obj=>obj['model'] === selectedModel);
+    if (existingModelIndex !== -1) {
+      // update table to saved settings
+      const fieldValueMap =  {...ankiModelObjectList[existingModelIndex]} // clone
+      delete fieldValueMap['model']; //remove model name from object
+      applyFieldAndValuesToTable(ankiModelObjectList[existingModelIndex]);
+    }
+    eel.update_config(ANKI_CONFIG, {'model': selectedModel})();
+}
+function changeAnkiTags() {
+    const tagList = ankiTagsInput.value.split(/[ ,]+/);
+    let tags = '';
+    if (tagList) {
+        tags = tagList.join(' ');
+        ankiTagsInput.value = tags;
+    }
+    eel.update_config(ANKI_CONFIG, {'cardtags': tags})();
+}
+async function updateFieldValue() {
+    const defaultAnkiModels = await eel.getAnkiCardModels()();
+    ankiModelObjectList = defaultAnkiModels ? defaultAnkiModels : [];
+    const modelName = cardModelSelect.value;
+    const fields = ankiModelFieldMap[modelName];
+    const table = document.getElementById('field_values_table');
+    const selectElementList = table.getElementsByClassName('field_value_select');
+    const values = [].map.call(selectElementList, selectElement=>selectElement.value);
+    fieldValueMap = {};
+    fields.forEach((field, index)=>fieldValueMap[field] = values[1+index]);
+    console.log(fieldValueMap);
+    if (ankiModelObjectList.length === 0) {
+        ankiModelObjectList.push({model: modelName, ...fieldValueMap});
+    } else {
+        // if exists update else insert
+        const existingModelIndex = ankiModelObjectList.findIndex(obj=>obj['model'] === modelName);
+        if (existingModelIndex !== -1) {
+            ankiModelObjectList[existingModelIndex] = {model: modelName, ...fieldValueMap};
+        } else {
+            ankiModelObjectList.push({model: modelName, ...fieldValueMap});  
+        }
+    }
+    eel.updateAnkiCardModels(ankiModelObjectList)();
+}
+// function applyFieldValueSelection(fieldValueMapWithModelName) {
+//     console.log('hello',fieldValueMapWithModelName )
+
+// }

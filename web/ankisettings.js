@@ -1,9 +1,5 @@
 const deckSelector = document.getElementById('deck_selector');
-const deckSelectContainer = document.getElementById('deck_select_container');
-const cardModelSelect = document.getElementById('card_model_select');
 const cardModelSelector = document.getElementById('card_model_selector');
-const cardModelSelectContainer = document.getElementById('card_model_select_container');
-const loadingSpinner = document.getElementById("loading-spinner")
 
 async function initDecks() {
     const deckNames = await eel.invoke_anki('deckNames')();
@@ -30,44 +26,55 @@ async function initCardModels() {
     getmdlSelect.init('#card_model_select_container');
     return cardModelNames;
 }
-(async() => {
-    await Promise.all([initDecks(), initCardModels()]);
-    loadingSpinner.hidden = true;
-    deckSelectContainer.hidden = false;
-    cardModelSelectContainer.hidden = false;
-})();
 
-function changeDeck() {
-
-}
-
-async function changeCardModel() {
-    const modelName = cardModelSelect.value;
-    const fieldNames =  await eel.invoke_anki('modelFieldNames', {modelName: modelName})();
-    console.log('field names', fieldNames)
-    // updateFieldValuesTable(fieldNames);
+async function getFieldNamesForModel(modelName) {
+    return await eel.invoke_anki('modelFieldNames', {modelName: modelName})()
 }
 
 function updateFieldValuesTable(fieldValues) {
-    const fieldValuesTable = document.getElementById('field_values_table');
-    const fieldValuesTableBody = fieldValuesTable.getElementsByTagName('tbody')[0];
-    const tupleTemplate = document.getElementById('field_values_tuple_template');
-    fieldValuesTableBody.innerHTML = '';
-    fieldValuesTableBody.append(tupleTemplate);
-    fieldValues.forEach(fieldValue=>{
-        const tupleClone = tupleTemplate.cloneNode(true);
-        tupleClone.id = fieldValue.replace(' ', '_');
-        const tupleLabel = tupleClone.getElementsByClassName('tuple_label')[0];
-        tupleLabel.innerHTML = fieldValue;
-        const fieldValueSelector = tupleClone.getElementsByClassName('field_value_selector')[0];
-        fieldValueSelector.id = `field_value_selector_${fieldValue.replace(' ', '_')}`;
-        const fieldValueSelect = tupleClone.getElementsByClassName('field_value_select')[0];
-        fieldValueSelect.id = `field_value_select_${fieldValue.replace(' ', '_')}`;
-        console.log(fieldValueSelect.id)
-        tupleClone.hidden = false;
-        fieldValuesTableBody.append(tupleClone);
-    })
+    if (fieldValues) {
+        const fieldValuesTable = document.getElementById('field_values_table');
+        const fieldValuesTableBody = fieldValuesTable.getElementsByTagName('tbody')[0];
+        const tupleTemplate = document.getElementById('field_values_tuple_template');
+        fieldValuesTableBody.innerHTML = '';
+        fieldValuesTableBody.append(tupleTemplate); // keeping the clone
+        fieldValues.forEach(fieldValue=>{
+            const tupleClone = tupleTemplate.cloneNode(true);
+            tupleClone.id = 'field_tuple' + fieldValue.replace(' ', '_');
+            const tupleLabel = tupleClone.getElementsByClassName('tuple_label')[0];
+            tupleLabel.innerHTML = fieldValue;
+            const fieldValueSelect = tupleClone.getElementsByClassName('field_value_select')[0];
+            fieldValueSelect.innerHTML = `<option></option>
+            <option>Sentence</option>
+            <option>Screenshot</option>
+            <option>Audio</option>`;
+            tupleClone.hidden = false;
+            fieldValuesTableBody.append(tupleClone);
+        })
+        fieldValuesTable.hidden = false;
+    }
 }
-
-updateFieldValuesTable(["Word", "Kana", "Picture", "Sentence", "Meaning", "Audio", "Pitch"])
-updateFieldValuesTable(["Front", "Back"])
+function applyFieldAndValuesToTable(fieldValueMap) {
+    if(fieldValueMap) {
+        const fieldValuesTable = document.getElementById('field_values_table');
+        const fieldValuesTableBody = fieldValuesTable.getElementsByTagName('tbody')[0];
+        const tupleTemplate = document.getElementById('field_values_tuple_template');
+        fieldValuesTableBody.innerHTML = '';
+        fieldValuesTableBody.append(tupleTemplate); // keeping the clone
+        for (const field in fieldValueMap) {
+            const tupleClone = tupleTemplate.cloneNode(true);
+            tupleClone.id = 'field_tuple' + field.replace(' ', '_');
+            const tupleLabel = tupleClone.getElementsByClassName('tuple_label')[0];
+            tupleLabel.innerHTML = field;
+            const fieldValueSelect = tupleClone.getElementsByClassName('field_value_select')[0];
+            fieldValueSelect.innerHTML = `<option></option>
+            <option>Sentence</option>
+            <option>Screenshot</option>
+            <option>Audio</option>`;
+            fieldValueSelect.value = fieldValueMap[field];
+            tupleClone.hidden = false;
+            fieldValuesTableBody.append(tupleClone);
+        }
+        fieldValuesTable.hidden = false;
+    }
+}

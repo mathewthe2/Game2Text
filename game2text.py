@@ -10,7 +10,7 @@ from recordaudio import RecordThread
 from pynput import keyboard
 from clipboard import clipboard_to_output, text_to_clipboard
 from logger import get_time_string, AUDIO_LOG_PATH
-from ankiconnect import invoke
+from ankiconnect import invoke, getAnkiModels, updateAnkiModels
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
 from config import r_config, w_config, WINDOWS_HOTKEYS_CONFIG, APP_CONFIG, LOG_CONFIG
 
@@ -94,6 +94,14 @@ def update_config(section, d):
 @eel.expose
 def invoke_anki(action, params={}):
     return invoke(action, params)
+
+@eel.expose
+def getAnkiCardModels():
+    return getAnkiModels()
+
+@eel.expose
+def updateAnkiCardModels(ankiModels):
+    return updateAnkiModels(ankiModels)
 
 @eel.expose
 def open_new_window(html_file, height=800, width=600):

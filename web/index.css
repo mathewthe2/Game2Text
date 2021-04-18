@@ -91,7 +91,7 @@ dialog {
 }
 dialog[open] {
   opacity: 1;
-  pointer-events: inherit;
+  pointer-events: auto;
 }
 video, canvas {
   width: 100vw;

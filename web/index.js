@@ -699,7 +699,7 @@ async function loadAnki() {
       // update table to saved settings
       const fieldValueMap =  {...ankiModelObjectList[existingModelIndex]}; // clone object
       delete fieldValueMap['model']; //remove model name from object
-      applyFieldAndValuesToTable(ankiModelObjectList[existingModelIndex]);
+      applyFieldAndValuesToTable(fieldValueMap);
     }
     for(const modelName of ankiModels) {
       ankiModelFieldMap[modelName] = await getFieldNamesForModel(modelName);

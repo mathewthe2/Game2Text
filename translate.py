@@ -3,13 +3,14 @@ from papago import Papago
 import asyncio
 import requests
 import time
-from config import r_config, TRANSLATION_CONFIG, DEEPL_CONFIG, PAPAGO_CONFIG
+from config import r_config, TRANSLATION_CONFIG
 
 def multi_translate(text):
     service =  r_config(TRANSLATION_CONFIG, 'translation_service')
+    print('service?', service)
     if service == 'Papago':
         return asyncio.run(papago_translate(text))
-    elif service == 'DeepL':
+    elif service == 'DeepL Translate':
         return deepl_translate(text)
     elif service == 'Google Translate':
         return google_translate(text)
@@ -17,7 +18,7 @@ def multi_translate(text):
         return 'Error: No Translation Service Available'
 
 async def papago_translate(text):
-    papago = Papago(r_config(PAPAGO_CONFIG, "source_lang") or 'ja',  r_config(PAPAGO_CONFIG, "target_lang") or "en")
+    papago = Papago(r_config(TRANSLATION_CONFIG, "source_lang") or 'ja',  r_config(TRANSLATION_CONFIG, "target_lang") or "en")
     res = await papago.translate(text, honorific=True)
     if res['translatedText']:
         return res['translatedText']
@@ -42,8 +43,8 @@ def deepl_translate(text):
             }],
             "lang":{
                 "user_preferred_langs":["EN"],
-                "source_lang_user_selected": r_config(DEEPL_CONFIG, "source_lang") or "JA",
-                "target_lang": r_config(DEEPL_CONFIG, "target_lang") or "EN"
+                "source_lang_user_selected": r_config(TRANSLATION_CONFIG, "source_lang").upper() or "JA",
+                "target_lang": r_config(TRANSLATION_CONFIG, "target_lang").upper() or "EN"
             },
             "priority":-1,
             "commonJobParams":{},

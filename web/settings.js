@@ -16,18 +16,26 @@ let audioDevices = {};
 
 const outputToClipboardSwitch = document.getElementById("output-to-clipboard-mode-switch");
 const clipboardModeSwitch = document.getElementById("clipboard-mode-switch");
+
+// OCR Control Elements
 const OCREngineSelect = document.getElementById("ocr_engine_select");
 const OCREngineSelectContainer = document.getElementById("ocr_engine_select_container");
+const textOrientationSwitch = document.getElementById("text-orientation-switch");
+
+// Translation Control Elements
 const translationSelect = document.getElementById("translation_select");
 const translationSelectContainer = document.getElementById("translation_select_container");
-const textOrientationSwitch = document.getElementById("text-orientation-switch");
+const sourceLanguageInput = document.getElementById('source_language_input');
+const targetLanguageInput = document.getElementById('target_language_input');
+
+// Audio Control Elements
 const audioHostSelector = document.getElementById("audio_host_selector");
 const audioHostSelect = document.getElementById("audio_host_select");
 const audioDeviceSelector = document.getElementById("audio_device_selector");
 const audioDeviceSelect = document.getElementById("audio_device_select");
 const audioDurationInput = document.getElementById("audio_duration_input");
 
-// Anki
+// Anki Control Elements
 const ankiTagsInput = document.getElementById('anki_tags_input');
 const deckSelect = document.getElementById('deck_select');
 const deckSelectContainer = document.getElementById('deck_select_container');
@@ -46,6 +54,7 @@ function initConfig () {
         initOCREngine();
         // Translation
         initTranslation();  
+        initSetTranslationLanguages();
         // Logs
         initIsLogImages();
         initSetLogImageTypeAndQuality();
@@ -94,6 +103,11 @@ async function initOCREngine() {
     }
 }
 
+/*
+ *
+ Translation Settings 
+ *
+*/
 
 async function initTranslation() {
     const service = await eel.read_config(TRANSLATION_CONFIG, 'translation_service')();
@@ -111,6 +125,32 @@ async function initTranslation() {
         getmdlSelect.init('#translation_select_container');
     }
 }
+
+async function initSetTranslationLanguages() {
+    sourceLanguage = await eel.read_config(TRANSLATION_CONFIG, 'source_lang')(); 
+    sourceLanguageInput.parentElement.MaterialTextfield.change(sourceLanguage);
+
+    targetLanguage = await eel.read_config(TRANSLATION_CONFIG, 'target_lang')(); 
+    targetLanguageInput.parentElement.MaterialTextfield.change(targetLanguage);
+}
+
+async function changeSourceLanguage() {
+    if (sourceLanguageInput.value){
+        eel.update_config(TRANSLATION_CONFIG, {'source_lang':sourceLanguageInput.value })();
+    }
+}
+
+async function changeTargetLanguage() {
+    if (sourceLanguageInput.value){
+        eel.update_config(TRANSLATION_CONFIG, {'target_lang':targetLanguageInput.value })();
+    }
+}
+
+/*
+ *
+ Media Settings 
+ *
+*/
 
 async function initIsLogImages() {
     const isLogImages = await eel.read_config(LOG_CONFIG, 'logimages')();
@@ -368,7 +408,7 @@ function changeCardModel() {
       // update table to saved settings
       const fieldValueMap =  {...ankiModelObjectList[existingModelIndex]} // clone
       delete fieldValueMap['model']; //remove model name from object
-      applyFieldAndValuesToTable(ankiModelObjectList[existingModelIndex]);
+      applyFieldAndValuesToTable(fieldValueMap);
     }
     eel.update_config(ANKI_CONFIG, {'model': selectedModel})();
 }

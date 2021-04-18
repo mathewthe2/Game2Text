@@ -24,6 +24,12 @@ html {
 .logItem:hover, .logMenuCard > .mdl-list > .mdl-list__item:hover {
     background-color: #eee;
 }
+.mdl-list__item-primary-content > .logMenuButton {
+   visibility: hidden;
+}
+.mdl-list__item-primary-content:hover > .logMenuButton {
+   visibility: visible;
+}
 .logMenuCard > .mdl-list {
     padding: 0
 }

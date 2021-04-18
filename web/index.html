@@ -307,6 +307,21 @@
                       </ul>
                     </div>
                   </div>
+
+                  <div class="tab_select_wrapper">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input onchange="changeSourceLanguage()" class="mdl-textfield__input" type="text" id="source_language_input">
+                      <label class="mdl-textfield__label" for="sample4">Source Language</label>
+                    </div>
+                  </div>
+
+                  <div class="tab_select_wrapper">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input onchange="changeTargetLanguage()" class="mdl-textfield__input" type="text" id="target_language_input">
+                      <label class="mdl-textfield__label" for="sample4">Target Language</label>
+                    </div>
+                  </div>
+
                 </ul>
               </div>
 
@@ -340,6 +355,29 @@
                 
                 <div class="mdl-tabs__panel" id="media">
                   <ul class="mdl-list">
+                        <!-- Audio Host Selection -->
+                        <div class="tab_select_wrapper">
+                          <div id="audio_host_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
+                            <input onchange="changeAudioHost()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="audio_host_select" readonly>
+                            <input type="hidden" value=""  name="audio_host_select">
+                            <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                            <label for="audio_host_select" class="mdl-textfield__label">Audio Host</label>
+                            <ul id="audio_host_selector" for="audio_host_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                            </ul>
+                          </div>
+                        </div>
+
+                        <!-- Audio Device Selection -->
+                        <div class="tab_select_wrapper">
+                          <div id="audio_device_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
+                            <input onchange="changeAudioDevice()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="audio_device_select" readonly>
+                            <input type="hidden" value=""  name="audio_device_select">
+                            <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                            <label for="audio_device_select" class="mdl-textfield__label">Audio Device</label>
+                            <ul id="audio_device_selector" for="audio_device_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                            </ul>
+                          </div>
+                        </div>
                         <li class="mdl-list__item mdl-list__item--two-line">
                           <span class="mdl-list__item-primary-content">
                             <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">photo_library</i>
@@ -365,30 +403,6 @@
                             </label>
                           </span>
                         </li>
-
-                        <!-- Audio Host Selection -->
-                        <div class="tab_select_wrapper">
-                          <div id="audio_host_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
-                            <input onchange="changeAudioHost()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="audio_host_select" readonly>
-                            <input type="hidden" value=""  name="audio_host_select">
-                            <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-                            <label for="audio_host_select" class="mdl-textfield__label">Audio Host</label>
-                            <ul id="audio_host_selector" for="audio_host_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-                            </ul>
-                          </div>
-                        </div>
-
-                        <!-- Audio Device Selection -->
-                        <div class="tab_select_wrapper">
-                          <div id="audio_device_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
-                            <input onchange="changeAudioDevice()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="audio_device_select" readonly>
-                            <input type="hidden" value=""  name="audio_device_select">
-                            <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-                            <label for="audio_device_select" class="mdl-textfield__label">Audio Device</label>
-                            <ul id="audio_device_selector" for="audio_device_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-                            </ul>
-                          </div>
-                        </div>
 
                         <div class="tab_select_wrapper">
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">

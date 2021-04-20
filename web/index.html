@@ -71,9 +71,14 @@
               </label>
             </div>
             <hr>
-            <button onclick="exportProfile()" class="mdl-button mdl-js-button mdl-button--accent">
-              Export
-            </button>
+            <div class="canvasMenuActionsContainer">
+              <button onclick="exportProfile()" class="mdl-button mdl-js-button mdl-button--accent">
+                Export
+              </button>
+              <button class="profileSelectImport mdl-button mdl-js-button mdl-button--icon">
+                <i onclick="resetImageFilters()" class="material-icons">restart_alt</i>
+              </button>
+            </div>
 
           <!-- <ul class="canvasContextMenu mdl-list"></ul>
             <li class="canvasContextMenuItem mdl-list__item">
@@ -237,6 +242,10 @@
 
               <div class="mdl-tabs__panel" id="anki">
                 <ul class="mdl-list">
+
+                  <div class="tab_select_wrapper">
+                    Make sure <a href="https://ankiweb.net/shared/info/2055492159" target="_blank" alt="anki_connect_link">AnkiConnect</a> is installed and Anki is open.
+                  </div>
 
                   <div class="tab_select_wrapper">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">

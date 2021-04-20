@@ -17,17 +17,20 @@ def request(action, params):
 
 @eel.expose
 def invoke(action, params):
-    requestJson = json.dumps(request(action, params)).encode('utf-8')
-    response = json.load(urllib.request.urlopen(urllib.request.Request('http://localhost:8765', requestJson)))
-    if len(response) != 2:
-        return 'Error: response has an unexpected number of fields'
-    if 'error' not in response:
-        return 'Error: response has an unexpected number of fields'
-    if 'result' not in response:
-        return 'Error: response is missing required result field'
-    if response['error'] is not None:
-        return 'Error:' + response['error']
-    return response['result']
+    try:
+        requestJson = json.dumps(request(action, params)).encode('utf-8')
+        response = json.load(urllib.request.urlopen(urllib.request.Request('http://localhost:8765', requestJson)))
+        if len(response) != 2:
+            return 'Error: Response has an unexpected number of fields'
+        if 'error' not in response:
+            return 'Error: Response has an unexpected number of fields'
+        if 'result' not in response:
+            return 'Error: Response is missing required result field'
+        if response['error'] is not None:
+            return 'Error:' + response['error']
+        return response['result']
+    except:
+        return 'Error: Failed to connect to Anki.'
 
 
 def get_anki_models():

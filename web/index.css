@@ -196,3 +196,12 @@ video, canvas {
   width: 10%;
   padding-top: 3px;
 }
+.canvasMenuActionsContainer {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+.canvasMenuActionsContainer > mdl-button {
+  width: 30%;
+}

@@ -19,7 +19,7 @@ config_file = os.path.join(os.path.dirname(__file__), 'config.ini')
 def r_config(section, key):
     #Read config.ini file
     # config_object = ConfigParser()
-    config_object.read(config_file)
+    config_object.read(config_file, encoding='utf-8')
 
     #Get the password
     section = config_object[section]

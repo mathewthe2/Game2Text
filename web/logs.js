@@ -49,10 +49,6 @@ function addLogs(newLogs) {
     content: 'Play Audio',
     delay: [300, null]
   });
-  // const playAudioTippy = tippy(document.querySelectorAll('.playAudioIcon'), {
-  //   content: 'Audio',
-  //   delay: [300, null]
-  // });
   createLogMenu();
   createAnkiFormCard();
   window.scrollTo(0,document.body.scrollHeight);
@@ -125,7 +121,6 @@ function formatCard(logId, cardElement) {
     const cardSelectedText = createCardSectionElement('title', 'card_selected_text', selectedText);
     cardBodyList.append(cardSelectedText);
   }
-
   if (log.text) {
     const cardSentence = createCardSectionElement('short_text', 'card_sentence', log.text, contentEditable=true);
     cardBodyList.append(cardSentence);
@@ -383,7 +378,6 @@ function refreshCardContent(logId) {
 }
 
 async function addCardToAnki(logId) {
-  // todo: add card to anki
   const log = getLogById(logId);
   const noteData = {
     folder: log.folder,
@@ -400,6 +394,23 @@ async function addCardToAnki(logId) {
     noteData['screenshot'] = log.image;
     noteData['imagetype'] = log.image_type;
   }
-  const addedNote = await eel.createNote(noteData)();
-  // TODO: success toaster message or error toaster on timeout
+  const result = await eel.createNote(noteData)();
+  if (result) {
+    if (typeof result === 'string' && result.includes('Error')){
+      const notification = document.querySelector('.mdl-js-snackbar');
+      notification.MaterialSnackbar.showSnackbar(
+        {
+          message: result
+        }
+      );
+    } else {
+      const notification = document.querySelector('.mdl-js-snackbar');
+      notification.MaterialSnackbar.showSnackbar(
+        {
+          message: 'Added to Anki'
+        }
+      );
+    }
+  }
 }
+

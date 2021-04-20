@@ -10,7 +10,7 @@ from recordaudio import RecordThread
 from pynput import keyboard
 from clipboard import clipboard_to_output, text_to_clipboard
 from logger import get_time_string, AUDIO_LOG_PATH
-from ankiconnect import invoke, get_anki_models, update_anki_models, createAnkiNote
+from ankiconnect import invoke, get_anki_models, update_anki_models, createAnkiNote, fetch_anki_fields
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
 from config import r_config, w_config, WINDOWS_HOTKEYS_CONFIG, APP_CONFIG, LOG_CONFIG
 
@@ -98,6 +98,11 @@ def invoke_anki(action, params={}):
 @eel.expose
 def get_anki_card_models():
     return get_anki_models()
+
+@eel.expose
+def fetch_anki_fields_by_modals(model_names):
+    fetch_anki_fields_thread = threading.Thread(target=fetch_anki_fields, args=((model_names,)))
+    fetch_anki_fields_thread.start()
 
 @eel.expose
 def update_anki_card_models(ankiModels):

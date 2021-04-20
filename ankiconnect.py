@@ -51,11 +51,10 @@ def update_anki_models(ankiModels):
         yaml.dump(ankiModels, outfile, sort_keys=False, default_flow_style=False)
         return outfile.name
 
-def fix_b64image_padding(image_string):
-    missing_padding = len(image_string) % 4
-    if missing_padding:
-        image_string += '='* (4 - missing_padding)
-    return image_string
+def fetch_anki_fields(model_names):
+    for model_name in model_names:
+        field_names = invoke('modelFieldNames', {'modelName': model_name})
+        eel.setAnkiFields(model_name, field_names)()
 
 def createAnkiNote(note_data):
     field_value_map = eel.getFieldValueMap()()

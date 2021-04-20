@@ -39,8 +39,6 @@ let blurImageRadius = 0;
 let ankiModelFieldMap = {}, fieldValueMap = {};
 let savedAnkiCardModels = [];
 let ankiDecks, ankiModels, ankitags, selectedDeck, selectedModel;
-let ankiFieldNameWorker;
-
 
 const videoElement = document.getElementById("video");
 // const myImg = document.getElementById("my_img");
@@ -704,19 +702,16 @@ async function loadAnki() {
         applyFieldAndValuesToTable(fieldValueMap);
       }
     }
-    ankiFieldNameWorker = new Worker('ankifieldnameworker.js');
-    for(const modelName of ankiModels) {
-      ankiFieldNameWorker.postMessage(modelName);
-    }
-    ankiFieldNameWorker.onmessage = function(e) {
-      const modelName = e.data[0];
-      const fieldNames = e.data[1];
-      ankiModelFieldMap[modelName] = fieldNames;
-    }
-    ankiFieldNameWorker.terminate();
+    // python backend will send the result to setAnkiFields()
+    eel.fetch_anki_fields_by_modals(ankiModels)();
     return true
   }
   return true
+}
+
+eel.expose(setAnkiFields);
+function setAnkiFields(modelName, fieldNames) {
+  ankiModelFieldMap[modelName] = fieldNames;
 }
 
 async function reloadAnki() {

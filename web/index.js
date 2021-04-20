@@ -39,6 +39,7 @@ let blurImageRadius = 0;
 let ankiModelFieldMap = {}, fieldValueMap = {};
 let savedAnkiCardModels = [];
 let ankiDecks, ankiModels, ankitags, selectedDeck, selectedModel;
+let ankiFieldNameWorker;
 
 
 const videoElement = document.getElementById("video");
@@ -703,10 +704,17 @@ async function loadAnki() {
         applyFieldAndValuesToTable(fieldValueMap);
       }
     }
-      for(const modelName of ankiModels) {
-        ankiModelFieldMap[modelName] = await getFieldNamesForModel(modelName);
-      }
-      return true
+    ankiFieldNameWorker = new Worker('ankifieldnameworker.js');
+    for(const modelName of ankiModels) {
+      ankiFieldNameWorker.postMessage(modelName);
+    }
+    ankiFieldNameWorker.onmessage = function(e) {
+      const modelName = e.data[0];
+      const fieldNames = e.data[1];
+      ankiModelFieldMap[modelName] = fieldNames;
+    }
+    ankiFieldNameWorker.terminate();
+    return true
   }
   return true
 }

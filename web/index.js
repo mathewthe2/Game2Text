@@ -37,7 +37,7 @@ let blurImageRadius = 0;
 
 // Anki
 let ankiModelFieldMap = {}, fieldValueMap = {};
-let ankiModelObjectList = [];
+let savedAnkiCardModels = [];
 let ankiDecks, ankiModels, ankitags, selectedDeck, selectedModel;
 
 
@@ -693,18 +693,20 @@ async function loadAnki() {
   }
   if (ankiModels) {
     cardModel = await setCardModel();
-    ankiModelObjectList = await eel.getAnkiCardModels()();
-    const existingModelIndex = ankiModelObjectList.findIndex(obj=>obj['model'] === cardModel)
-    if (existingModelIndex !== -1) {
-      // update table to saved settings
-      const fieldValueMap =  {...ankiModelObjectList[existingModelIndex]}; // clone object
-      delete fieldValueMap['model']; //remove model name from object
-      applyFieldAndValuesToTable(fieldValueMap);
+    savedAnkiCardModels = await eel.get_anki_card_models()();
+    if (savedAnkiCardModels) {
+      const existingModelIndex = savedAnkiCardModels.findIndex(obj=>obj['model'] === cardModel)
+      if (existingModelIndex !== -1) {
+        // update table to saved settings
+        fieldValueMap =  {...savedAnkiCardModels[existingModelIndex]}; // get obj value
+        delete fieldValueMap['model']; // remove model name from object
+        applyFieldAndValuesToTable(fieldValueMap);
+      }
     }
-    for(const modelName of ankiModels) {
-      ankiModelFieldMap[modelName] = await getFieldNamesForModel(modelName);
-    }
-    return true
+      for(const modelName of ankiModels) {
+        ankiModelFieldMap[modelName] = await getFieldNamesForModel(modelName);
+      }
+      return true
   }
   return true
 }
@@ -714,6 +716,11 @@ async function reloadAnki() {
   fieldValuesTable.hidden = true;
   const result = await loadAnki();
   fieldValuesTable.hidden = false;
+}
+
+eel.expose(getFieldValueMap)
+function getFieldValueMap() {
+  return fieldValueMap;
 }
 
 /*
@@ -771,4 +778,3 @@ function cropVideo() {
     }, 20);
   }
 }
-openSettings();

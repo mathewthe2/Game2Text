@@ -3,7 +3,8 @@ let currentLogs = [];
 window.tippyInstances = [];
 let isRecording = false;
 let isPlayingAudio = false;
-const loadingScreenDelay = setTimeout("showLoadingScreen()", 500);
+const loadingScreenDelay = setTimeout("showLoadingScreen()", 400);
+let selectedText = '';
 
 function showLogs() {
   (async() => {
@@ -109,24 +110,31 @@ function formatCard(logId, cardElement) {
   const log = getLogById(logId);
   if (log.image) {
     const cardImage = cardElement.getElementsByClassName('addCardScreenshot')[0];
-    cardImage.setAttribute('src', log.image);
+    cardImage.setAttribute('src', `data:image/${log.image_type};base64,${log.image}`);
     cardImage.setAttribute('alt', `add-card-screenshot-${log.id}`);
     cardImage.style.width = '100%';
   }
   const cardBodyList = cardElement.getElementsByClassName('addCardBodyList')[0];
+  cardBodyList.setAttribute("log_id", logId);
 
   const addCardToAnkiButton = cardElement.getElementsByClassName('addCardToAnkiButton')[0];
   addCardToAnkiButton.id = `add_card_to_anki_button_${logId}`
   addCardToAnkiButton.setAttribute("log_id", logId);
 
+  if (selectedText) {
+    const cardSelectedText = createCardSectionElement('title', 'card_selected_text', selectedText);
+    cardBodyList.append(cardSelectedText);
+  }
+
   if (log.text) {
-    const cardSentence = createCardSectionElement('short_text', 'card_sentence', log.text);
+    const cardSentence = createCardSectionElement('short_text', 'card_sentence', log.text, contentEditable=true);
     cardBodyList.append(cardSentence);
   }
   if (log.audio) {
     const cardAudio = createCardSectionElement('mic', 'card_audio_file', log.audio);
     cardBodyList.append(cardAudio);
   }
+
   // const cardSentence = cardElement.getElementsByClassName('card_sentence')[0];
   // cardSentence.innerHTML = log.text;
   // const cardAudioFileName = cardElement.getElementsByClassName('card_audio_file_name')[0];
@@ -135,13 +143,13 @@ function formatCard(logId, cardElement) {
   return cardElement
 }
 
-function createCardSectionElement(icon_name, field, value) {
+function createCardSectionElement(iconName, field, value, contentEditable=false) {
   const cardSection = document.createElement('li');
   cardSection.classList.add('mdl-list__item');
   const content = `
     <span class="card_${field}_container mdl-list__item-primary-content">
-        <i class="material-icons mdl-list__item-icon">${icon_name}</i>
-        <span class="card_${field}">${value}</span>
+        <i class="material-icons mdl-list__item-icon">${iconName}</i>
+        <span contentEditable=${contentEditable} class="card_${field}">${value}</span>
     </span>`;
   cardSection.innerHTML = content;
   return cardSection
@@ -259,7 +267,7 @@ function copyScreenshot(logId) {
   const log = getLogById(logId);
   if (log.image) {
     const img = document.createElement('img');
-    img.src = log.image
+    img.src = `data:image/${log.image_type};base64,${log.image}`
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext("2d");     
     canvas.width = img.width;
@@ -300,7 +308,28 @@ async function deleteRecording(logId) {
  
 }
 
-function updateLog() {
+document.addEventListener('mouseup', event => {  
+  if (window.getSelection) {
+    if (window.getSelection().toString() === '') {
+      return
+    }
+      if (window.getSelection().anchorNode.parentNode.className === 'logText') {
+        // Selected Text in Log
+        selectedText = window.getSelection().toString();
+        const logId = window.getSelection().anchorNode.parentNode.parentNode.parentNode.id.split('logItem-')[1]
+        currentLogs.find(log=>log.id === logId)['selectedText'] = selectedText;
+        refreshCardContent(logId);
+      } else if (window.getSelection().anchorNode.parentElement.className === 'card_card_sentence'){
+        // Selected Text in addtoanki card
+        selectedText = window.getSelection().toString();
+        const logId = window.getSelection().anchorNode.parentNode.parentNode.parentNode.parentNode.getAttribute('log_id');
+        currentLogs.find(log=>log.id === logId)['selectedText'] = selectedText;
+        refreshCardContent(logId);
+      }
+  }
+});
+
+function updateLogById(logId) {
    // TODO: update logs
 }
 
@@ -353,8 +382,24 @@ function refreshCardContent(logId) {
     }
 }
 
-function addCardToAnki(logId) {
+async function addCardToAnki(logId) {
   // todo: add card to anki
   const log = getLogById(logId);
-  console.log('log2anki', log)
+  const noteData = {
+    folder: log.folder,
+    filename: log.id,
+    sentence: log.text
+  }
+  if (log.selectedText) {
+    noteData['selectedtext'] = log.selectedText;
+  }
+  if (log.audio) {
+    noteData['audio'] = log.audio;
+  }
+  if (log.image) {
+    noteData['screenshot'] = log.image;
+    noteData['imagetype'] = log.image_type;
+  }
+  const addedNote = await eel.createNote(noteData)();
+  // TODO: success toaster message or error toaster on timeout
 }

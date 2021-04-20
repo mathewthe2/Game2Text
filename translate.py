@@ -7,7 +7,6 @@ from config import r_config, TRANSLATION_CONFIG
 
 def multi_translate(text):
     service =  r_config(TRANSLATION_CONFIG, 'translation_service')
-    print('service?', service)
     if service == 'Papago':
         return asyncio.run(papago_translate(text))
     elif service == 'DeepL Translate':

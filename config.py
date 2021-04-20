@@ -6,6 +6,7 @@ OCR_CONFIG = "OCRCONFIG"
 TRANSLATION_CONFIG = "TRANSLATIONCONFIG"
 APPERANCE_CONFIG = "APPEARANCE"
 APP_CONFIG = "APPCONFIG"
+ANKI_CONFIG = "ANKICONFIG"
 WINDOWS_HOTKEYS_CONFIG = "WINDOWS_HOTKEYS"
 LOG_CONFIG = "LOGCONFIG"
 
@@ -27,7 +28,7 @@ def r_config(section, key):
 def w_config(section, to_update_dict):
     #Read config.ini file
     # config_object = ConfigParser()
-    config_object.read("config.ini")
+    config_object.read("config.ini", encoding='utf-8')
 
     #Get the USERINFO section
     section = config_object[section]
@@ -37,5 +38,5 @@ def w_config(section, to_update_dict):
         section[key] = value
 
     #Write changes back to file
-    with open('config.ini', 'w') as conf:
+    with open('config.ini', 'w', encoding='utf-8') as conf:
         config_object.write(conf)

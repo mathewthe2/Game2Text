@@ -29,7 +29,7 @@ def export_image_profile(profile):
     if file is None: # asksaveasfile return `None` if dialog closed with "cancel".
         return
     with open(file.name, 'w') as outfile:
-        yaml.dump(profile, outfile, default_flow_style=False)
+        yaml.dump(profile, outfile, sort_keys=False, default_flow_style=False)
     file.close()
     root.destroy()
     return file.name

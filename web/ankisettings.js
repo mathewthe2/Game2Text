@@ -45,6 +45,7 @@ function updateFieldValuesTable(fieldValues) {
             tupleLabel.innerHTML = fieldValue;
             const fieldValueSelect = tupleClone.getElementsByClassName('field_value_select')[0];
             fieldValueSelect.innerHTML = `<option></option>
+            <option>Selected Text</option>
             <option>Sentence</option>
             <option>Screenshot</option>
             <option>Audio</option>`;
@@ -68,6 +69,7 @@ function applyFieldAndValuesToTable(fieldValueMap) {
             tupleLabel.innerHTML = field;
             const fieldValueSelect = tupleClone.getElementsByClassName('field_value_select')[0];
             fieldValueSelect.innerHTML = `<option></option>
+            <option>Selected Text</option>
             <option>Sentence</option>
             <option>Screenshot</option>
             <option>Audio</option>`;

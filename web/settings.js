@@ -403,12 +403,14 @@ function changeDeck() {
 function changeCardModel() {
     selectedModel = cardModelSelect.value;
     updateFieldValuesTable(ankiModelFieldMap[selectedModel]);
-    const existingModelIndex = ankiModelObjectList.findIndex(obj=>obj['model'] === selectedModel);
-    if (existingModelIndex !== -1) {
-      // update table to saved settings
-      const fieldValueMap =  {...ankiModelObjectList[existingModelIndex]} // clone
-      delete fieldValueMap['model']; //remove model name from object
-      applyFieldAndValuesToTable(fieldValueMap);
+    if (savedAnkiCardModels) {
+        const existingModelIndex = savedAnkiCardModels.findIndex(obj=>obj['model'] === selectedModel);
+        if (existingModelIndex !== -1) {
+            // update table to saved settings
+            fieldValueMap =  {...savedAnkiCardModels[existingModelIndex]} // get obj
+            delete fieldValueMap['model']; //remove model name from object
+            applyFieldAndValuesToTable(fieldValueMap);
+        }
     }
     eel.update_config(ANKI_CONFIG, {'model': selectedModel})();
 }
@@ -422,8 +424,8 @@ function changeAnkiTags() {
     eel.update_config(ANKI_CONFIG, {'cardtags': tags})();
 }
 async function updateFieldValue() {
-    const defaultAnkiModels = await eel.getAnkiCardModels()();
-    ankiModelObjectList = defaultAnkiModels ? defaultAnkiModels : [];
+    const defaultAnkiModels = await eel.get_anki_card_models()();
+    savedAnkiCardModels = defaultAnkiModels ? defaultAnkiModels : [];
     const modelName = cardModelSelect.value;
     const fields = ankiModelFieldMap[modelName];
     const table = document.getElementById('field_values_table');
@@ -431,21 +433,16 @@ async function updateFieldValue() {
     const values = [].map.call(selectElementList, selectElement=>selectElement.value);
     fieldValueMap = {};
     fields.forEach((field, index)=>fieldValueMap[field] = values[1+index]);
-    console.log(fieldValueMap);
-    if (ankiModelObjectList.length === 0) {
-        ankiModelObjectList.push({model: modelName, ...fieldValueMap});
+    if (savedAnkiCardModels.length === 0) {
+        savedAnkiCardModels.push({model: modelName, ...fieldValueMap});
     } else {
         // if exists update else insert
-        const existingModelIndex = ankiModelObjectList.findIndex(obj=>obj['model'] === modelName);
+        const existingModelIndex = savedAnkiCardModels.findIndex(obj=>obj['model'] === modelName);
         if (existingModelIndex !== -1) {
-            ankiModelObjectList[existingModelIndex] = {model: modelName, ...fieldValueMap};
+            savedAnkiCardModels[existingModelIndex] = {model: modelName, ...fieldValueMap};
         } else {
-            ankiModelObjectList.push({model: modelName, ...fieldValueMap});  
+            savedAnkiCardModels.push({model: modelName, ...fieldValueMap});  
         }
     }
-    eel.updateAnkiCardModels(ankiModelObjectList)();
+    eel.update_anki_card_models(savedAnkiCardModels)();
 }
-// function applyFieldValueSelection(fieldValueMapWithModelName) {
-//     console.log('hello',fieldValueMapWithModelName )
-
-// }

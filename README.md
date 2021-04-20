@@ -1,25 +1,27 @@
-## Game2Text ##
+# Game2Text
 
-[Game2Text](https://www.game2text.com) helps you learn and retain Japanese words from games.
+[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) 
 
 ![Game2Text Preview](https://game2text.com/images/header-software-app.png)
 
-## Features ##
+[Game2Text](https://www.game2text.com) is an all-in-one application that helps you learn language from games.
 
-- Kanji Finder with browser dictionaries like Yomichan
-- Deepl Translate
-- Anki Integration with AnkiConnect via Yomichan
 
-## Download ##
+## Features
+- Dictionary lookup with browser dictionaries like Yomichan
+- Translation - DeepL, Papago, and Google
+- Create image and audio flashcards via Anki and AnkiConnect
+
+## Download 
 You can find downloads on [Releases](https://github.com/mathewthe2/Game2Text/releases).
 
-## Prerequisite: Tesseract ##
+## Prerequisite: Tesseract
 
 Windows/Mac: Tesseract is bundled with the application.
 
 Linux: Follow installation instructions [here](https://tesseract-ocr.github.io/tessdoc/Home.html).
 
-## Custom Config ##
+## Custom Config 
 
 Update *config.ini* file for the following configurations:
 
@@ -27,12 +29,12 @@ Update *config.ini* file for the following configurations:
 - **logimagetype**: file type to save logged images
 - **refresh**: hotkey to execute OCR
 
-## Image Filter Profiles ##
+## Image Filter Profiles 
 
 You can import and export image filter profiles to improve the accuracy of the OCR result. Image filtering controls can be accessed by right clicking on the game/video stream.    
 
 
-## Getting Started ##
+## Getting Started
 
 Create a venv, then once activated install requirements:
 ```
@@ -40,7 +42,7 @@ pip install -r requirements.txt
 python game2text.py
 ```
 
-## Distribution ##
+## Distribution
 
 Windows: 
 
@@ -52,7 +54,7 @@ Mac:
 
 Temporary fix for all read/write operations using *os.path* on Mac builds with pyinstaller: create a wrapper file that runs the Game2Text executable inside the package
 
-## FAQ ##
+## FAQ
 
 Q. Why is my application not showing in screen share?
 - 

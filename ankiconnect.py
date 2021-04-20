@@ -85,7 +85,7 @@ def createAnkiNote(note_data):
     if (picture_fields):
         # TODO: check to see if image is already in file and add from path
         picture_params = {
-            'filename': '.' + note_data['imagetype'],
+            'filename': note_data['filename'] + '.' + note_data['imagetype'],
             'fields': picture_fields,
             'data':  note_data['screenshot']
         }

@@ -10,9 +10,9 @@ function showLogs() {
   (async() => {
       const newlogs = await eel.show_logs()();
       if (newlogs) {
-          hideLoadingScreen();
           addLogs(newlogs);
       }
+      hideLoadingScreen();
   })()
 }
 
@@ -129,11 +129,6 @@ function formatCard(logId, cardElement) {
     const cardAudio = createCardSectionElement('mic', 'card_audio_file', log.audio);
     cardBodyList.append(cardAudio);
   }
-
-  // const cardSentence = cardElement.getElementsByClassName('card_sentence')[0];
-  // cardSentence.innerHTML = log.text;
-  // const cardAudioFileName = cardElement.getElementsByClassName('card_audio_file_name')[0];
-  // cardAudioFileName.innerHTML = log.audio;
 
   return cardElement
 }

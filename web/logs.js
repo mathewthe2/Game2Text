@@ -121,6 +121,16 @@ function formatCard(logId, cardElement) {
     const cardSelectedText = createCardSectionElement('title', 'card_selected_text', selectedText);
     cardBodyList.append(cardSelectedText);
   }
+  if (log.dictionary) {
+    if (log.dictionary.reading) {
+      const cardReading = createCardSectionElement('library_books', 'card_glossary', log.dictionary.reading);
+      cardBodyList.append(cardReading);
+    }
+  }
+  if (log.dictionary) {
+    const cardGlossary = createCardSectionElement('book', 'card_glossary', log.dictionary.glossary_list.join(', '));
+    cardBodyList.append(cardGlossary);
+  }
   if (log.text) {
     const cardSentence = createCardSectionElement('short_text', 'card_sentence', log.text, contentEditable=true);
     cardBodyList.append(cardSentence);
@@ -309,16 +319,27 @@ document.addEventListener('mouseup', event => {
         const logId = window.getSelection().anchorNode.parentNode.parentNode.parentNode.id.split('logItem-')[1]
         currentLogs.find(log=>log.id === logId)['selectedText'] = selectedText;
         refreshCardContent(logId);
+        updateCardWithDictionaryEntry(logId, selectedText);
       } else if (window.getSelection().anchorNode.parentElement.className === 'card_card_sentence'){
         // Selected Text in addtoanki card
         selectedText = window.getSelection().toString();
         const logId = window.getSelection().anchorNode.parentNode.parentNode.parentNode.parentNode.getAttribute('log_id');
         currentLogs.find(log=>log.id === logId)['selectedText'] = selectedText;
         refreshCardContent(logId);
+        updateCardWithDictionaryEntry(logId, selectedText);
       }
   }
 });
 
+function updateCardWithDictionaryEntry(logId, word) {
+  (async() => {
+    const dictionaryEntry = await eel.look_up_dictionary(word)();
+    if (dictionaryEntry) {
+      currentLogs.find(log=>log.id === logId)['dictionary'] = dictionaryEntry;
+      refreshCardContent(logId);
+    }
+})()
+}
 function updateLogById(logId) {
    // TODO: update logs
 }
@@ -382,6 +403,15 @@ async function addCardToAnki(logId) {
   if (log.selectedText) {
     noteData['selectedtext'] = log.selectedText;
   }
+  if (log.dictionary) {
+    noteData['glossary'] = log.dictionary.glossary_list.join(', ');
+    if (log.dictionary.reading) {
+      noteData['reading'] = log.dictionary.reading;
+    }
+  }
+  if (log.reading) {
+
+  }
   if (log.audio) {
     noteData['audio'] = log.audio;
   }
@@ -389,7 +419,7 @@ async function addCardToAnki(logId) {
     noteData['screenshot'] = log.image;
     noteData['imagetype'] = log.image_type;
   }
-  const result = await eel.createNote(noteData)();
+  const result = await eel.create_note(noteData)();
   if (result) {
     if (typeof result === 'string' && result.includes('Error')){
       const notification = document.querySelector('.mdl-js-snackbar');

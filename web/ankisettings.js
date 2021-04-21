@@ -3,27 +3,31 @@ const cardModelSelector = document.getElementById('card_model_selector');
 
 async function initDecks() {
     const deckNames = await eel.invoke_anki('deckNames')();
-    deckNames.forEach(deckName => {
-        const deckOption = document.createElement("li");
-        deckOption.classList.add("mdl-menu__item")
-        deckOption.data_val = deckName.replace(' ', '_');
-        deckOption.innerHTML = deckName;
-        deckSelector.append(deckOption);
-    });
-    getmdlSelect.init('#deck_select_container');
+    if (deckNames) {
+        deckNames.forEach(deckName => {
+            const deckOption = document.createElement("li");
+            deckOption.classList.add("mdl-menu__item")
+            deckOption.data_val = deckName.replace(' ', '_');
+            deckOption.innerHTML = deckName;
+            deckSelector.append(deckOption);
+        });
+        getmdlSelect.init('#deck_select_container');
+    }
     return deckNames;
 }
 
 async function initCardModels() {
     const cardModelNames = await eel.invoke_anki('modelNames')();
-    cardModelNames.forEach(cardModelName => {
-        const cardModelOption = document.createElement("li");
-        cardModelOption.classList.add("mdl-menu__item")
-        cardModelOption.data_val = cardModelName.replace(' ', '_');
-        cardModelOption.innerHTML = cardModelName;
-        cardModelSelector.append(cardModelOption);
-    });  
-    getmdlSelect.init('#card_model_select_container');
+    if (cardModelNames) {
+        cardModelNames.forEach(cardModelName => {
+            const cardModelOption = document.createElement("li");
+            cardModelOption.classList.add("mdl-menu__item")
+            cardModelOption.data_val = cardModelName.replace(' ', '_');
+            cardModelOption.innerHTML = cardModelName;
+            cardModelSelector.append(cardModelOption);
+        });  
+        getmdlSelect.init('#card_model_select_container');
+    }
     return cardModelNames;
 }
 
@@ -46,6 +50,8 @@ function updateFieldValuesTable(fieldValues) {
             const fieldValueSelect = tupleClone.getElementsByClassName('field_value_select')[0];
             fieldValueSelect.innerHTML = `<option></option>
             <option>Selected Text</option>
+            <option>Reading</option>
+            <option>Glossary</option>
             <option>Sentence</option>
             <option>Screenshot</option>
             <option>Audio</option>`;
@@ -70,6 +76,8 @@ function applyFieldAndValuesToTable(fieldValueMap) {
             const fieldValueSelect = tupleClone.getElementsByClassName('field_value_select')[0];
             fieldValueSelect.innerHTML = `<option></option>
             <option>Selected Text</option>
+            <option>Reading</option>
+            <option>Glossary</option>
             <option>Sentence</option>
             <option>Screenshot</option>
             <option>Audio</option>`;

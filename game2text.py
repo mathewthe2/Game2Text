@@ -9,9 +9,10 @@ from audio import get_recommended_device_index, get_audio_objects
 from recordaudio import RecordThread
 from pynput import keyboard
 from clipboard import clipboard_to_output, text_to_clipboard
-from logger import get_time_string, AUDIO_LOG_PATH
-from ankiconnect import invoke, get_anki_models, update_anki_models, createAnkiNote, fetch_anki_fields
+from logger import get_time_string, AUDIO_LOG_PATH, SCRIPT_DIR
+from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki_note, fetch_anki_fields
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
+from dictionary import load_dictionary, look_up
 from config import r_config, w_config, WINDOWS_HOTKEYS_CONFIG, APP_CONFIG, LOG_CONFIG
 
 session_start_time = get_time_string()
@@ -109,8 +110,12 @@ def update_anki_card_models(ankiModels):
     return update_anki_models(ankiModels)
 
 @eel.expose
-def createNote(note_data):
-    return createAnkiNote(note_data)
+def create_note(note_data):
+    return create_anki_note(note_data)
+
+@eel.expose
+def look_up_dictionary(word):
+    return look_up(word)
 
 @eel.expose
 def open_new_window(html_file, height=800, width=600):
@@ -134,9 +139,10 @@ def run_eel():
 main_thread = threading.Thread(target=run_eel, args=())
 main_thread.start()
 
-# Thread to export clipboard text continuously
-clipboard_timer = RepeatedTimer(1, clipboard_to_output)
-clipboard_timer.stop() # stop the initial timer
+# Thread to load dictionaries
+dictionary_path = str(Path(SCRIPT_DIR, 'dictionaries', 'jmdict_english.zip'))
+dictionary_thread = threading.Thread(target=load_dictionary, args=((dictionary_path,))) 
+dictionary_thread.start()
 
 # Thread to record audio continuously
 recommended_audio_device_index = get_recommended_device_index(r_config(LOG_CONFIG, 'logaudiohost'))
@@ -148,6 +154,10 @@ if is_log_audio and recommended_audio_device_index != -1:
 # Thread to manually record audio
 manual_audio_recorder = RecordThread(recommended_audio_device_index, int(r_config(LOG_CONFIG, "logaudioframes")))
 manual_audio_file_path = ''
+
+# Thread to export clipboard text continuously
+clipboard_timer = RepeatedTimer(1, clipboard_to_output)
+clipboard_timer.stop() # stop the initial timer
 
 refresh_hotkey_string = {
     "Linux" : "<ctrl>+q",

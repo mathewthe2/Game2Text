@@ -56,7 +56,7 @@ def fetch_anki_fields(model_names):
         field_names = invoke('modelFieldNames', {'modelName': model_name})
         eel.setAnkiFields(model_name, field_names)()
 
-def createAnkiNote(note_data):
+def create_anki_note(note_data):
     field_value_map = eel.getFieldValueMap()()
     fields = {}
     picture_fields = []

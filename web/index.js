@@ -8,7 +8,7 @@ let OCRrequests = 0;
 let showSelection = true;
 let clipboardMode = false;
 let outputToClipboard = false;
-let OCREngine = "Tesseract", verticalText = false;
+let OCREngine = "Tesseract Default", verticalText = false;
 let translationService;
 let translation = {
   sourceText : '',
@@ -446,7 +446,7 @@ function getVideoImage() {
 function recognize_image(image) {
   OCRrequests += 1; // counter for auto-mode
   (async() => {
-    const textOrientation = verticalText && (OCREngine === 'Tesseract') ? 'vertical' : 'horizontal';
+    const textOrientation = verticalText && (OCREngine.includes('Tesseract')) ? 'vertical' : 'horizontal';
     const imageData = isCacheScreenshots ? getVideoImage() : '';
     let response = await eel.recognize_image(OCREngine, image, textOrientation)();
     if (response.result) {

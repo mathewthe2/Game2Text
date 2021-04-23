@@ -34,10 +34,21 @@ Update *config.ini* file for the following configurations:
 You can import and export image filter profiles to improve the accuracy of the OCR result. Image filtering controls can be accessed by right clicking on the game/video stream.    
 
 
-## Getting Started
+## Development Environment Setup 
 
+### System requirements
+
+macOS:
+```
+brew install tcl-tk
+brew install portaudio
+brew install python-tk@3.9 // or some other method to get a python3 bundled with tk
+```
+
+### Running the app
 Create a venv, then once activated install requirements:
 ```
+python -m venv venv
 pip install -r requirements.txt
 python game2text.py
 ```

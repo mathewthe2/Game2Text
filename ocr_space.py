@@ -31,5 +31,6 @@ def ocr_space_file(filename, overlay=False, api_key=OCRSPACE_API_KEY, language='
     result = r.json()
     if (result):
         if (result["ParsedResults"]):
-            return result["ParsedResults"][0]['ParsedText']
+            parsedText = result["ParsedResults"][0]['ParsedText']
+            return parsedText.join(" ", s.splitlines()) # force ouptut to one line
     return "Error: OCR Failed"

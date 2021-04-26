@@ -12,7 +12,7 @@ from clipboard import clipboard_to_output, text_to_clipboard
 from logger import get_time_string, AUDIO_LOG_PATH, SCRIPT_DIR
 from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki_note, fetch_anki_fields
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
-from dictionary import load_dictionary, look_up
+from dictionary import load_all_dictionaries, look_up
 from config import r_config, w_config, WINDOWS_HOTKEYS_CONFIG, APP_CONFIG, LOG_CONFIG
 
 session_start_time = get_time_string()
@@ -124,7 +124,7 @@ def open_new_window(html_file, height=800, width=600):
     mode=r_config(APP_CONFIG, "browser"),
     host=r_config(APP_CONFIG, "host"),
     size=(width, height), 
-    port = 0)
+    port = int(r_config(APP_CONFIG, "port")))
     return
 
 def run_eel():
@@ -140,8 +140,7 @@ main_thread = threading.Thread(target=run_eel, args=())
 main_thread.start()
 
 # Thread to load dictionaries
-dictionary_path = str(Path(SCRIPT_DIR, 'dictionaries', 'jmdict_english.zip'))
-dictionary_thread = threading.Thread(target=load_dictionary, args=((dictionary_path,))) 
+dictionary_thread = threading.Thread(target=load_all_dictionaries, args=()) 
 dictionary_thread.start()
 
 # Thread to record audio continuously

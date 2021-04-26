@@ -74,7 +74,11 @@ html {
     height: 400px;
 }
 .addCardBody {
-    padding: 0px
+    padding: 0px;
+}
+.addCardBodyList {
+    max-height: 220px;
+    overflow-y: auto;
 }
 .addCardBodyContainer > .mdl-card__actions {
     display: flex;

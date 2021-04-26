@@ -46,7 +46,7 @@ python game2text.py
 
 Windows: 
 
-```python -m eel game2text.py web --windowed --icon "icon.ico" --add-data "logs;logs/" --add-data "profiles;profiles/" --add-data "anki;anki/" --add-data "win;win/" --add-data "config.ini;."```
+```python -m eel game2text.py web --windowed --icon "icon.ico" --add-data "logs;logs/" --add-data "profiles;profiles/" --add-data "dictionaries;dictionaries/" --add-data "anki;anki/" --add-data "win;win/" --add-data "config.ini;."```
 
 Mac:
 

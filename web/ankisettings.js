@@ -3,7 +3,11 @@ const cardModelSelector = document.getElementById('card_model_selector');
 
 async function initDecks() {
     const deckNames = await eel.invoke_anki('deckNames')();
-    if (deckNames) {
+    if (typeof deckNames === 'string') { 
+        // Failed to connect to Anki
+        return []
+    }
+    if (deckNames.length > 0) {
         deckNames.forEach(deckName => {
             const deckOption = document.createElement("li");
             deckOption.classList.add("mdl-menu__item")
@@ -18,7 +22,11 @@ async function initDecks() {
 
 async function initCardModels() {
     const cardModelNames = await eel.invoke_anki('modelNames')();
-    if (cardModelNames) {
+    if (typeof cardModelNames === 'string') {
+        // Failed to connect to Anki
+        return []
+    }
+    if (cardModelNames.length > 0) {
         cardModelNames.forEach(cardModelName => {
             const cardModelOption = document.createElement("li");
             cardModelOption.classList.add("mdl-menu__item")

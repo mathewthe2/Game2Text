@@ -30,49 +30,53 @@ class RecordThread(threading.Thread):
         useloopback = is_wasapi and not is_input
         # Open stream
         channelcount = device_info["maxInputChannels"] if (device_info["maxOutputChannels"] < device_info["maxInputChannels"]) else device_info["maxOutputChannels"]
-        stream = p.open(format = pyaudio.paInt16,   
-                    channels = channelcount,
-                    rate = int(device_info["defaultSampleRate"]),
-                    input = True,
-                    frames_per_buffer = self.frames,
-                    input_device_index = device_info["index"],
-                    as_loopback = useloopback)
+        try:
+            stream = p.open(format = pyaudio.paInt16,   
+                        channels = channelcount,
+                        rate = int(device_info["defaultSampleRate"]),
+                        input = True,
+                        frames_per_buffer = self.frames,
+                        input_device_index = device_info["index"],
+                        as_loopback = useloopback)
         
-        # Start recording
-        self.isRecording = True
-        while self.bRecord:
-            self.recorded_frames.append(stream.read(self.frames))
-        
-        stream.stop_stream()
-        stream.close()
+            # Start recording
+            self.isRecording = True
+            while self.bRecord:
+                self.recorded_frames.append(stream.read(self.frames))
+            
+            stream.stop_stream()
+            stream.close()
 
-        # Don't save file if duration is 0
-        if (self.duration == 0):
+            # Don't save file if duration is 0
+            if (self.duration == 0):
+                p.terminate()
+                return
+
+            file = self.audiofile
+            filename, file_extension = os.path.splitext(file)
+            file_needs_conversion = file_extension != '.wav'
+            if file_needs_conversion:
+                file = filename + '.wav'
+            waveFile = wave.open(file, 'wb')
+            waveFile.setnchannels(channelcount)
+            waveFile.setsampwidth(p.get_sample_size(pyaudio.paInt16))
+            waveFile.setframerate(int(device_info["defaultSampleRate"]))
+            start_frame = 0
+            trim_audio = (self.duration != -1)
+            if trim_audio:
+                start_frame = len(self.recorded_frames) - int(int(device_info["defaultSampleRate"]) / self.frames * self.duration)
+            waveFile.writeframes(b''.join(self.recorded_frames[start_frame:]))
+            waveFile.close()
             p.terminate()
-            return
 
-        file = self.audiofile
-        filename, file_extension = os.path.splitext(file)
-        file_needs_conversion = file_extension != '.wav'
-        if file_needs_conversion:
-            file = filename + '.wav'
-        waveFile = wave.open(file, 'wb')
-        waveFile.setnchannels(channelcount)
-        waveFile.setsampwidth(p.get_sample_size(pyaudio.paInt16))
-        waveFile.setframerate(int(device_info["defaultSampleRate"]))
-        start_frame = 0
-        trim_audio = (self.duration != -1)
-        if trim_audio:
-            start_frame = len(self.recorded_frames) - int(int(device_info["defaultSampleRate"]) / self.frames * self.duration)
-        waveFile.writeframes(b''.join(self.recorded_frames[start_frame:]))
-        waveFile.close()
-        p.terminate()
+            # Convert to mp3 or other formats
+            if file_needs_conversion:
+                convert_audio(file, self.audiofile)
+                os.remove(file)
 
-        # Convert to mp3 or other formats
-        if file_needs_conversion:
-            convert_audio(file, self.audiofile)
-            os.remove(file)
-
+        except:
+            print('Error: cannot record audio with selected device')
+            
     def stop_recording(self, audiofile='out.wav', duration = 10):
         self.audiofile = audiofile
         self.duration = duration

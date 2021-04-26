@@ -317,7 +317,12 @@ async function setAudioDevices(audio_host) {
     const recommended_audio_device = await eel.get_recommended_device_index(audio_host)();
     if (recommended_audio_device == -1) {
         if (logAudio) {
-            alert('Unable to find audio recording device. Please select audio device in settings.')
+            const notification = document.querySelector('.mdl-js-snackbar');
+            notification.MaterialSnackbar.showSnackbar(
+              {
+                message: 'Unable to find audio recording device. Please select audio device in settings.'
+              }
+            );
         }
         audioDeviceSelect.value = '';
     }

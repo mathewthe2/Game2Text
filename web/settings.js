@@ -351,6 +351,7 @@ async function setAudioDevices(audio_host) {
     }
 }
 function changeAudioHost () {
+    eel.update_config(LOG_CONFIG, {'logaudiohost':audioHostSelect.value})();
     setAudioDevices(audioHostSelect.value);
 }
 eel.expose(restartAudioRecording)

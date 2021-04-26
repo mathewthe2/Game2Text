@@ -118,38 +118,48 @@ function formatCard(logId, cardElement) {
   addCardToAnkiButton.setAttribute("log_id", logId);
 
   if (selectedText) {
-    let outputText = selectedText;
+    let selectedTextPreview = selectedText;
     if (log.dictionary) {
       if (log.dictionary[0].reading) {
-        outputText += ` (${log.dictionary[0].reading})`;
+        selectedTextPreview += ` (${log.dictionary[0].reading})`;
       }
     }
-    const cardSelectedText = createCardSectionElement('title', 'card_selected_text', outputText);
+    const cardSelectedText = createCardSectionElement(
+      iconName = 'title', 
+      field = 'card_selected_text',
+      value = selectedTextPreview
+    );
     cardBodyList.append(cardSelectedText);
   }
   if (log.dictionary) {
-    const cardGlossary = createCardSectionElement('book', 'card_glossary', log.dictionary[0].glossary_list.join(', '));
+    const cardGlossary = createCardSectionElement(
+      iconName = 'book', 
+      field = 'card_glossary',
+      value = log.dictionary[0].glossary_list.join(', ')
+    );
     cardBodyList.append(cardGlossary);
   }
   if (log.text) {
-    const cardSentence = createCardSectionElement('short_text', 'card_sentence', log.text, contentEditable=true);
+    const cardSentence = createCardSectionElement(
+      iconName='short_text', 
+      field ='card_sentence', 
+      value = log.text, 
+      contentEditable = true,
+      footerIcon = log.audio ? 'mic' : ''
+    );
     cardBodyList.append(cardSentence);
   }
-  if (log.audio) {
-    const cardAudio = createCardSectionElement('mic', 'card_audio_file', log.audio);
-    cardBodyList.append(cardAudio);
-  }
-
   return cardElement
 }
 
-function createCardSectionElement(iconName, field, value, contentEditable=false) {
+function createCardSectionElement(iconName, field, value, contentEditable=false, footerIcon='') {
   const cardSection = document.createElement('li');
   cardSection.classList.add('mdl-list__item');
   const content = `
     <span class="card_${field}_container mdl-list__item-primary-content">
         <i class="material-icons mdl-list__item-icon">${iconName}</i>
         <span contentEditable=${contentEditable} class="card_${field}">${value}</span>
+        ${footerIcon && `<i class="material-icons" style="padding-left:12px">${footerIcon}</i>`}
     </span>`;
   cardSection.innerHTML = content;
   return cardSection
@@ -225,7 +235,6 @@ async function playRecording(log, playAudioIcon) {
     audioDurationSeconds = await eel.play_log_audio(log.audio, log.folder)();
     setTimeout(()=>finishPlayingAudio(log.id), audioDurationSeconds)
   }
-
 }
 
 function finishPlayingAudio(logId) {
@@ -333,16 +342,14 @@ document.addEventListener('mouseup', event => {
   }
 });
 
-function updateCardWithDictionaryEntry(logId, word) {
-  (async() => {
-    const dictionaryEntry = await eel.look_up_dictionary(word)();
-    if (dictionaryEntry) {
-      currentLogs.find(log=>log.id === logId)['dictionary'] = dictionaryEntry;
-    } else {
-      currentLogs.find(log=>log.id === logId)['dictionary'] = null;
-    }
-    refreshCardContent(logId);
-})()
+async function updateCardWithDictionaryEntry(logId, word) {
+  const dictionaryEntry = await eel.look_up_dictionary(word)();
+  if (dictionaryEntry) {
+    currentLogs.find(log=>log.id === logId)['dictionary'] = dictionaryEntry;
+  } else {
+    currentLogs.find(log=>log.id === logId)['dictionary'] = null;
+  }
+  refreshCardContent(logId);
 }
 function updateLogById(logId) {
    // TODO: update logs

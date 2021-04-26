@@ -32,6 +32,7 @@ def load_all_dictionaries():
     # pitch_dictionary_map = load_sdictionary(str(Path(SCRIPT_DIR, 'dictionaries', 'kanjium_pitch_accents.zip')))
 
 def look_up(word):
+    word = word.strip()
     if word in dictionary_map:
         result = [{
             'headword': entry[0],
@@ -44,11 +45,8 @@ def look_up(word):
     else:
         return None
 
-# load_all_dictionaries()
-# a = look_up('画面')
-# print(a)
-
 # def look_up_pitch(word):
+#     word = word.strip()
 #     if word in pitch_dictionary_map:
 #         entry = pitch_dictionary_map[word]
 #         print(entry)

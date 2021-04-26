@@ -42,6 +42,8 @@ PyYAML==5.4.1
 requests==2.25.0
 rfc3986==1.4.0
 six==1.15.0
+SudachiDict-small==20201223.post1
+SudachiPy==0.5.2
 sniffio==1.2.0
 tk==0.1.0
 urllib3==1.26.2

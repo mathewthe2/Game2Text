@@ -1,11 +1,16 @@
 import zipfile 
 import json
-# import tinysegmenter
+from sudachipy import tokenizer
+from sudachipy import dictionary
 from logger import SCRIPT_DIR
 from pathlib import Path
 
 dictionary_map = {}
 pitch_dictionary_map = {}
+
+# Sudachi Parser
+tokenizer_obj = dictionary.Dictionary(dict_type='small').create()
+mode = tokenizer.Tokenizer.SplitMode.A
 
 def load_dictionary(dictionary):
     output_map = {}
@@ -33,17 +38,19 @@ def load_all_dictionaries():
 
 def look_up(word):
     word = word.strip()
-    if word in dictionary_map:
-        result = [{
-            'headword': entry[0],
-            'reading': entry[1],
-            'tags': entry[2],
-            'glossary_list': entry[5],
-            'sequence': entry[6]
-        } for entry in dictionary_map[word]]
-        return result
-    else:
-        return None
+    if word not in dictionary_map:
+        m = tokenizer_obj.tokenize(word, mode)[0]
+        word = m.dictionary_form()
+        if word not in dictionary_map:
+            return None
+    result = [{
+        'headword': entry[0],
+        'reading': entry[1],
+        'tags': entry[2],
+        'glossary_list': entry[5],
+        'sequence': entry[6]
+    } for entry in dictionary_map[word]]
+    return result
 
 # def look_up_pitch(word):
 #     word = word.strip()
@@ -58,19 +65,3 @@ def look_up(word):
 #         }
 #     else:
 #         return None
-
-# def look_up_with_parse(word, word_start_index, sentence):
-#     dictionary_entry = look_up(word)
-#     if (dictionary_entry):
-#         return dictionary_entry
-#     else:
-#         segmenter = tinysegmenter.TinySegmenter()
-#         words = segmenter.tokenize(sentence[word_start_index:])
-        
-#     print(' | '.join(segmenter.tokenize(sentence)))
-
-# def parse_text(sentence):
-#     segmenter = tinysegmenter.TinySegmenter()
-#     print(' | '.join(segmenter.tokenize(sentence)))
-
-# parse_text(u"私の名前は中野です")

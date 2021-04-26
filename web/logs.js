@@ -4,7 +4,6 @@ window.tippyInstances = [];
 let isRecording = false;
 let isPlayingAudio = false;
 const loadingScreenDelay = setTimeout("showLoadingScreen()", 400);
-let selectedText = '';
 
 function showLogs() {
   (async() => {
@@ -117,9 +116,10 @@ function formatCard(logId, cardElement) {
   addCardToAnkiButton.id = `add_card_to_anki_button_${logId}`
   addCardToAnkiButton.setAttribute("log_id", logId);
 
-  if (selectedText) {
-    let selectedTextPreview = selectedText;
+  if (log.selectedText) {
+    let selectedTextPreview = log.selectedText;
     if (log.dictionary) {
+      selectedTextPreview = log.dictionary[0].headword;
       if (log.dictionary[0].reading) {
         selectedTextPreview += ` (${log.dictionary[0].reading})`;
       }
@@ -324,14 +324,14 @@ document.addEventListener('mouseup', event => {
     }
       if (window.getSelection().anchorNode.parentNode.className === 'logText') {
         // Selected Text in Log
-        selectedText = window.getSelection().toString();
+        const selectedText = window.getSelection().toString();
         const logId = window.getSelection().anchorNode.parentNode.parentNode.parentNode.id.split('logItem-')[1]
         currentLogs.find(log=>log.id === logId)['selectedText'] = selectedText;
         refreshCardContent(logId);
         updateCardWithDictionaryEntry(logId, selectedText);
       } else if (window.getSelection().anchorNode.parentElement.className === 'card_card_sentence'){
         // Selected Text in addtoanki card
-        selectedText = window.getSelection().toString();
+        const selectedText = window.getSelection().toString();
         const logId = window.getSelection().anchorNode.parentNode.parentNode.parentNode.parentNode.getAttribute('log_id');
         if (logId) {
           currentLogs.find(log=>log.id === logId)['selectedText'] = selectedText;
@@ -415,6 +415,7 @@ async function addCardToAnki(logId) {
     noteData['selectedtext'] = log.selectedText;
   }
   if (log.dictionary) {
+    noteData['selectedtext'] = log.dictionary[0].headword
     noteData['glossary'] = log.dictionary[0].glossary_list.join(', ');
     if (log.dictionary[0].reading) {
       noteData['reading'] = log.dictionary[0].reading;

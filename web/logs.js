@@ -1,18 +1,98 @@
-showLogs();
+const LOG_CONFIG = 'LOGCONFIG';
+
 let currentLogs = [];
 window.tippyInstances = [];
-let isRecording = false;
-let isPlayingAudio = false;
 const loadingScreenDelay = setTimeout("showLoadingScreen()", 400);
 
-function showLogs() {
+// Audio
+let isRecording = false;
+let isPlayingAudio = false;
+
+// Game Scripts
+let gameScripts = []
+
+init();
+
+function init() {
   (async() => {
-      const newlogs = await eel.show_logs()();
-      if (newlogs) {
-          addLogs(newlogs);
-      }
-      hideLoadingScreen();
-  })()
+    loadGameScripts();
+    showLogs();
+  })();
+}
+
+async function loadGameScripts() {
+  gameScripts = await eel.load_game_text_scripts()();
+  const gameScriptSelect = document.getElementById('gameScriptSelect');
+  gameScriptSelect.innerHTML = '<option>None</option>';
+  gameScripts
+  .forEach(gameScript=>{
+    const scriptOption = document.createElement('option');
+    scriptOption.innerHTML = gameScript.name;
+    gameScriptSelect.append(scriptOption);
+  })
+  const savedGameScript = await eel.read_config(LOG_CONFIG, 'gamescriptfile')();
+  // Use saved game script. If not in script folder remove from config file
+  if (savedGameScript) {
+    const gameScript = gameScripts.find(script => script.path === savedGameScript);
+    if (gameScript) {
+      gameScriptSelect.value = gameScript.name;
+    } else {
+      eel.update_config(LOG_CONFIG, {'gamescriptfile': ''})();
+    }
+  }
+}
+
+function selectGameScript(gameScriptSelect) {
+  const gameScript = gameScripts.find(gameScript=>gameScript.name === gameScriptSelect.value);
+  if (gameScript) {
+    eel.update_config(LOG_CONFIG, {'gamescriptfile':gameScript.path })();
+  } else if (gameScriptSelect.value === 'None') {
+    eel.update_config(LOG_CONFIG, {'gamescriptfile': '' })();
+  }
+}
+
+async function loadGameScriptFromFile() {
+  const fileName = await eel.open_game_text_script()();
+  if (fileName) {
+    loadGameScripts();
+  }
+}
+
+eel.expose(getGameScript)
+function getGameScript() {
+  const gameScript = gameScripts.find(gameScript=>gameScript === gameScriptSelect.value);
+  if (gameScript) {
+    return gameScript
+  } else if (gameScriptSelect.value === 'None') {
+    return null
+  }
+}
+
+eel.expose(updateLogDataById)
+function updateLogDataById(logId, data) {
+  const log = getLogById(logId);
+  if (log) {
+    for (const property in data) {
+      currentLogs.find(log=>log.id === logId)[property] = data[property]
+    };
+    refreshLogElement(logId);
+  }
+}
+
+function refreshLogElement(logId){
+  const logElement = getLogElementById(logId);
+  const newLogElement = logToHtml(getLogById(logId));
+  logElement.innerHTML = newLogElement.innerHTML;
+  
+  addToolTips();
+}
+
+async function showLogs() {
+    const newlogs = await eel.show_logs()();
+    if (newlogs) {
+        addLogs(newlogs);
+    }
+    hideLoadingScreen();
 }
 
 function showLoadingScreen() {
@@ -39,7 +119,19 @@ function addLogs(newLogs) {
     logsContainer.append(logItem);
     currentLogs.push(newLog);
    })
-   // Add Tooltips
+
+  addToolTips();
+  window.scrollTo(0,document.body.scrollHeight);
+}
+
+function addToolTips() {
+  createAudioToolTips();
+  createLogMenu();
+  createAnkiFormCard();
+  createMatchScriptDropdown();
+}
+
+function createAudioToolTips() {
   tippy(document.querySelectorAll('.recordAudioButton'), {
     content: 'Record Audio',
     delay: [300, null]
@@ -48,9 +140,6 @@ function addLogs(newLogs) {
     content: 'Play Audio',
     delay: [300, null]
   });
-  createLogMenu();
-  createAnkiFormCard();
-  window.scrollTo(0,document.body.scrollHeight);
 }
 
 function createLogMenu() {
@@ -96,6 +185,26 @@ function createAnkiFormCard() {
       const template = document.getElementById('addCardForm');
       const cardContent = template.cloneNode(true);
       return logId ? formatCard(logId, cardContent).innerHTML : ''
+    },
+    allowHTML: true,
+  });
+}
+
+function createMatchScriptDropdown() {
+  tippy(document.querySelectorAll('.showMatchingGameScriptButton'), {
+    delay: [100, null],
+    offset: [-400, 0],
+    theme: 'material-light',
+    placement: 'bottom',
+    arrow: false,
+    animation: 'shift-away',
+    trigger:'click',
+    interactive: true,
+    content(reference) {
+      const template = document.getElementById('matchingScriptMenu');
+      const matchScriptMenuContent = template.cloneNode(true);
+      const logId = reference.getAttribute('log_id');
+      return logId ? formatMatchScriptMenu(logId, matchScriptMenuContent).innerHTML : ''
     },
     allowHTML: true,
   });
@@ -187,6 +296,28 @@ function formatLogMenu(logId, logMenuContent) {
   return logMenuContent
 }
 
+function formatMatchScriptMenu(logId, matchScriptContent) {
+  const log = getLogById(logId);
+  matchScriptContent.innerHTML = `<div class="matchingScriptMenuCard mdl-card mdl-shadow--2dp">
+    <ul class="mdl-list">
+      ${log.matches.map(match=>{
+        return (
+        `<li class="mdl-list__item" log_id="${logId}" onclick="replaceLogText(this.getAttribute('log_id'), this.innerText)">
+          <span class="mdl-list__item-primary-content">${match[0]}</span>
+        </li>`
+        )
+      })}
+    </ul>
+  </div>`;
+  return matchScriptContent
+}
+
+function replaceLogText(logId, newText) {
+  updateLogDataById(logId, {
+    text: newText
+  })
+}
+
 function logToHtml(log) {
   const logItem = document.getElementById('logItemTemplate');
   const logItemClone = logItem.cloneNode(true);
@@ -221,6 +352,14 @@ function logToHtml(log) {
   const showAnkiFormButton = logItemClone.getElementsByClassName('showAnkiFormButton')[0];
   showAnkiFormButton.id = `show_anki_form_button_${log.id}`
   showAnkiFormButton.setAttribute("log_id", log.id);
+
+
+  if (log.matches) {
+    const showMatchingScriptButton = logItemClone.getElementsByClassName('showMatchingGameScriptButton')[0];
+    showMatchingScriptButton.id = `show_matching_script_button_${log.id}`
+    showMatchingScriptButton.setAttribute("log_id", log.id);
+    showMatchingScriptButton.hidden = false;
+  }
   
   logText.innerText = log.text;
   logItemClone.hidden = false;

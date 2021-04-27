@@ -12,6 +12,7 @@ from datetime import datetime
 from config import r_config, LOG_CONFIG
 from util import create_directory_if_not_exists, base64_to_image_path
 from audio import play_audio_from_file
+from gamescript import add_matching_script_to_logs
 
 SCRIPT_DIR = Path(__file__).parent 
 TEXT_LOG_PATH = Path(SCRIPT_DIR, 'logs', 'text')
@@ -129,6 +130,17 @@ def text_to_log(text, file_path):
         'text': text[16:]
     }
     return log
+
+def add_gamescript_to_logs(logs):
+    gamescript = r_config(LOG_CONFIG, 'gamescriptfile',)
+    if (gamescript):
+        with open(gamescript, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+            f.close()
+        logs = add_matching_script_to_logs(lines, logs)
+        for log in logs:
+            eel.updateLogDataById(log['id'], {'matches': log['matches'],})()
+    return
     
 def get_logs():
     output = []
@@ -143,6 +155,8 @@ def get_logs():
             log = text_to_log(line, latest_file)
             output.append(log)
         f.close()
+    thread = threading.Thread(target = add_gamescript_to_logs,  args=[output])
+    thread.start()
     return output
 
 def get_latest_log():
@@ -159,6 +173,8 @@ def get_latest_log():
         last_line = line
         log = text_to_log(last_line, latest_file)
     f.close()
+    thread = threading.Thread(target = add_gamescript_to_logs,  args=[[log],])
+    thread.start()
     return log
 
 @eel.expose

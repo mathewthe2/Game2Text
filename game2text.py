@@ -12,6 +12,7 @@ from clipboard import clipboard_to_output, text_to_clipboard
 from logger import get_time_string, AUDIO_LOG_PATH, SCRIPT_DIR
 from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki_note, fetch_anki_fields
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
+from gamescript import load_game_scripts, open_game_script
 from dictionary import load_all_dictionaries, look_up
 from config import r_config, w_config, WINDOWS_HOTKEYS_CONFIG, APP_CONFIG, LOG_CONFIG
 
@@ -41,6 +42,14 @@ def load_image_filter_profiles():
 @eel.expose
 def open_image_filter_profile():
     return open_image_profile()
+
+@eel.expose
+def load_game_text_scripts():
+    return load_game_scripts()
+
+@eel.expose
+def open_game_text_script():
+    return open_game_script()
 
 @eel.expose        
 def translate(text):
@@ -118,7 +127,7 @@ def look_up_dictionary(word):
     return look_up(word)
 
 @eel.expose
-def open_new_window(html_file, height=800, width=600):
+def open_new_window(html_file, height=900, width=600):
     eel.start(html_file, 
     close_callback=close, 
     mode=r_config(APP_CONFIG, "browser"),

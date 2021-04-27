@@ -23,6 +23,16 @@
             <p id="loadingLogsCaption">Getting your logs<p>
             <div id="progressIndicator" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
         </div>
+        <div id="gameScriptLoader">
+            <i class="material-icons">description</i>
+            <span>Game Script</span>
+            <select onchange="selectGameScript(this)" id="gameScriptSelect">
+                <option value="volvo">None</option>
+            </select>
+            <button onclick="loadGameScriptFromFile()" class="mdl-button mdl-js-button mdl-button--icon">
+            <i class="material-icons">folder</i>
+            </button>
+        </div>
         <div id="logsContainer" class="mdl-list">
             <div hidden id="logItemTemplate" class="mdl-list__item logItem">
                 <span class="mdl-list__item-primary-content">
@@ -41,6 +51,15 @@
                               </ul>
                         </div>
                     </div>
+                    <div hidden id="matchingScriptMenu">
+                        <div class="matchingScriptMenuCard mdl-card mdl-shadow--2dp">
+                            <ul class="mdl-list">
+                                <li  class="mdl-list__item">
+                                  <span class="mdl-list__item-primary-content">Test</span>
+                                </li>
+                              </ul>
+                        </div>
+                    </div>
                     <button class="playAudioButton mdl-button mdl-js-button mdl-button--icon mdl-button--colored" >
                         <i class="material-icons playAudio">play_circle_filled</i>
                     </button>
@@ -50,6 +69,9 @@
                     <span contenteditable class="logText"></span>
                 </span>
                 <span class="mdl-list__item-secondary-action">
+                    <button hidden class="showMatchingGameScriptButton mdl-button mdl-js-button mdl-button--icon" >
+                        <i class="game-script-arrow-down-icon material-icons">arrow_drop_down</i>
+                    </button>
                     <button class="showAnkiFormButton mdl-button mdl-js-button mdl-button--icon mdl-button--colored" >
                         <i class="note-add-icon material-icons">note_add</i>
                     </button>

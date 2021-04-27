@@ -14,6 +14,19 @@ html {
     font-size: 22px;
     text-align: center;
 }
+#gameScriptLoader {
+    background: #2e2e2e;
+    color: white;
+    width: 100%;
+    min-height: 20px;
+    padding: 12px;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+}
+#gameScriptLoader > i, span, select {
+    padding-right: 10px
+}
 .logItem {
     transition-duration: .28s;
     transition-timing-function: cubic-bezier(.4,0,.2,1);
@@ -21,7 +34,7 @@ html {
     -webkit-animation: fadein 0.6s;
     animation: fadein 0.6s;
 }
-.logItem:hover, .logMenuCard > .mdl-list > .mdl-list__item:hover {
+.logItem:hover, .matchingScriptMenuCard > .mdl-list > .mdl-list__item:hover, .logMenuCard > .mdl-list > .mdl-list__item:hover {
     background-color: #eee;
 }
 .mdl-list__item-primary-content > .logMenuButton {
@@ -29,6 +42,15 @@ html {
 }
 .mdl-list__item-primary-content:hover > .logMenuButton {
    visibility: visible;
+}
+.matchingScriptMenuCard > .mdl-list > .mdl-list__item {
+    cursor: pointer;
+    font-size: 16px;
+    transition-duration: .28s;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    transition-property: background-color;  
+    -webkit-animation: fadein 0.6s;
+    animation: fadein 0.6s;
 }
 .logMenuCard > .mdl-list {
     padding: 0
@@ -41,6 +63,9 @@ html {
     transition-property: background-color;  
     -webkit-animation: fadein 0.6s;
     animation: fadein 0.6s;
+}
+.matchingScriptMenuCard {
+    min-width: 500px;
 }
 .logMenuCard {
     width: 180px;

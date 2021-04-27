@@ -37,7 +37,7 @@ def load_all_dictionaries():
     # pitch_dictionary_map = load_sdictionary(str(Path(SCRIPT_DIR, 'dictionaries', 'kanjium_pitch_accents.zip')))
 
 def look_up(word):
-    word = word.strip()
+    word = word.replace(" ", "")
     if word not in dictionary_map:
         m = tokenizer_obj.tokenize(word, mode)[0]
         word = m.dictionary_form()

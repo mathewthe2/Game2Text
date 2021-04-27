@@ -5,6 +5,7 @@ import sys
 import eel
 import glob
 import base64
+import fileinput
 import threading
 from pathlib import Path
 from datetime import datetime
@@ -68,7 +69,7 @@ def log_video_image(image_path):
 
 
 def get_image_type(log_id, folder_name):
-    path = Path(SCRIPT_DIR, 'logs', 'images', folder_name)
+    path = Path(IMAGE_LOG_PATH, folder_name)
     if not path.is_dir():
         return None
     file_name = next((f for f in os.listdir(path) if re.match('{}.(?:jpg|jpeg|png|tiff|webp)$'.format(log_id), f)), None)
@@ -77,8 +78,8 @@ def get_image_type(log_id, folder_name):
     return Path(file_name).suffix.split('.')[1]
 
 def get_base64_image_with_log(log_id, folder_name):
-    imagePath = str(Path(SCRIPT_DIR,'logs', 'images', folder_name, log_id + '.png')) 
-    path = Path(SCRIPT_DIR, 'logs', 'images', folder_name)
+    imagePath = str(Path(IMAGE_LOG_PATH, folder_name, log_id + '.png')) 
+    path = Path(IMAGE_LOG_PATH, folder_name)
     if not path.is_dir():
         return None
     file_name = next((f for f in os.listdir(path) if re.match('{}.(?:jpg|jpeg|png|tiff|webp)$'.format(log_id), f)), None)
@@ -110,6 +111,24 @@ def show_logs():
                         log['image'] =  image_data['base64ImageString']
                         log['image_type'] = image_data['imageType']
         return saved_logs
+
+
+def text_to_log(text, file_path):
+    log_id = text[:15]
+    date = parse_time_string(log_id)
+    image = get_base64_image_with_log(log_id=log_id, folder_name=Path(file_path).stem)
+    image_type = get_image_type(log_id=log_id, folder_name=Path(file_path).stem)
+    log = {
+        'id': log_id,
+        'file': Path(file_path).name,
+        'folder': Path(file_path).stem,
+        'image': image,
+        'image_type': image_type,
+        'audio': get_audio_file_name(log_id, Path(file_path).stem),
+        'hours': get_hours_string(date),
+        'text': text[16:]
+    }
+    return log
     
 def get_logs():
     output = []
@@ -121,33 +140,50 @@ def get_logs():
     latest_file = max(list_of_files, key=os.path.getctime)
     with open(latest_file, 'r', encoding='utf-8') as f:
         for index, line in enumerate(f):
-            log_id = line[:15]
-            date = parse_time_string(log_id)
-            image = get_base64_image_with_log(log_id=log_id, folder_name=Path(latest_file).stem)
-            image_type = get_image_type(log_id=log_id, folder_name=Path(latest_file).stem)
-            log = {
-                'id': log_id,
-                'file': Path(latest_file).name,
-                'folder': Path(latest_file).stem,
-                'image': image,
-                'image_type': image_type,
-                'audio': get_audio_file_name(log_id, Path(latest_file).stem),
-                'hours': get_hours_string(date),
-                'text': line[16:]
-            }
+            log = text_to_log(line, latest_file)
             output.append(log)
         f.close()
     return output
 
+def get_latest_log():
+    log = {}
+    if not os.path.exists(TEXT_LOG_PATH):
+        return {}
+    list_of_files = glob.glob(str(TEXT_LOG_PATH) + '/*.txt')
+    if len(list_of_files) < 1:
+        return {}
+    latest_file = max(list_of_files, key=os.path.getctime)
+    with open(latest_file, 'r', encoding='utf-8') as f:
+        for line in f:
+            pass
+        last_line = line
+        log = text_to_log(last_line, latest_file)
+    f.close()
+    return log
+
+@eel.expose
+def update_log_text(log_id, folder_name, text):
+    parsed_text =  text.replace('\n', '')
+    if (len(parsed_text) < 1):
+        return False
+    filename = '{}/{}.txt'.format(TEXT_LOG_PATH, folder_name)
+    create_directory_if_not_exists(filename)
+    for line in fileinput.input(filename, inplace=True):
+        line_id = line[:15]
+        if (line_id == log_id):
+            line = '{}, {}'.format(log_id, parsed_text)
+            return True
+    
+    return False
+        
 def insert_newest_log_with_image(base64_image_string, image_type):
-    saved_logs = get_logs()
-    saved_logs[-1]['image'] = base64_image_string
-    saved_logs[-1]['image_type'] = image_type
-    eel.addLogs([saved_logs[-1]])()
+    log = get_latest_log()
+    log['image'] = base64_image_string
+    log['image_type'] = image_type
+    eel.addLogs([log])()
 
 def insert_newest_log_without_image():
-    saved_logs = get_logs()
-    eel.addLogs([saved_logs[-1]])()
+    eel.addLogs([get_latest_log()])()
 
 @eel.expose
 def play_log_audio(file_name, folder_name):

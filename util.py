@@ -5,6 +5,7 @@ import platform
 import base64
 import cv2
 import eel
+from winreg import HKEY_CURRENT_USER, OpenKey, QueryValueEx
 
 SCRIPT_DIR = Path(__file__).parent 
 
@@ -58,3 +59,19 @@ def base64_to_image_path(base64string, path):
     with open(path, "wb") as fh:
         fh.write(base64.b64decode(base64string))
     return path
+
+def get_default_browser_name():
+    platform_name = platform.system() 
+    if platform_name == 'Windows':
+        with OpenKey(HKEY_CURRENT_USER, r"Software\\Microsoft\\Windows\\Shell\\Associations\\UrlAssociations\\http\\UserChoice") as key:
+            browser = QueryValueEx(key, 'Progid')[0]
+            browser_map = {
+                'ChromeHTML': 'chrome',
+                'FirefoxURL': 'chromium',
+                'IE.HTTP': 'edge'
+            }
+            if browser in browser_map:
+                return browser_map[browser]
+            else:
+                return 'chromium'
+    return 'chrome'

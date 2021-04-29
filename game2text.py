@@ -4,7 +4,7 @@ from pathlib import Path
 from ocr import detect_and_log
 from translate import multi_translate
 from hotkeys import refresh_ocr_hotkey, esc_hotkey
-from util import RepeatedTimer, open_folder_by_relative_path, create_directory_if_not_exists
+from util import RepeatedTimer, open_folder_by_relative_path, create_directory_if_not_exists, get_default_browser_name
 from audio import get_recommended_device_index, get_audio_objects
 from recordaudio import RecordThread
 from pynput import keyboard
@@ -130,7 +130,7 @@ def look_up_dictionary(word):
 def open_new_window(html_file, height=900, width=600):
     eel.start(html_file, 
     close_callback=close, 
-    mode=r_config(APP_CONFIG, "browser"),
+    mode=get_default_browser_name() if r_config(APP_CONFIG, "browser") == 'default' else r_config(APP_CONFIG, "browser"), 
     host=r_config(APP_CONFIG, "host"),
     size=(width, height), 
     port = int(r_config(APP_CONFIG, "port")))
@@ -140,7 +140,7 @@ def run_eel():
     eel.init('web', allowed_extensions=['.js', '.html', '.map'])
     eel.start('index.html',
     close_callback=close, 
-    mode=r_config(APP_CONFIG, "browser"), 
+    mode=get_default_browser_name() if r_config(APP_CONFIG, "browser") == 'default' else r_config(APP_CONFIG, "browser"), 
     host=r_config(APP_CONFIG, "host"), 
     port=int(r_config(APP_CONFIG, "port"))
     )

@@ -44,11 +44,11 @@ python game2text.py
 
 ## Distribution
 
-Unzip *sudachidict_small.zip*
+Unzip *resources/sudachidict_small.zip*
 
 Windows: 
 
-```./build.bat```
+```build.bat```
 
 Mac:
 

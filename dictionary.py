@@ -33,7 +33,7 @@ def load_dictionary(dictionary):
 
 def load_all_dictionaries():
     global dictionary_map
-    dictionary_map = load_dictionary(str(Path(SCRIPT_DIR, 'dictionaries', 'jmdict_english.zip')))
+    dictionary_map = load_dictionary(str(Path(SCRIPT_DIR, 'resources', 'dictionaries', 'jmdict_english.zip')))
     # pitch_dictionary_map = load_sdictionary(str(Path(SCRIPT_DIR, 'dictionaries', 'kanjium_pitch_accents.zip')))
 
 def look_up(word):

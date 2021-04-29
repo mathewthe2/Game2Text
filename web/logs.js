@@ -272,7 +272,7 @@ function createCardSectionElement(iconName, field, value, contentEditable=false,
   const content = `
     <span class="card_${field}_container mdl-list__item-primary-content">
         <i class="material-icons mdl-list__item-icon">${iconName}</i>
-        <span ${contentEditable && `oninput="changeLogText(this)"`} contentEditable=${contentEditable} class="card_${field}">${value}</span>
+        <span ${contentEditable && `oninput="()=>changeLogText(this)"`} contentEditable=${contentEditable} class="card_${field}">${value}</span>
         ${footerIcon && `<i class="material-icons" style="padding-left:12px">${footerIcon}</i>`}
     </span>`;
   cardSection.innerHTML = content;
@@ -289,6 +289,10 @@ function formatLogMenu(logId, logMenuContent) {
     // Disable deleteRecordingButton if there is no audio
     deleteRecordingButton.classList.add('disabled_list__item');
   }
+
+  // Set logId as button attribute
+  const deleteLogButton = logMenuContent.getElementsByClassName('deleteLogButton')[0];
+  deleteLogButton.setAttribute('log_id', logId);
 
   // Set logId as button attribute
   const copyScreenshotButton = logMenuContent.getElementsByClassName('copyScreenshotButton')[0];
@@ -486,9 +490,22 @@ async function deleteRecording(logId) {
       recordAudioButton.hidden = false;
     }
   }
- 
 }
 
+async function deleteLog(logId) {
+  const log = getLogById(logId)
+  const logElement = getLogElementById(logId);
+  if (log && logElement) {
+    const deleteLogEvent = await eel.delete_log(logId, log.folder)();
+    currentLogs = currentLogs.filter(log=>log.id !== logId)
+    logElement.remove()
+  }
+}
+
+/**
+ * Add selected word when user highlights words in log or addToAnkiCard
+ * 
+ */
 document.addEventListener('mouseup', event => {  
   if (window.getSelection) {
     if (window.getSelection().toString() === '') {

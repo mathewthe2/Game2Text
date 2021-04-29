@@ -86,13 +86,10 @@ def get_base64_image_with_log(log_id, folder_name):
     file_name = next((f for f in os.listdir(path) if re.match('{}.(?:jpg|jpeg|png|tiff|webp)$'.format(log_id), f)), None)
     if not file_name:
         return None
-    image_type = Path(file_name).suffix.split('.')[1]
     with open('{}/{}'.format(path, file_name), 'rb') as image_file:
         base64_bytes  = base64.b64encode(image_file.read())
     base64_image_string = base64_bytes.decode('utf-8')
     return base64_image_string
-    # return 'data:image/{};base64, {}'.format(image_type, base64_image_string)
-
 
 @eel.expose
 def show_logs():
@@ -134,12 +131,13 @@ def text_to_log(text, file_path):
 def add_gamescript_to_logs(logs):
     gamescript = r_config(LOG_CONFIG, 'gamescriptfile',)
     if (gamescript):
-        with open(gamescript, 'r', encoding='utf-8') as f:
-            lines = f.readlines()
-            f.close()
-        logs = add_matching_script_to_logs(lines, logs)
-        for log in logs:
-            eel.updateLogDataById(log['id'], {'matches': log['matches'],})()
+        if (Path(gamescript).is_file()):
+            with open(gamescript, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+                f.close()
+            logs = add_matching_script_to_logs(lines, logs)
+            for log in logs:
+                eel.updateLogDataById(log['id'], {'matches': log['matches'],})()
     return
     
 def get_logs():
@@ -155,6 +153,7 @@ def get_logs():
             log = text_to_log(line, latest_file)
             output.append(log)
         f.close()
+    # Start another thread to match logs to game script
     thread = threading.Thread(target = add_gamescript_to_logs,  args=[output])
     thread.start()
     return output
@@ -173,9 +172,29 @@ def get_latest_log():
         last_line = line
         log = text_to_log(last_line, latest_file)
     f.close()
-    thread = threading.Thread(target = add_gamescript_to_logs,  args=[[log],])
+    # Start another thread to match log to game script
+    thread = threading.Thread(target = add_gamescript_to_logs,  args=[[log],]) 
     thread.start()
     return log
+
+@eel.expose
+def delete_log(log_id, folder_name):
+    filename = '{}/{}.txt'.format(TEXT_LOG_PATH, folder_name)
+    if (Path(filename).is_file()):
+        temp_filename = '{}/temp.txt'.format(TEXT_LOG_PATH)
+        with codecs.open(filename, 'r', encoding='utf-8') as fi, \
+            codecs.open(temp_filename, 'w', encoding='utf-8') as fo:
+
+            for line in fi:
+                line_id = line[:15]
+                if (line_id != log_id):
+                    fo.write(line)
+
+        # Remove original file and rename the temporary as the original one
+        os.remove(filename)
+        os.rename(temp_filename, filename)
+        return
+    return 
 
 @eel.expose
 def update_log_text(log_id, folder_name, text):
@@ -183,21 +202,22 @@ def update_log_text(log_id, folder_name, text):
     if (len(parsed_text) < 1):
         return
     filename = '{}/{}.txt'.format(TEXT_LOG_PATH, folder_name)
-    create_directory_if_not_exists(filename)
+    if (Path(filename).is_file()):
+        temp_filename = '{}/temp.txt'.format(TEXT_LOG_PATH)
+        with codecs.open(filename, 'r', encoding='utf-8') as fi, \
+            codecs.open(temp_filename, 'w', encoding='utf-8') as fo:
 
-    temp_filename = '{}/temp.txt'.format(TEXT_LOG_PATH)
-    with codecs.open(filename, 'r', encoding='utf-8') as fi, \
-        codecs.open(temp_filename, 'w', encoding='utf-8') as fo:
+            for line in fi:
+                line_id = line[:15]
+                if (line_id == log_id):
+                    fo.write('{}, {}'.format(log_id, parsed_text))
+                else:
+                    fo.write(line)
 
-        for line in fi:
-            line_id = line[:15]
-            if (line_id == log_id):
-                fo.write('{}, {}'.format(log_id, parsed_text))
-            else:
-                fo.write(line)
-
-    os.remove(filename) # remove original
-    os.rename(temp_filename, filename) # rename temp to original name
+        # Remove original file and rename the temporary as the original one
+        os.remove(filename)
+        os.rename(temp_filename, filename)
+        return
     return
         
 def insert_newest_log_with_image(base64_image_string, image_type):

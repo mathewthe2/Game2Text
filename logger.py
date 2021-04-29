@@ -182,14 +182,16 @@ def delete_log(log_id, folder_name):
     filename = '{}/{}.txt'.format(TEXT_LOG_PATH, folder_name)
     if (Path(filename).is_file()):
         temp_filename = '{}/temp.txt'.format(TEXT_LOG_PATH)
-        with codecs.open(filename, 'r', encoding='utf-8') as fi, \
-            codecs.open(temp_filename, 'w', encoding='utf-8') as fo:
-
-            for line in fi:
-                line_id = line[:15]
-                if (line_id != log_id):
-                    fo.write(line)
-
+        # lines = []
+        with open(filename, "r", encoding='utf-8') as file:
+            lines = file.readlines()
+        with open(temp_filename, "w", encoding='utf-8') as new_file:
+            newLines = [line.rstrip('\r\n') for line in lines if line[:15] != log_id]
+            for line in newLines:
+                if line != newLines[0]:
+                    new_file.write('\n')
+                new_file.write(line)
+                
         # Remove original file and rename the temporary as the original one
         os.remove(filename)
         os.rename(temp_filename, filename)

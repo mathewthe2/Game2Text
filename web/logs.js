@@ -179,6 +179,11 @@ function createAnkiFormCard() {
     },
     onHide(instance) {
       instance.setProps({trigger: 'mouseenter'});
+      // Update log element if user changed the log data
+      const logId = instance.reference.getAttribute('log_id');
+      if (isLogDataUpdated(logId)) {
+        refreshLogElement(logId);
+      }
     },
     content(reference) {
       const logId = reference.getAttribute('log_id');
@@ -267,7 +272,7 @@ function createCardSectionElement(iconName, field, value, contentEditable=false,
   const content = `
     <span class="card_${field}_container mdl-list__item-primary-content">
         <i class="material-icons mdl-list__item-icon">${iconName}</i>
-        <span contentEditable=${contentEditable} class="card_${field}">${value}</span>
+        <span ${contentEditable && `oninput="changeLogText(this)"`} contentEditable=${contentEditable} class="card_${field}">${value}</span>
         ${footerIcon && `<i class="material-icons" style="padding-left:12px">${footerIcon}</i>`}
     </span>`;
   cardSection.innerHTML = content;
@@ -310,6 +315,34 @@ function formatMatchScriptMenu(logId, matchScriptContent) {
     </ul>
   </div>`;
   return matchScriptContent
+}
+
+// Handle user change of log text from log or inside card
+function changeLogText(element) {
+  const newLogText = element.innerText;
+  let logId = '';
+  if (element.classList[0] === 'card_card_sentence') {
+    logId = element.parentNode.parentNode.parentNode.getAttribute('log_id');
+    currentLogs.find(log=>log.id===logId).text = newLogText;
+  }
+  if (element.classList[0] === 'logText') {
+    const logItemElement = element.parentNode.parentNode;
+    logId = logItemElement.id.split('logItem-')[1];
+    currentLogs.find(log=>log.id===logId).text = newLogText;
+    refreshCardContent(logId);
+  }
+  if (logId) {
+    updateLogFileById(logId);
+    // TODO: update matching card options after updating log text
+  }
+}
+
+function isLogDataUpdated(logId) {
+  const log = getLogById(logId);
+  const logElement = getLogElementById(logId);
+  const logTextElement = logElement.getElementsByClassName('logText')[0]
+  const isTextChanged = log.text.trim() !== logTextElement.innerText.trim();
+  return isTextChanged
 }
 
 function replaceLogText(logId, newText) {
@@ -490,8 +523,10 @@ async function updateCardWithDictionaryEntry(logId, word) {
   }
   refreshCardContent(logId);
 }
-function updateLogById(logId) {
-   // TODO: update logs
+
+function updateLogFileById(logId) {
+   const log = getLogById(logId);
+   eel.update_log_text(logId, log.folder, log.text);
 }
 
 function fileBaseName(fileName) {

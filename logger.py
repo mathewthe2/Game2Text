@@ -5,7 +5,7 @@ import sys
 import eel
 import glob
 import base64
-import fileinput
+import codecs
 import threading
 from pathlib import Path
 from datetime import datetime
@@ -181,16 +181,24 @@ def get_latest_log():
 def update_log_text(log_id, folder_name, text):
     parsed_text =  text.replace('\n', '')
     if (len(parsed_text) < 1):
-        return False
+        return
     filename = '{}/{}.txt'.format(TEXT_LOG_PATH, folder_name)
     create_directory_if_not_exists(filename)
-    for line in fileinput.input(filename, inplace=True):
-        line_id = line[:15]
-        if (line_id == log_id):
-            line = '{}, {}'.format(log_id, parsed_text)
-            return True
-    
-    return False
+
+    temp_filename = '{}/temp.txt'.format(TEXT_LOG_PATH)
+    with codecs.open(filename, 'r', encoding='utf-8') as fi, \
+        codecs.open(temp_filename, 'w', encoding='utf-8') as fo:
+
+        for line in fi:
+            line_id = line[:15]
+            if (line_id == log_id):
+                fo.write('{}, {}'.format(log_id, parsed_text))
+            else:
+                fo.write(line)
+
+    os.remove(filename) # remove original
+    os.rename(temp_filename, filename) # rename temp to original name
+    return
         
 def insert_newest_log_with_image(base64_image_string, image_type):
     log = get_latest_log()

@@ -16,6 +16,8 @@ def open_game_script():
     root = Tk()
     root.withdraw()
     file = askopenfile(initialdir=str(GAME_SCRIPT_PATH), filetypes = (("TXT files","*.txt"),("all files","*.*")), defaultextension=".txt")
+    if not file:
+        return
     try:
         new_file = str(Path(GAME_SCRIPT_PATH, Path(file.name).stem + '.txt'))
         copyfile(file.name, new_file)

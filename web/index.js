@@ -76,7 +76,7 @@ async function startCapture(){
   try {
     videoElement.srcObject = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
     if (settingsDialog.open) {
-      settingsDialog.close();
+      closeSettings();
     }
   }catch(err) {
     console.error("Error" + err)
@@ -385,12 +385,23 @@ function toggleAutoMode() {
 }
 
 function openSettings() {
-  settingsDialog.showModal();
+  settingsDialog.hidden = false;
+  setTimeout(()=>settingsDialog.showModal(), 300);
 }
 
 function closeSettings() {
   settingsDialog.close();
+  setTimeout(()=>settingsDialog.hidden = true, 300);
 }
+
+document.addEventListener("keydown", function(event) {
+  const key = event.key; // Or const {key} = event; in ES6+
+  if (key === "Escape") {
+    if (!settingsDialog.hidden) {
+      setTimeout(()=>settingsDialog.hidden = true, 300);
+    }
+  }
+});
 
 function createCanvasWithSelection({width, height, x, y}) {
   aspectRatioY = videoElement.videoHeight / cv1.height;

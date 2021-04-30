@@ -32,5 +32,5 @@ def ocr_space_file(filename, overlay=False, api_key=OCRSPACE_API_KEY, language='
     if (result):
         if (result["ParsedResults"]):
             parsedText = result["ParsedResults"][0]['ParsedText']
-            return parsedText.join(" ", s.splitlines()) # force ouptut to one line
+            return " ".join(parsedText.splitlines()) # force output to one line
     return "Error: OCR Failed"

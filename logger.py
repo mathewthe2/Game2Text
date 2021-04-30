@@ -137,7 +137,7 @@ def add_gamescript_to_logs(logs):
                 f.close()
             logs = add_matching_script_to_logs(lines, logs)
             for log in logs:
-                eel.updateLogDataById(log['id'], {'matches': log['matches'],})()
+                eel.updateLogDataById(log['id'], {'matches': log['matches'],})()    
     return
     
 def get_logs():
@@ -191,7 +191,7 @@ def delete_log(log_id, folder_name):
                 if line != newLines[0]:
                     new_file.write('\n')
                 new_file.write(line)
-                
+
         # Remove original file and rename the temporary as the original one
         os.remove(filename)
         os.rename(temp_filename, filename)
@@ -233,7 +233,9 @@ def insert_newest_log_without_image():
 
 @eel.expose
 def play_log_audio(file_name, folder_name):
-    return play_audio_from_file(str(Path(AUDIO_LOG_PATH, folder_name, file_name)))
+    file = Path(AUDIO_LOG_PATH, folder_name, file_name)
+    if file:
+        return play_audio_from_file(str(file))
 
 @eel.expose
 def delete_audio_file(log_id, folder_name):

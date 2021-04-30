@@ -17,7 +17,6 @@ html {
 #gameScriptLoader {
     background: #2e2e2e;
     color: white;
-    width: 100%;
     min-height: 20px;
     padding: 12px;
     vertical-align: middle;
@@ -80,6 +79,9 @@ html {
 }
 .playAudioButton .recordAudioButton {
     margin-right: 0.2em;
+}
+.logSecondaryActionGroup {
+    min-width: 70px;
 }
 .addCardScreenshot {
    width: 100%;

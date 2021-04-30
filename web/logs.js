@@ -6,7 +6,7 @@ const loadingScreenDelay = setTimeout("showLoadingScreen()", 400);
 
 // Audio
 let isRecording = false;
-let isPlayingAudio = false;
+let currentlyPlayingAudio = '';
 
 // Game Scripts
 let gameScripts = []
@@ -58,16 +58,6 @@ async function loadGameScriptFromFile() {
   }
 }
 
-eel.expose(getGameScript)
-function getGameScript() {
-  const gameScript = gameScripts.find(gameScript=>gameScript === gameScriptSelect.value);
-  if (gameScript) {
-    return gameScript
-  } else if (gameScriptSelect.value === 'None') {
-    return null
-  }
-}
-
 eel.expose(updateLogDataById)
 function updateLogDataById(logId, data) {
   const log = getLogById(logId);
@@ -83,7 +73,6 @@ function refreshLogElement(logId){
   const logElement = getLogElementById(logId);
   const newLogElement = logToHtml(getLogById(logId));
   logElement.innerHTML = newLogElement.innerHTML;
-  
   addToolTips();
 }
 
@@ -272,7 +261,7 @@ function createCardSectionElement(iconName, field, value, contentEditable=false,
   const content = `
     <span class="card_${field}_container mdl-list__item-primary-content">
         <i class="material-icons mdl-list__item-icon">${iconName}</i>
-        <span ${contentEditable && `oninput="()=>changeLogText(this)"`} contentEditable=${contentEditable} class="card_${field}">${value}</span>
+        <span ${contentEditable && `oninput="changeLogText(this)"`} contentEditable=${contentEditable} class="card_${field}">${value}</span>
         ${footerIcon && `<i class="material-icons" style="padding-left:12px">${footerIcon}</i>`}
     </span>`;
   cardSection.innerHTML = content;
@@ -364,17 +353,22 @@ function logToHtml(log) {
   // Init play audio button
   const playAudioButton = logItemClone.getElementsByClassName('playAudioButton')[0];
   playAudioButton.id = `play_audio_button_${log.id}`;
-  playAudioButton.onclick = () => playRecording(log, playAudioButton.firstElementChild);
+  playAudioButton.setAttribute('log_id', log.id);
+  playAudioButton.setAttribute('onclick', `playRecording(this.getAttribute('log_id'), this)`)
 
-  
   // Init record audio button
   const recordAudioButton = logItemClone.getElementsByClassName('recordAudioButton')[0];
   recordAudioButton.id = `record_audio_button_${log.id}`;
-  recordAudioButton.onclick = () => startManualRecording(log, recordAudioButton.firstElementChild);
+  recordAudioButton.setAttribute('log_id', log.id);
+  recordAudioButton.setAttribute('onclick', `startManualRecording(this.getAttribute('log_id'), this)`)
 
   if (log.audio) {
     playAudioButton.hidden = false;
     recordAudioButton.hidden = true;
+    if (currentlyPlayingAudio == log.id) {
+      const playAudioIcon = playAudioButton.firstElementChild;
+      playAudioIcon.innerHTML = 'pause_circle_filled';
+    }
   } else {
     playAudioButton.hidden = true;
     recordAudioButton.hidden = false;
@@ -395,7 +389,7 @@ function logToHtml(log) {
     const showMatchingScriptButton = logItemClone.getElementsByClassName('showMatchingGameScriptButton')[0];
     showMatchingScriptButton.id = `show_matching_script_button_${log.id}`
     showMatchingScriptButton.setAttribute("log_id", log.id);
-    showMatchingScriptButton.hidden = false;
+    showMatchingScriptButton.style.visibility  = 'visible';
   }
   
   logText.innerText = log.text;
@@ -403,33 +397,41 @@ function logToHtml(log) {
   return logItemClone
 }
 
-async function playRecording(log, playAudioIcon) {
+async function playRecording(logId, playAudioButton) {
   // TODO: allow pause and play from another file. Currently only support playing one at a time
-  if (!isPlayingAudio) {
-    isPlayingAudio = true;
-    playAudioIcon.innerHTML = 'pause_circle_filled';
-    audioDurationSeconds = await eel.play_log_audio(log.audio, log.folder)();
-    setTimeout(()=>finishPlayingAudio(log.id), audioDurationSeconds)
+  const log = getLogById(logId);
+  if (log) {
+    if (currentlyPlayingAudio === '') {
+      currentlyPlayingAudio = logId;
+      const playAudioIcon = playAudioButton.firstElementChild;
+      playAudioIcon.innerHTML = 'pause_circle_filled';
+      audioDurationSeconds = await eel.play_log_audio(log.audio, log.folder)();
+      setTimeout(()=>finishPlayingAudio(log.id), audioDurationSeconds)
+    }
   }
 }
 
 function finishPlayingAudio(logId) {
   const playAudioButton = document.getElementById(`play_audio_button_${logId}`);
   playAudioButton.firstElementChild.innerHTML = 'play_circle_filled';
-  isPlayingAudio = false;
+  currentlyPlayingAudio = '';
 }
 
 
-async function startManualRecording(log, recordAudioIcon) {
+async function startManualRecording(logId, recordAudioButton) {
   // Manual Recording: first click to record, second click to stop recording
-  if (!isRecording) {
-    recordAudioIcon.style.color = '#E21549';
-    eel.start_manual_recording(log.id, log.folder)();
-    isRecording = true;
-  } else {
-    recordAudioIcon.style.color = '#3F51B5';
-    stopManualRecording(); 
-    isRecording = false;
+  const log = getLogById(logId);
+  if (log) {
+    const recordAudioIcon = recordAudioButton.firstElementChild;
+    if (!isRecording) {
+      recordAudioIcon.style.color = '#E21549';
+      eel.start_manual_recording(log.id, log.folder)();
+      isRecording = true;
+    } else {
+      recordAudioIcon.style.color = '#3F51B5';
+      stopManualRecording(); 
+      isRecording = false;
+    }
   }
 }
 

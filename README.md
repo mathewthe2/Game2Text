@@ -42,6 +42,12 @@ pip install -r requirements.txt
 python game2text.py
 ```
 
+On Windows, install pyaudio_portaudio through wheel. This package includes "as_loopback" as an option for audio recording to allow recorindg system sounds through Windows WASAPI. 
+```
+pip uninstall pyaudio
+pip install https://github.com/intxcc/pyaudio_portaudio/releases/download/1.1.1/PyAudio-0.2.11-cp37-cp37m-win_amd64.whl
+```
+
 ## Distribution
 
 Unzip *resources/sudachidict_small.zip*
@@ -63,11 +69,3 @@ Q. Why is my application not showing in screen share?
 On MacOS, make sure you have allowed screen recording for your browser in **Security & Privacy** settings.
 
 <img src="https://user-images.githubusercontent.com/13146030/113811992-d7243280-979f-11eb-8bdf-bcea6bd4e9bd.png" width="500" height="439">
-
-
-Q. How do I use Game2Text without Chrome?
-- 
-Modify *config.ini* and update the value of browser to edge, chromium, or firefox. 
-
-<img src="https://user-images.githubusercontent.com/13146030/113812636-02f3e800-97a1-11eb-8435-5f2c0e7b0339.png" width="400" height="504">
-

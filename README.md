@@ -25,12 +25,6 @@
 ## Documentation
 [Read Documentation](https://github.com/mathewthe2/Game2Text/blob/main/public/documentation.md)
 
-## Prerequisite: Tesseract
-
-Windows/Mac: Tesseract is bundled with the application.
-
-Linux: Follow installation instructions [here](https://tesseract-ocr.github.io/tessdoc/Home.html).
-
 ## Getting Started
 
 Create a venv, then once activated install requirements:
@@ -44,6 +38,8 @@ On Windows, install pyaudio_portaudio through wheel. This package includes "as_l
 pip uninstall pyaudio
 pip install https://github.com/intxcc/pyaudio_portaudio/releases/download/1.1.1/PyAudio-0.2.11-cp37-cp37m-win_amd64.whl
 ```
+
+On Linux, install Tesseract by following the installation instructions [here](https://tesseract-ocr.github.io/tessdoc/Home.html).
 
 ## Distribution
 

@@ -7,7 +7,7 @@
 [Improve OCR by switching OCR Engine](#engine) <br/>
 [Improve OCR with image filters](#filters) <br/>
 [Improve OCR with Game Script Matching](#matching) <br/>
-[Add cards to Anki](#anki) <br/>
+[Create game flashcards in Anki](#anki) <br/>
 [Hotkeys](#hotkeys)
 
 <a name="browser"/>
@@ -90,9 +90,9 @@ Click on the dropdown button and select a game text. It will replace the extract
 
 <a name="anki"/>
 
-## Add cards to Anki
+## Create game flashcards in Anki
 
-Game2Text can create SRS flashcards in Anki with useful information from game audio, screenshots, sentences, to dictionary definitions.
+Game2Text can create SRS flashcards in Anki with useful media such as game audio, screenshots, sentences, and dictionary definitions.
 
 To start, add [Anki Connect](https://ankiweb.net/shared/info/2055492159) to Anki.
 

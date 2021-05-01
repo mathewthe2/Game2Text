@@ -5,7 +5,10 @@ import platform
 import base64
 import cv2
 import eel
-from winreg import HKEY_CURRENT_USER, OpenKey, QueryValueEx
+try:
+    from winreg import HKEY_CURRENT_USER, OpenKey, QueryValueEx
+except ImportError:
+    print('Failed to import winreg.')
 
 SCRIPT_DIR = Path(__file__).parent 
 

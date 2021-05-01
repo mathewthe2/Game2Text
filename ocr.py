@@ -38,6 +38,11 @@ def image_to_text(engine, base64img, text_orientation):
 def tesseract_ocr(image, text_orientation):
     language = r_config(OCR_CONFIG, "tesseract_language")
     psm = HORIZONTAL_TEXT_DETECTION
+    # Add English Tessdata for legacy Tesseract (English is included in v4 Japanese trained data)
+    is_legacy_tesseract = r_config(OCR_CONFIG, "oem") == '0'
+    if is_legacy_tesseract:
+        language += '+eng'
+    # Manual Vertical Text Orientation
     if (text_orientation == 'vertical'):
         psm = VERTICAL_TEXT_DETECTON
         language += "_vert"

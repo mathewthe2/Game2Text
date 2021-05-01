@@ -13,7 +13,7 @@ def path_to_ffmpeg():
     if platform_name == 'Windows':
         return str(Path(SCRIPT_DIR, "resources", "bin", "win", "ffmpeg", "ffmpeg.exe"))
     elif platform_name == 'Darwin':
-        return ''
+        return str(Path(SCRIPT_DIR, "resources", "bin", "mac", "ffmpeg", "ffmpeg"))
     return ''
 
 def path_to_ffmpeg_folder():

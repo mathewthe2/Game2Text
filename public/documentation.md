@@ -78,7 +78,7 @@ Game script matching is a powerful tool to find the correct sentence in a game.
 
 To start, install a game script file in the **logs window** in Game2Text or move it to the *game2text/gamescripts* folder.
 
-You can find game scripts [provided by our community here](https://github.com/mathewthe2/Game2Text-GameScripts) or create your own by writing each in-game dialog to a newline in a text file.
+You can find [game scripts provided by our community](https://github.com/mathewthe2/Game2Text-GameScripts) or create your own by writing each in-game dialog to a newline in a text file.
 
 In the **log window**, select the game script at the top of the window. 
 

@@ -24,7 +24,7 @@ Then, install [Blackhole](https://github.com/ExistentialAudio/BlackHole), a virt
 
 After you have installed Blackhole, on your desktop type *command-space* to launch **Spotlight** and type in *midi* and press enter to launch **Auto MIDI Setup**.
 
-In Auto MIDI Setup, click on the bottom right corner **+** icon and add a new Multi-Output Device. Select Blackhole 16ch as well as your speakers/headphone. 
+In Auto MIDI Setup, click on the bottom left corner **+** icon and add a new Multi-Output Device. Select Blackhole 16ch as well as your speakers/headphone. 
 
 <img width="580" alt="Screenshot 2021-05-01 at 9 42 03 PM" src="https://user-images.githubusercontent.com/13146030/116784464-e492bb00-aac6-11eb-94a2-deb13f079dde.png">
 

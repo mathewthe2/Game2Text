@@ -127,7 +127,7 @@ The words will be parsed and if it's a valid dictionary entry, its *reading* in 
 
 On Windows, system sound is recorded through Windows WASAPI.
 
-For Mac, [follow the instructions here](https://github.com/mathewthe2/Game2Text/blob/main/public/faq.md#sound) to set up a virtual audio cable.
+[Mac users, follow the instructions here](https://github.com/mathewthe2/Game2Text/blob/main/public/faq.md#sound) to set up a virtual audio cable.
 
 7 seconds of audio prior to the text extracted are recorded for the *audio* field. You can disable this feature in the *Settings* Dialog.
 

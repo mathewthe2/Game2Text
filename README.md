@@ -25,7 +25,7 @@
 ## Documentation
 [Read Documentation](https://github.com/mathewthe2/Game2Text/blob/main/public/documentation.md)
 
-## Getting Started
+## Getting Started (for developers)
 
 Create a venv, then once activated install requirements:
 ```

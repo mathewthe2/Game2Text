@@ -42,7 +42,7 @@ pip install -r requirements.txt
 python game2text.py
 ```
 
-On Windows, install pyaudio_portaudio through wheel. This package includes "as_loopback" as an option for audio recording to allow recorindg system sounds through Windows WASAPI. 
+On Windows, install pyaudio_portaudio through wheel. This package includes "as_loopback" as an option to record system audio through Windows WASAPI. 
 ```
 pip uninstall pyaudio
 pip install https://github.com/intxcc/pyaudio_portaudio/releases/download/1.1.1/PyAudio-0.2.11-cp37-cp37m-win_amd64.whl
@@ -64,8 +64,4 @@ Temporary fix for all read/write operations using *os.path* on Mac builds with p
 
 ## FAQ
 
-Q. Why is my application not showing in screen share?
-- 
-On MacOS, make sure you have allowed screen recording for your browser in **Security & Privacy** settings.
 
-<img src="https://user-images.githubusercontent.com/13146030/113811992-d7243280-979f-11eb-8bdf-bcea6bd4e9bd.png" width="500" height="439">

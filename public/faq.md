@@ -14,10 +14,10 @@ On MacOS, make sure you have allowed screen recording for your browser in **Secu
 
 Q. How do I use Game2Text without Chrome?
 -
-Change browser in the *config.ini* file. 
-- *default*: finds your default browser (on Windows)
+Replace the browser value in *browser=[your browser]* in the *config.ini* file. 
 - *chrome*: Chrome
 - *chromium*: Firefox, Opera, Brave, and other chromium browsers installed.
 - *edge*: Microsoft Edge
+- *default*: (Windows Only) finds your default browser 
 
 <img src="https://user-images.githubusercontent.com/13146030/113812636-02f3e800-97a1-11eb-8435-5f2c0e7b0339.png" width="300">

@@ -1,4 +1,5 @@
 const LOG_CONFIG = 'LOGCONFIG';
+const ANKI_CONFIG = 'ANKICONFIG';
 
 let currentLogs = [];
 window.tippyInstances = [];
@@ -7,6 +8,11 @@ const loadingScreenDelay = setTimeout("showLoadingScreen()", 400);
 // Audio
 let isRecording = false;
 let currentlyPlayingAudio = '';
+
+// Screenshots
+let isResizeAnkiScreenshot = false;
+let ankiScreenshotMaxWidth = 1280;
+let ankiScreenshotMaxHeight = 720; 
 
 // Game Scripts
 let gameScripts = []
@@ -17,6 +23,7 @@ function init() {
   (async() => {
     loadGameScripts();
     showLogs();
+    initSetAnkiScreenshotMaxDimensions();
   })();
 }
 
@@ -597,6 +604,16 @@ function refreshCardContent(logId) {
     }
 }
 
+function resizeScreenshot(log) {
+  if (isResizeAnkiScreenshot) {
+    const imgSrc = `data:image/${log.image_type};base64,${log.image}`
+    const imgBase64 = resizeImage(imgSrc, resizeAnkiScreenshotMaxWidth, resizeAnkiScreenshotMaxHeight);
+    const imgData = imgBase64.split(';base64,')[1]; 
+    return imgData
+  }
+  return log.image
+}
+
 async function addCardToAnki(logId) {
   const log = getLogById(logId);
   const noteData = {
@@ -618,7 +635,8 @@ async function addCardToAnki(logId) {
     noteData['audio'] = log.audio;
   }
   if (log.image) {
-    noteData['screenshot'] = log.image;
+    const image = resizeScreenshot(log);
+    noteData['screenshot'] = image;
     noteData['imagetype'] = log.image_type;
   }
   const result = await eel.create_note(noteData)();
@@ -641,3 +659,8 @@ async function addCardToAnki(logId) {
   }
 }
 
+async function initSetAnkiScreenshotMaxDimensions() {
+  isResizeAnkiScreenshot = await eel.read_config(ANKI_CONFIG, 'resize_screenshot')(); 
+  resizeAnkiScreenshotMaxWidth = await eel.read_config(ANKI_CONFIG, 'resize_screenshot_max_width')(); 
+  resizeAnkiScreenshotMaxHeight = await eel.read_config(ANKI_CONFIG, 'resize_screenshot_max_height')(); 
+}

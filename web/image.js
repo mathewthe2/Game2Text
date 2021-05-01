@@ -500,3 +500,29 @@ function drawGrayPixel(img, i, alpha, output) {
   const val = blend(rgb2y(r, g, b), alpha * img[i + 3] / 255);
   drawPixel(output, i, val, val, val);
 }
+
+// from https://gist.github.com/ORESoftware/ba5d03f3e1826dc15d5ad2bcec37f7bf#file-resize-base64-js
+function resizeImage(base64Str, max_width, max_height) {
+  var img = new Image();
+  img.src = base64Str;
+  var canvas = document.createElement('canvas');
+  var width = img.width;
+  var height = img.height;
+
+  if (width > height) {
+    if (width > max_width) {
+      height *= max_width / width;
+      width = max_width;
+    }
+  } else {
+    if (height > max_height) {
+      width *= max_height / height;
+      height = max_height;
+    }
+  }
+  canvas.width = width;
+  canvas.height = height;
+  var ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, width, height);
+  return canvas.toDataURL();
+}

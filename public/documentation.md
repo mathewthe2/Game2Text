@@ -153,6 +153,6 @@ These are the default hotkeys for each operating system.
 
 You can change hotkeys in the *config.ini* file
 
-Platform | Windows | Mac OSX | Linux | 
+Action | Windows | Mac OSX | Linux | 
 --- | --- | --- | --- |
 Refresh OCR | Ctrl-Q | Cmd-B | Ctrl-Q |

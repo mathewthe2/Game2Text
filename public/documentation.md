@@ -125,6 +125,10 @@ The words will be parsed and if it's a valid dictionary entry, its *reading* in 
 
 ### Audio
 
+On Windows, system sound is recorded through Windows WASAPI.
+
+[Mac users, follow the instructions here](https://github.com/mathewthe2/Game2Text/blob/main/public/faq.md#sound) to set up a virtual audio cable.
+
 7 seconds of audio prior to the text extracted are recorded for the *audio* field. You can disable this feature in the *Settings* Dialog.
 
 Alternatively, you can also manually record your own audio by clicking on the microphone icon to the left the extracted sentence. Click once to start recording and click again to stop. 

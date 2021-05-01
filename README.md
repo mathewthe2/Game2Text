@@ -15,24 +15,17 @@
 ## Download 
 You can find downloads on [Releases](https://github.com/mathewthe2/Game2Text/releases).
 
+## FAQ
+[Read FAQ](https://github.com/mathewthe2/Game2Text/blob/main/public/faq.md)
+
+## Documentation
+[Read Documentation](https://github.com/mathewthe2/Game2Text/blob/main/public/documentation.md)
+
 ## Prerequisite: Tesseract
 
 Windows/Mac: Tesseract is bundled with the application.
 
 Linux: Follow installation instructions [here](https://tesseract-ocr.github.io/tessdoc/Home.html).
-
-## Custom Config 
-
-Update *config.ini* file for the following configurations:
-
-- **browser**: Browser to launch Game2Text
-- **logimagetype**: file type to save logged images
-- **refresh**: hotkey to execute OCR
-
-## Image Filter Profiles 
-
-You can import and export image filter profiles to improve the accuracy of the OCR result. Image filtering controls can be accessed by right clicking on the game/video stream.    
-
 
 ## Getting Started
 
@@ -61,7 +54,4 @@ Mac:
 ```sh build.sh```
 
 Temporary fix for all read/write operations using *os.path* on Mac builds with pyinstaller: create a wrapper file that runs the Game2Text executable inside the package
-
-## FAQ
-[Read FAQ](https://github.com/mathewthe2/Game2Text/blob/main/public/faq.md)
 

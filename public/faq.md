@@ -16,7 +16,7 @@ On MacOS, make sure you have allowed screen recording for your browser in **Secu
 
 Q. How do I record system sound on Mac OS? <br/>
 -
-First, make sure you have allowed microphone for Terminal in  **Security & Privacy** settings.
+First, make sure you have allowed microphone for the **Terminal** application in  **Security & Privacy** settings.
 
 <img width="580" alt="Screenshot]¥" src="https://user-images.githubusercontent.com/13146030/116784216-a3e67200-aac5-11eb-9a16-96462cbc3b75.png">
 

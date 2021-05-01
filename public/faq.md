@@ -20,7 +20,7 @@ First, make sure you have allowed microphone for the **Terminal** application in
 
 <img width="580" alt="Screenshot]¥" src="https://user-images.githubusercontent.com/13146030/116784216-a3e67200-aac5-11eb-9a16-96462cbc3b75.png">
 
-Then, install [Blackhole](https://github.com/ExistentialAudio/BlackHole)
+Then, install [Blackhole](https://github.com/ExistentialAudio/BlackHole), a virtual audio cable to pass system sound as a microphone.
 
 After you have installed Blackhole, on your desktop type *command-space* to launch **Spotlight** and type in *midi* and press enter to launch **Auto MIDI Setup**.
 

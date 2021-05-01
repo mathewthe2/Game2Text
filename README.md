@@ -17,7 +17,7 @@
 - Create game flashcards with screenshot and game audio via Anki and AnkiConnect
 
 ## Download 
-[Download Game2Text](https://github.com/mathewthe2/Game2Text/releases)
+[Download Game2Text](https://game2text.com/download.html)
 
 ## FAQ
 [Read FAQ](https://github.com/mathewthe2/Game2Text/blob/main/public/faq.md)

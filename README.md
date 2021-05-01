@@ -4,13 +4,14 @@
 
 ![Game2Text Preview](https://game2text.com/images/header-software-app.png)
 
-[Game2Text](https://www.game2text.com) is an all-in-one application that helps you learn language from games.
+[Game2Text](https://www.game2text.com) is an all-in-one application that helps you learn languages from the games you play.
 
 
 ## Features
-- Dictionary lookup with browser dictionaries like Yomichan
-- Translation - DeepL, Papago, and Google
-- Create image and audio flashcards via Anki and AnkiConnect
+- Dictionary lookup with browser dictionaries like Yomichan and Rikaichan
+- OCR-assisted game script matching 
+- Translation tools including DeepL, Papago, and Google Translate.
+- Create game flashcards with screenshot and game audio via Anki and AnkiConnect
 
 ## Download 
 You can find downloads on [Releases](https://github.com/mathewthe2/Game2Text/releases).
@@ -43,7 +44,7 @@ pip install https://github.com/intxcc/pyaudio_portaudio/releases/download/1.1.1/
 
 ## Distribution
 
-Unzip *resources/sudachidict_small.zip*
+Unzip *resources/sudachidict_small.zip* into the same directory.
 
 Windows: 
 

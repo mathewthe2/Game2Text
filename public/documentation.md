@@ -137,7 +137,9 @@ If you're not happy with the result, you can press on the menu icon on the left 
 
 Sometimes there are unwanted characters in our extracted text. 
 
-Click on the sentence log to add or remove words. You can also modify your 
+In the log window, click on the sentence to add or remove words. 
+
+To remove a sentence log, click on the *More* icon on the left and select *Remove log*.
 
 ### Similar Kanji Replacement
 

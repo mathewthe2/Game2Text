@@ -63,5 +63,5 @@ Mac:
 Temporary fix for all read/write operations using *os.path* on Mac builds with pyinstaller: create a wrapper file that runs the Game2Text executable inside the package
 
 ## FAQ
-
+[Read FAQ](https://github.com/mathewthe2/Game2Text/blob/main/public/faq.md)
 

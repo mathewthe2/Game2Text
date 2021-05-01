@@ -8,7 +8,8 @@ import eel
 try:
     from winreg import HKEY_CURRENT_USER, OpenKey, QueryValueEx
 except ImportError:
-    print('Failed to import winreg.')
+    if platform.system() == 'Windows':
+        print('failed to import winreg')
 
 SCRIPT_DIR = Path(__file__).parent 
 

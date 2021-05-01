@@ -7,6 +7,7 @@ import glob
 import base64
 import codecs
 import threading
+import platform
 from pathlib import Path
 from datetime import datetime
 from config import r_config, LOG_CONFIG
@@ -252,4 +253,7 @@ def get_audio_file_name(log_id, folder_name):
     if not path.is_dir():
         return None
     file_name = next((f for f in os.listdir(path) if re.match('{}.(?:wav|mp3|mp4|ogg|wma|aac|aiff|flv|m4a|flac)$'.format(log_id), f)), None)
+    # Temporary fix for Mac OS: change file type since mp3 hasn't finished converting
+    if platform.system() == 'Darwin':
+        file_name = log_id + '.' + r_config(LOG_CONFIG, 'logaudiotype')
     return file_name

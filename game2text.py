@@ -156,6 +156,11 @@ dictionary_thread.start()
 recommended_audio_device_index = get_recommended_device_index(r_config(LOG_CONFIG, 'logaudiohost'))
 audio_recorder = RecordThread(recommended_audio_device_index, int(r_config(LOG_CONFIG, "logaudioframes")))
 is_log_audio = r_config(LOG_CONFIG, "logaudio").lower() == "true"
+# TODO: Fix input overflowed error if start logging audio on Mac automatically at launch
+is_mac = (platform.system() == 'Darwin')
+if is_mac:
+    is_log_audio  = False
+    w_config(LOG_CONFIG, {"logaudio": 'false'})
 if is_log_audio and recommended_audio_device_index != -1:
     audio_recorder.start()
 

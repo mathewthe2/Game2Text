@@ -3,6 +3,7 @@ from pydub.playback import play
 import pyaudio
 import wave 
 import os
+import platform
 from shutil import copyfile
 import eel
 from config import r_config, LOG_CONFIG
@@ -66,13 +67,14 @@ def valid_output_device(deviceIndex):
     p = pyaudio.PyAudio()
     device_info = p.get_device_info_by_index(deviceIndex)
     is_input = device_info["maxInputChannels"] > 0
+    is_windows = (platform.system() == 'Windows')
     is_wasapi = (p.get_host_api_info_by_index(device_info["hostApi"])["name"]).find("WASAPI") != -1
     p.terminate()
     if is_input:
-        if is_wasapi:
-            return True
-        else:
+        if is_windows and not is_wasapi:
             return False
+        else:
+            return True
     return True
 
 def play_audio_from_file(file):

@@ -1,6 +1,19 @@
 #! /bin/sh
 rm -rf build, dist
-python -m eel game2text.py web --windowed --icon "public/icon.icns" --add-data "logs/images/temp.png:logs/images" --add-data "logs/text:logs/text" --add-data "mac:mac" --add-data "config.ini:."
+python -m eel game2text.py web \
+--windowed \
+--hidden-import sudachidict_small \
+--hidden-import sudachipy.lattice \
+--hidden-import sudachipy.morphemelist \
+--icon "public/icon.icns" \
+--add-data "logs/images/temp.png:logs/images" \
+--add-data "logs/text:logs/text" \
+--add-data "resources/sudachidict_small:sudachidict_small/" \
+--add-data "resources/sudachipy/resources:sudachipy/resources/" \
+--add-data "anki:anki/" \
+--add-data "resources/bin/mac:resources/bin/mac/" \
+--add-data "resources/dictionaries:resources/dictionaries/" \
+--add-data "config.ini:."
 # temporary fix for using os.path in MacOS
 touch dist/game2text.app/Contents/MacOS/wrapper
 echo '#!/bin/bash' >> dist/game2text.app/Contents/MacOS/wrapper

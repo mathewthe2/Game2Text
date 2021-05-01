@@ -38,6 +38,7 @@ pyparsing==2.4.7
 pyperclip==1.8.1
 pytesseract==0.3.6
 python-xlib==0.29
+python-Levenshtein==0.12.2
 pywin32-ctypes==0.2.0
 PyYAML==5.4.1
 requests==2.25.0

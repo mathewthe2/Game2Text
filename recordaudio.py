@@ -2,6 +2,7 @@ import threading
 import pyaudio
 import wave
 import os
+import platform
 from audio import valid_output_device, convert_audio
 from config import r_config, LOG_CONFIG
 
@@ -31,18 +32,25 @@ class RecordThread(threading.Thread):
         # Open stream
         channelcount = device_info["maxInputChannels"] if (device_info["maxOutputChannels"] < device_info["maxInputChannels"]) else device_info["maxOutputChannels"]
         try:
-            stream = p.open(format = pyaudio.paInt16,   
-                        channels = channelcount,
-                        rate = int(device_info["defaultSampleRate"]),
-                        input = True,
-                        frames_per_buffer = self.frames,
-                        input_device_index = device_info["index"],
-                        as_loopback = useloopback)
+            stream_parameters = {
+                'format': pyaudio.paInt16,  
+                'channels': channelcount,
+                'rate': int(device_info["defaultSampleRate"]),
+                'input': True,
+                'frames_per_buffer': self.frames,
+                'input_device_index': device_info["index"]
+            }
+
+            is_windows = (platform.system() == 'Windows')
+            if is_windows:
+                stream_parameters['as_loopback'] = useloopback
+
+            stream = p.open(**stream_parameters)
         
             # Start recording
             self.isRecording = True
             while self.bRecord:
-                self.recorded_frames.append(stream.read(self.frames))
+                self.recorded_frames.append(stream.read(self.frames, exception_on_overflow = True))
             
             stream.stop_stream()
             stream.close()
@@ -74,8 +82,8 @@ class RecordThread(threading.Thread):
                 convert_audio(file, self.audiofile)
                 os.remove(file)
 
-        except:
-            print('Error: cannot record audio with selected device')
+        except Exception as e:
+            print('Error: cannot record audio with selected device', e)
             
     def stop_recording(self, audiofile='out.wav', duration = 10):
         self.audiofile = audiofile

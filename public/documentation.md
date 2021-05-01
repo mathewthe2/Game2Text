@@ -3,7 +3,7 @@
 ##### Table of Contents  
 [Switch browser for Game2Text](#browser) <br/>
 [Extract text with OCR](#ocr) <br/> 
-[Word lookup with Yomichan or Rikaichan](#yomichan) <br/>
+[Lookup word with Yomichan or Rikaichan](#yomichan) <br/>
 [Improve OCR by switching OCR Engine](#engine) <br/>
 [Improve OCR with image filters](#filters) <br/>
 [Improve OCR with Game Script Matching](#matching) <br/>
@@ -34,7 +34,7 @@ Then, click and drag over the game screen to create a selection over a text regi
 
 <a name="yomichan"/>
 
-## Word Lookup with Yomichan, Rikaichan
+## Lookup word with Yomichan or Rikaichan
 
 Browser dictionaries like Yomichan are immedaitely accessible from Game2Text.
 

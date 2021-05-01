@@ -6,6 +6,9 @@
 
 [Game2Text](https://www.game2text.com) is an all-in-one application that helps you learn languages from the games you play.
 
+## Platforms
+- Windows 10
+- Mac OSX Mojave, Catalina
 
 ## Features
 - Dictionary lookup with browser dictionaries like Yomichan and Rikaichan

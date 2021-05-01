@@ -4,7 +4,7 @@
 [Switch browser for Game2Text](#browser) <br/>
 [Extract text with OCR](#ocr) <br/> 
 [Word lookup with Yomichan or Rikaichan](#yomichan) <br/>
-[Improve OCR by switching OCR Engine](#engine)
+[Improve OCR by switching OCR Engine](#engine) <br/>
 [Improve OCR with image filters](#filters) <br/>
 [Improve OCR with Game Script Matching](#matching) <br/>
 [Add cards to Anki](#anki) <br/>

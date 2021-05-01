@@ -605,7 +605,7 @@ function refreshCardContent(logId) {
 }
 
 function resizeScreenshot(log) {
-  if (isResizeAnkiScreenshot) {
+  if (isResizeAnkiScreenshot === 'true') {
     const imgSrc = `data:image/${log.image_type};base64,${log.image}`
     const imgBase64 = resizeImage(imgSrc, resizeAnkiScreenshotMaxWidth, resizeAnkiScreenshotMaxHeight);
     const imgData = imgBase64.split(';base64,')[1]; 

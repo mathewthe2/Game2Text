@@ -396,11 +396,13 @@ function closeSettings() {
 }
 
 function openTexthookerSettings() {
-  texthookerSettingsDialog.showModal();
+  texthookerSettingsDialog.hidden = false;
+  setTimeout(()=>texthookerSettingsDialog.showModal(), 300);
 }
 
 function closeTexthookerSettingsDialog() {
   texthookerSettingsDialog.close();
+  setTimeout(()=>texthookerSettingsDialog.hidden = true, 300);
 }
 
 document.addEventListener("keydown", function(event) {

@@ -17,7 +17,7 @@
 - Create game flashcards with screenshot and game audio via Anki and AnkiConnect
 
 ## Download 
-[Download Game2Text](https://game2text.com/download.html)
+[Download Game2Text](https://game2text.com/download.html) 
 
 ## FAQ
 [Read FAQ](https://github.com/mathewthe2/Game2Text/blob/main/public/faq.md)
@@ -25,7 +25,7 @@
 ## Documentation
 [Read Documentation](https://github.com/mathewthe2/Game2Text/blob/main/public/documentation.md)
 
-## Getting Started (for developers)
+## Development
 
 Create a venv, then once activated install requirements:
 ```
@@ -54,4 +54,23 @@ Mac:
 ```sh build.sh```
 
 Temporary fix for all read/write operations using *os.path* on Mac builds with pyinstaller: create a wrapper file that runs the Game2Text executable inside the package
+
+## Acknowledgement
+
+#### Tools
+
+| Tool | Description | Version |
+| :---: | :---: | :---: |
+| [Python Eel](https://github.com/ChrisKnott/Eel)  | Electron-like Library for Python | 0.14.0 |
+| [Tesseract](https://github.com/tesseract-ocr/tesseract)  | OCR Tool | 4.1.1 |
+| [AnkiConnect](https://github.com/FooSoft/anki-connect) |  Anki Remote API Extension | / |
+| [SudachiPy](https://github.com/WorksApplications/SudachiPy)  |  Japanese Morphological Analyzer | 0.5.2 |
+| [Textractor](https://github.com/Artikash/Textractor) |  Texthooker | 4.16.1 |
+
+
+#### Resources
+
+Jun Mako (Game Scripts)
+
+Unboxious (Game Scripts)
 

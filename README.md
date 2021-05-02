@@ -71,6 +71,8 @@ Temporary fix for all read/write operations using *os.path* on Mac builds with p
 | [AnkiConnect](https://github.com/FooSoft/anki-connect) |  Anki Remote API Extension | / |
 | [SudachiPy](https://github.com/WorksApplications/SudachiPy)  |  Japanese Morphological Analyzer | 0.5.2 |
 | [Textractor](https://github.com/Artikash/Textractor) |  Texthooker | 4.16.1 |
+| [FFmpeg](https://www.ffmpeg.org/) |  Audio Converter | 4.4 |
+
 
 
 #### Resources

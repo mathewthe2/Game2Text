@@ -255,6 +255,7 @@ function updateText(element, text) {
 eel.expose(updateOutput)
 function updateOutput(text) {
   updateText(output, text);
+  eel.log_output(text)();
   if (showTranslation) {
     translate(text)
   }

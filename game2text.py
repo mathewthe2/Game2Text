@@ -11,7 +11,7 @@ from audio import get_recommended_device_index, get_audio_objects
 from recordaudio import RecordThread
 from pynput import keyboard
 from clipboard import clipboard_to_output, text_to_clipboard
-from logger import get_time_string, AUDIO_LOG_PATH, SCRIPT_DIR
+from logger import get_time_string, log_text, log_media, AUDIO_LOG_PATH, SCRIPT_DIR
 from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki_note, fetch_anki_fields
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
 from gamescript import load_game_scripts, open_game_script
@@ -33,6 +33,11 @@ def close(page, sockets):
 @eel.expose     
 def recognize_image(engine, image, orientation):
     return detect_and_log(engine, image, orientation, session_start_time, get_time_string(), audio_recorder)
+
+@eel.expose
+def log_output(text):
+    log_text(session_start_time, get_time_string(), text)
+    log_media(session_start_time, get_time_string(), audio_recorder)
 
 @eel.expose
 def export_image_filter_profile(profile):

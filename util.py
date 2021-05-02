@@ -1,6 +1,8 @@
 from threading import Timer
 from pathlib import Path
+from textractor import Textractor
 import os
+import psutil
 import platform
 import base64
 import cv2
@@ -79,3 +81,28 @@ def get_default_browser_name():
             else:
                 return 'chromium'
     return 'chrome'
+
+def get_PID_list():
+    processes = [proc.name() + ' ' + str(proc.pid) for proc in psutil.process_iter()]
+    processes.sort()
+    pids = []
+    for process in processes:
+        name = process.split(' ')[0]
+        pid = process.split(' ')[1]
+        if len(pids) == 0:
+            pids.append({'name': name, 'pids':[pid]})
+        elif name != pids[-1]['name']:
+            pids.append({'name': name, 'pids':[pid]})
+        else:
+            pids[-1]['pids'].append(pid)
+
+    return pids
+
+def get_textractor_path():
+    return str(Path(SCRIPT_DIR, 'resources', 'bin', 'win', 'textractor', 'TextractorCLI.exe'))
+
+def attach_PIDs(pids):
+    # Testing purposes: attach the first pid only
+    pid = pids[0]
+    textractor = Textractor(pid)
+

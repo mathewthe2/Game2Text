@@ -88,7 +88,7 @@ function videoOnLoad(element) {
   resizeCanvas(element);
   startMessage.hidden = true;
   minimizeButton.disabled = false;
-  updateText(output, 'Drag and encircle the text portion of the game.');
+  // updateText(output, 'Drag and encircle the text portion of the game.');
   showSelectionButton.disabled = false;
   settingsButton.disabled = false;
   autoModeButton.disabled = false;
@@ -392,6 +392,14 @@ function openSettings() {
 function closeSettings() {
   settingsDialog.close();
   setTimeout(()=>settingsDialog.hidden = true, 300);
+}
+
+function openTexthookerSettings() {
+  texthookerSettingsDialog.showModal();
+}
+
+function closeTexthookerSettingsDialog() {
+  texthookerSettingsDialog.close();
 }
 
 document.addEventListener("keydown", function(event) {

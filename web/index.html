@@ -152,7 +152,10 @@
       <i class="material-icons">settings</i>
     </button>
     <div id="settingsTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="settingsButton">Settings</div>
-    <div id="showTranslationTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="showTranslationButton">Enable Translation</div>
+    <button id="texthookerButton" onclick="openTexthookerSettings()" class="mdl-button mdl-js-button mdl-button--icon">
+      <i class="material-icons">menu_book</i>
+    </button>
+    <div id="texthookerTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="texthookerButton">Visual Novel Hooker</div>
     <button style="float: right; margin-right: 12px" id="toggleLogsButton" onclick="openLogWindow()" class="mdl-button mdl-js-button mdl-button--icon">
       <i class="material-icons">view_list</i>
     </button>
@@ -433,6 +436,70 @@
     </div>
   </dialog>
 
+  <!-- Texthooker Dialog -->
+  <dialog id="texthookerSettingsDialog" class="mdl-dialog" style="width: 600px">
+    <h4 class="mdl-dialog__title">Visual Novel Hooker</h4>
+    <div class="mdl-dialog__content">
+       <div>
+          <div class="tab_section_label">Text hookers extract text automatically. There is no need for manual OCR.</div>
+            <ul class="mdl-list">
+              <li class="mdl-list__item">
+                <span class="mdl-list__item-primary-content">
+                  <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">sports_esports</i>
+                  <span>Applications</span>
+                  <span class="tab_select_wrapper" >
+                    <input onchange="selectTextHookerApplication(this)" type="text" name="application" list="pidNameSelect" placeholder="Select Application">
+                    <datalist id="pidNameSelect">
+                    </datalist>
+                  </span>
+                  <button class="refreshPIDsButton mdl-button mdl-js-button mdl-button--icon">
+                    <i onclick="refreshPIDs()" class="material-icons">refresh</i>
+                  </button>
+                </span>
+                </li>
+
+                <li class="mdl-list__item">
+                  <span class="mdl-list__item-primary-content">
+                    <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">add_task</i>
+                    <span>Hooks</span>
+                    <span style="padding-left: 55px" >
+                      <select style="width: 170px" onchange="if (this.selectedIndex) selectHook(this);" id="hookSelect" name="hooks">
+                        <option value="-1">--</option>
+                      </select>
+                    </span>
+                  </span>
+                  <li>
+              </ul>
+          </div>
+          <hr>
+          <div class="tab_section_label">Advanced</div>
+          <ul class="mdl-list">
+            <li class="mdl-list__item">
+              <span class="mdl-list__item-primary-content">
+              <span>Custom Hooks</span>
+              <span style="padding-left: 50px" >
+                <input placeholder="Enter Hook Code" id="customHookCodeInput"></input>
+                <button onclick="addCustomHook()">Add</button>
+              </span>
+              <li>
+                <li class="mdl-list__item">
+                  <span class="mdl-list__item-primary-content">
+                    <span>Regex Filter</span>
+                    <span style="padding-left: 70px" >
+                      <input></input>
+                    </span>
+                  </span>
+                  </span>
+                </li>
+          </ul>
+
+    </div>
+    <hr>
+    <div class="mdl-dialog__actions">
+      <button id="texthookerSettingsDialogCloseButton" onclick="closeTexthookerSettingsDialog()" type="button" class="mdl-button close">Close</button>
+    </div>
+  </dialog>
+
     <!-- Output -->
 
     <span class="results" id="results">
@@ -446,6 +513,7 @@
   </div>
     <span id ="similarKanjiTooltip" class="tooltiptext"></span>
     <script src="ankisettings.js"></script>
+    <script src="texthookersettings.js"></script>
     <script src="settings.js"></script>
     <script src="index.js"></script>
     <script src="similarkanji.js"></script>

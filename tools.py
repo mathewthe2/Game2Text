@@ -44,3 +44,6 @@ def get_tessdata_dir():
             os.rename(Path(WIN_TESSERACT_DIR, "tessdata"), Path(WIN_TESSERACT_DIR,  "tessdata-legacy"))
             os.rename(Path(WIN_TESSERACT_DIR, "tessdata-new"), Path(WIN_TESSERACT_DIR, "tessdata"))
     return ''
+
+def path_to_textractor():
+    return str(Path(SCRIPT_DIR, 'resources', 'bin', 'win', 'textractor', 'TextractorCLI.exe'))

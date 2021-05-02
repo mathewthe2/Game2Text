@@ -1,10 +1,12 @@
 import eel
-import threading, os, platform
+import threading, os, platform, time
 from pathlib import Path
 from ocr import detect_and_log
 from translate import multi_translate
 from hotkeys import refresh_ocr_hotkey, esc_hotkey
-from util import RepeatedTimer, open_folder_by_relative_path, create_directory_if_not_exists, get_default_browser_name
+from util import RepeatedTimer, open_folder_by_relative_path, create_directory_if_not_exists, get_default_browser_name, get_PID_list
+from textractor import Textractor
+from tools import path_to_textractor
 from audio import get_recommended_device_index, get_audio_objects
 from recordaudio import RecordThread
 from pynput import keyboard
@@ -17,6 +19,7 @@ from dictionary import load_all_dictionaries, look_up
 from config import r_config, w_config, WINDOWS_HOTKEYS_CONFIG, APP_CONFIG, LOG_CONFIG
 
 session_start_time = get_time_string()
+textractor = None
 
 # run_eel()
 
@@ -125,6 +128,41 @@ def create_note(note_data):
 @eel.expose
 def look_up_dictionary(word):
     return look_up(word)
+
+@eel.expose
+def get_PIDs():
+    return get_PID_list()
+
+@eel.expose
+def attach_process(pids):
+    textractor_thread = threading.Thread(target=start_textractor, args=[pids,])
+    textractor_thread.start()
+
+def start_textractor(pids):
+    try:
+        global textractor
+        textractor = Textractor(exectuable=path_to_textractor(), callback=monitor_textractor)
+        time.sleep(1)
+        for pid in pids:
+            textractor.attach(pid)
+        textractor.read()
+    except Exception as e:
+        return 'Error: failed to attach process' + str(e)
+
+@eel.expose
+def hook_code(code, pids):
+    try:
+        global textractor
+        for pid in pids:
+            textractor.hook(code, pid)
+    except Exception as e:
+        print(e)
+        return 'Error: failed to hook code'
+
+def monitor_textractor(output_objects):
+    for output in output_objects:
+        parsed_output = output['text'].replace('\r\n', ' ')
+        eel.textractorPipe(output)
 
 @eel.expose
 def open_new_window(html_file, height=900, width=600):

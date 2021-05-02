@@ -10,9 +10,14 @@
 - Windows 10
 - Mac OSX Mojave, Catalina
 
+## Text Extraction Modes
+- Classic OCR with Tesseract, Tesseract Legacy, or OCR Space.
+- OCR-assisted game script matching
+- Text hooking (for Visual Novels)
+- Clipboard to Game2Text
+
 ## Features
 - Dictionary lookup with browser dictionaries like Yomichan and Rikaichan
-- OCR-assisted game script matching 
 - Translation tools including DeepL, Papago, and Google Translate.
 - Create game flashcards with screenshot and game audio via Anki and AnkiConnect
 

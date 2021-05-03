@@ -101,3 +101,7 @@ def get_PID_list():
             pids[-1]['pids'].append(pid)
 
     return pids
+
+def remove_repeat_string(s):
+    i = (s+s).find(s, 1, -1)
+    return s if i == -1 else s[:i]

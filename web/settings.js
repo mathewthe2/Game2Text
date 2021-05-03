@@ -56,6 +56,7 @@ function initConfig () {
         initTranslation();  
         initSetTranslationLanguages();
         // Logs
+        initLaunchLogWindow();
         initIsLogImages();
         initSetLogImageTypeAndQuality();
         initIsLogAudio();
@@ -151,6 +152,13 @@ async function changeTargetLanguage() {
  Media Settings 
  *
 */
+
+async function initLaunchLogWindow() {
+    const isLaunchLogWindow = await eel.read_config(LOG_CONFIG, 'launchlogwindow')();
+    if (isLaunchLogWindow === 'true') {
+        eel.open_new_window('logs.html');
+    }
+}
 
 async function initIsLogImages() {
     const isLogImages = await eel.read_config(LOG_CONFIG, 'logimages')();

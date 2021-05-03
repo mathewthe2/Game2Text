@@ -4,7 +4,7 @@ from pathlib import Path
 from ocr import detect_and_log
 from translate import multi_translate
 from hotkeys import refresh_ocr_hotkey, esc_hotkey
-from util import RepeatedTimer, open_folder_by_relative_path, create_directory_if_not_exists, get_default_browser_name, get_PID_list
+from util import RepeatedTimer, open_folder_by_relative_path, create_directory_if_not_exists, get_default_browser_name, get_PID_list, remove_repeat_string
 from textractor import Textractor
 from tools import path_to_textractor
 from audio import get_recommended_device_index, get_audio_objects
@@ -16,7 +16,7 @@ from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
 from gamescript import load_game_scripts, open_game_script
 from dictionary import load_all_dictionaries, look_up
-from config import r_config, w_config, WINDOWS_HOTKEYS_CONFIG, APP_CONFIG, LOG_CONFIG
+from config import r_config, w_config, WINDOWS_HOTKEYS_CONFIG, APP_CONFIG, LOG_CONFIG, TEXTHOOKER_CONFIG
 
 session_start_time = get_time_string()
 textractor = None
@@ -166,9 +166,12 @@ def hook_code(code, pids):
         return 'Error: failed to hook code'
 
 def monitor_textractor(output_objects):
-    for output in output_objects:
-        parsed_output = output['text'].replace('\r\n', ' ')
-        eel.textractorPipe(output)
+    if r_config(TEXTHOOKER_CONFIG, 'remove_repeat') == 'true':
+        for output in output_objects:
+            output['text'] = output['text'].strip()
+            output['text'] = remove_repeat_string(output['text'])
+
+    eel.textractorPipe(output)
 
 @eel.expose
 def open_new_window(html_file, height=900, width=600):

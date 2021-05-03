@@ -33,9 +33,7 @@ class Textractor(object):
     def handle_output(self):
         if self.lines:
             output_objects = self.format_output(self.lines)
-            print(self.lines)
             self.lines = ''
-            print(output_objects)
             if output_objects:
                 self.emit_lines(output_objects)
 
@@ -69,15 +67,15 @@ class Textractor(object):
     def hook(self, code, pid):
         self.process.sendline(code + ' -P' + pid)
 
-    def group_text_of_same_handles(self, raw_list):
-        handleMap = {}
+    def group_text_by_key(self, raw_list, key):
+        hookMap = {}
         for item in raw_list:
-            if item['code']:
-                if item['code'] not in handleMap:
-                    handleMap[item['code']] = item
+            if item[key]:
+                if item[key] not in hookMap:
+                    hookMap[item[key]] = item
                 else:
-                    handleMap[item['code']]['text'] += item['text']
-        return list(handleMap.values())
+                    hookMap[item[key]]['text'] += item['text']
+        return list(hookMap.values())
 
     def remove_repeat(self, raw_list, key):
         new_list = []
@@ -86,7 +84,8 @@ class Textractor(object):
                 new_list.append(raw_list[index])
             else:
                 is_repeat = raw_list[index][key] == raw_list[index-1][key]
-                if not is_repeat:
+                is_same_hook = raw_list[index]['code'] == raw_list[index-1]['code']
+                if (not is_repeat) or (not is_same_hook):
                     new_list.append(raw_list[index])
         return new_list
 
@@ -94,29 +93,39 @@ class Textractor(object):
         return text.replace('/[\x00-\xFF]+/g,', '')
 
     def format_output(self, line):
+        print('newline', line)
         if 'Usage' in line:
-            return ''
+            # First line of Textractor output can include Textractor console information
+            if '[' in line:
+                line = '[' + line.split('[')[1]
+            else:
+                return ''
         if '[' in line:
+            line = ''.join(line.splitlines())
             format_string = '[{handle}:{pid}:{addr}:{ctx}:{ctx2}:{name}:{code}]{text}'
             result = parse(format_string, line)
+            previous_result = result
+            line = result.named['text']
             output_objects = []
             if (result):
-                format_grouped_string = '{raw_text}[{handle}:{pid}:{addr}:{ctx}:{ctx2}:{name}:{code}]{text}'
-                while (parse(format_grouped_string, result.named['text'])):
-                    output_object = result.named
-                    result = parse(format_grouped_string, result.named['text'])
+                format_grouped_string = '{prev_text}[{handle}:{pid}:{addr}:{ctx}:{ctx2}:{name}:{code}]{text}'
+                while (parse(format_grouped_string, line)):
+                    result = parse(format_grouped_string, line)
+                    line = ''.join(line.splitlines())
+                    line = result.named['text']
+                    previous_object = previous_result.named
+                    previous_object['text'] = result.named['prev_text']
+                    output_objects.append(previous_object)
+                    previous_result = result
+                output_objects.append(result.named)
 
-                    parsed_text = self.remove_non_ascii(result.named['raw_text'])
-                    if parsed_text:
-                        output_object['text'] = parsed_text
-                        output_objects.append(output_object)
+                print('what i got')
+                for o in output_objects:
+                    print(o['code'] + ' --> ' + o['text'])
 
-                parsed_text = self.remove_non_ascii(result.named['text'])
-                if parsed_text:
-                    result.named['text'] = parsed_text
-                    output_objects.append(result.named)
-                output_objects = self.group_text_of_same_handles(output_objects)
+                output_objects = self.group_text_by_key(output_objects, 'code')
                 output_objects = self.remove_repeat(output_objects, 'text')
+
                 return output_objects
             else:
                 return None

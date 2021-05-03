@@ -448,13 +448,13 @@
                   <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">sports_esports</i>
                   <span>Applications</span>
                   <span class="tab_select_wrapper" >
-                    <input onchange="selectTextHookerApplication(this)" type="text" name="application" list="pidNameSelect" placeholder="Select Application">
+                    <input style="width: 355px" oninput="refreshPIDs()" onchange="selectTextHookerApplication(this)" type="text" name="application" list="pidNameSelect" placeholder="Select Application">
                     <datalist id="pidNameSelect">
                     </datalist>
                   </span>
-                  <button class="refreshPIDsButton mdl-button mdl-js-button mdl-button--icon">
+                  <!-- <button class="refreshPIDsButton mdl-button mdl-js-button mdl-button--icon">
                     <i onclick="refreshPIDs()" class="material-icons">refresh</i>
-                  </button>
+                  </button> -->
                 </span>
                 </li>
 
@@ -462,15 +462,31 @@
                   <span class="mdl-list__item-primary-content">
                     <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">add_task</i>
                     <span>Hooks</span>
-                    <span style="padding-left: 55px" >
-                      <select style="width: 170px" onchange="if (this.selectedIndex) selectHook(this);" id="hookSelect" name="hooks">
-                        <option value="-1">--</option>
+                    <span style="padding-left: 63px" >
+                      <select style="width: 360px" size="6" onchange="selectHook(this)" onfocus="this.selectedIndex=-1;this.blur()" id="hookSelect" name="hooks">
                       </select>
                     </span>
                   </span>
                   <li>
+                    <li class="mdl-list__item">
+                      <span class="mdl-list__item-primary-content">
+                        <span>Hook Code</span>
+                        <span style="padding-left: 80px; width: 350px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" >
+                          <span id="currentHookLabel"></span>
+                        </span>
+                      </span>
+                    </li>
+                    <li class="mdl-list__item">
+                      <span class="mdl-list__item-primary-content">
+                        <span>Textractor Log</span>
+                        <span style="padding-left: 55px" >
+                          <span id="textractorLogLabel"></span>
+                        </span>
+                      </span>
+                    </li>
               </ul>
           </div>
+          
           <hr>
           <div class="tab_section_label">Advanced</div>
           <ul class="mdl-list">
@@ -481,7 +497,7 @@
                 <input placeholder="Enter Hook Code" id="customHookCodeInput"></input>
                 <button onclick="addCustomHook()">Add</button>
               </span>
-              <li>
+            </li>
                 <li class="mdl-list__item">
                   <span class="mdl-list__item-primary-content">
                     <span>Regex Filter</span>

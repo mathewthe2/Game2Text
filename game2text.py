@@ -171,7 +171,7 @@ def monitor_textractor(output_objects):
             output['text'] = output['text'].strip()
             output['text'] = remove_repeat_string(output['text'])
 
-    eel.textractorPipe(output)
+    eel.textractorPipe(output_objects)
 
 @eel.expose
 def open_new_window(html_file, height=900, width=600):

@@ -5,6 +5,7 @@ let currentHook = '';
 let hookOutputMap = {} 
 const pidNameSelect = document.getElementById('pidNameSelect');
 const hookSelect = document.getElementById('hookSelect');
+const textractorLogLabel = document.getElementById('textractorLogLabel');
 
 
 initSetPIDs();
@@ -53,33 +54,54 @@ function getProcessPIDsFromName(name) {
 }
 
 eel.expose(textractorPipe)
-function textractorPipe(textractorOutputObject) {
-    const hook = textractorOutputObject.code;
-    hookOutputMap[hook] = textractorOutputObject
-    updateHooksSelectOptions(hookOutputMap)
-    if (currentHook == hook) {
-        const output = parseText(textractorOutputObject.text)
-        updateOutput(output)
+function textractorPipe(textractorOutput) {
+    for(const textractorOutputObject of textractorOutput) {
+        const hook = textractorOutputObject.code;
+        console.log('obj', textractorOutputObject)
+        hookOutputMap[hook] = textractorOutputObject
+        updateHooksSelectOptions(hookOutputMap)
+        if (textractorOutputObject.name === 'Console') {
+            console.log(textractorOutputObject.text)
+            textractorLogLabel.innerText = textractorOutputObject.text
+        }
+            // if (textractorOutputObject.text) {
+            //     const notification = document.querySelector('.mdl-js-snackbar');
+            //     notification.MaterialSnackbar.showSnackbar(
+            //     {
+            //         message: textractorOutputObject.text
+            //     }
+            //     );
+            // }
+        if (currentHook == hook) {
+            const output = parseText(textractorOutputObject.text)
+            updateOutput(output)
+        }
     }
 }
-
 function updateHooksSelectOptions(hookOutputMap) {
     hookSelect.innerHTML = '';
-    for (const [hookId, outputObject] of Object.entries(hookOutputMap)) {
+    for (const [hookCode, outputObject] of Object.entries(hookOutputMap)) {
+        if (outputObject.name === 'Console' || outputObject.name === 'Clipboard') { 
+            continue; 
+        }
         const option = document.createElement("option");
-        option.setAttribute('value', hookId);
-        const label = `${hookId}:${outputObject.text}`;
+        option.setAttribute('value', hookCode);
+        option.classList.add('hookOption');
+        const label = `${outputObject.text}`;
         option.innerHTML = label;
-        if (hookId === currentHook) {
+        if (hookCode === currentHook) {
             option.selected = true;
         }
-        hookSelect.appendChild(option);
+        hookSelect.add(option);
     }
 }
 
 
 function selectHook(hookSelect) {
+    // currentHook = hookSelect.value;
+    console.log('changed!')
     currentHook = hookSelect.value;
+    currentHookLabel.innerText = hookSelect.value;
     const output = parseText(hookOutputMap[currentHook].text);
     updateOutput(output)
 }

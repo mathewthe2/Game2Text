@@ -2,17 +2,31 @@ from parse import parse
 from pathlib import Path
 import time
 import re
+import os, sys
 import wexpect
 import threading
+from tools import path_to_wexpect
+
+os.environ['WEXPECT_LOGGER_LEVEL']='INFO'
 
 idled_seconds = 0
 
 class Textractor(object):
     def __init__(self, exectuable, callback, lines='', encoding='utf-8', codec_errors='ignore'):
-        self.process = wexpect.spawn(exectuable, encoding=encoding, codec_errors=codec_errors)
+        self.spawn(exectuable=exectuable, encoding=encoding, codec_errors=codec_errors)
         self.lines = ''
         self.seconds_to_idle = 1
         self.callback = callback
+
+    def spawn(self, exectuable, encoding, codec_errors):
+        real_executable = sys.executable
+        try:
+            if sys._MEIPASS is not None: # is compiled with pyinstaller
+                sys.executable = path_to_wexpect()
+        except AttributeError:
+            pass
+        self.process = wexpect.spawn(exectuable, encoding=encoding, codec_errors=codec_errors)
+        sys.executable = real_executable
 
     def run_when_idle(self, func, *args):
         global idled_seconds

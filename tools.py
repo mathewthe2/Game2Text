@@ -47,3 +47,6 @@ def get_tessdata_dir():
 
 def path_to_textractor():
     return str(Path(SCRIPT_DIR, 'resources', 'bin', 'win', 'textractor', 'TextractorCLI.exe'))
+
+def path_to_wexpect():
+    return str(Path(SCRIPT_DIR, 'resources', 'bin', 'win', 'wexpect', 'wexpect.exe'))

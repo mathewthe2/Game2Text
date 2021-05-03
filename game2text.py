@@ -152,6 +152,7 @@ def start_textractor(pids):
             textractor.attach(pid)
         textractor.read()
     except Exception as e:
+        print('error', str(e))
         return 'Error: failed to attach process' + str(e)
 
 @eel.expose

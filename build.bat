@@ -1,6 +1,7 @@
 python -m eel game2text.py web ^
 --windowed ^
 --icon "public/icon.ico" ^
+--hidden-import encodings ^
 --hidden-import sudachidict_small ^
 --hidden-import sudachipy.lattice ^
 --hidden-import sudachipy.morphemelist ^

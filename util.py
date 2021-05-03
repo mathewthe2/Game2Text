@@ -39,6 +39,11 @@ class RepeatedTimer(object):
         self._timer.cancel()
         self.is_running = False
 
+    def reset(self):
+        if self.is_running:
+            self.stop()
+        self.start()
+
 def create_directory_if_not_exists(filename):
     if not os.path.exists(os.path.dirname(filename)):
         try:

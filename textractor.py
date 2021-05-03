@@ -49,7 +49,7 @@ class Textractor(object):
                 new_line = self.process.read_nonblocking(size=9999)
                 if new_line:
                     self.lines += new_line
-                    self.flush_thread.start()
+                    self.flush_thread.reset()
             except wexpect.wexpect_util.TIMEOUT:
                 print('timeout')
                 if (self.flush_thread.is_running):

@@ -6,34 +6,29 @@ import os, sys
 import wexpect
 import threading
 from tools import path_to_wexpect
+from util import RepeatedTimer
 
 os.environ['WEXPECT_LOGGER_LEVEL']='INFO'
-
-idled_seconds = 0
 
 class Textractor(object):
     def __init__(self, exectuable, callback, lines='', encoding='utf-8', codec_errors='ignore'):
         self.spawn(exectuable=exectuable, encoding=encoding, codec_errors=codec_errors)
         self.lines = ''
-        self.seconds_to_idle = 1
+        self.flush_delay = 1
         self.callback = callback
+        self.flush_thread = RepeatedTimer(self.flush_delay, self.handle_output)
+        self.flush_thread.stop()
 
     def spawn(self, exectuable, encoding, codec_errors):
         real_executable = sys.executable
         try:
-            if sys._MEIPASS is not None: # is compiled with pyinstaller
+            is_compiled_with_pyinstaller = (sys._MEIPASS is not None)
+            if is_compiled_with_pyinstaller:
                 sys.executable = path_to_wexpect()
         except AttributeError:
             pass
         self.process = wexpect.spawn(exectuable, encoding=encoding, codec_errors=codec_errors)
         sys.executable = real_executable
-
-    def run_when_idle(self, func, *args):
-        global idled_seconds
-        while idled_seconds < self.seconds_to_idle:
-            idled_seconds += 0.1
-            time.sleep(0.1)
-        func()
 
     def handle_output(self):
         if self.lines:
@@ -43,25 +38,22 @@ class Textractor(object):
             print(output_objects)
             if output_objects:
                 self.emit_lines(output_objects)
-        global idled_seconds
-        idled_seconds = 0
-        self.run_when_idle(self.handle_output)
 
     def emit_lines(self, output_objects):
         self.callback(output_objects)
     
     def read(self):
-        thread = threading.Thread(target=self.run_when_idle, args=[self.handle_output,])
-        thread.start()
+
         while 1:
             try:
                 new_line = self.process.read_nonblocking(size=9999)
                 if new_line:
                     self.lines += new_line
-                    global idled_seconds
-                    idled_seconds = 0
+                    self.flush_thread.start()
             except wexpect.wexpect_util.TIMEOUT:
                 print('timeout')
+                if (self.flush_thread.is_running):
+                    self.flush_thread.stop()
                 output_objects = self.format_output(self.lines)
                 if output_objects:
                     callback(output_objects)
@@ -80,10 +72,11 @@ class Textractor(object):
     def group_text_of_same_handles(self, raw_list):
         handleMap = {}
         for item in raw_list:
-            if item['handle'] not in handleMap:
-                handleMap[item['handle']] = item
-            else:
-                handleMap[item['handle']]['text'] += item['text']
+            if item['code']:
+                if item['code'] not in handleMap:
+                    handleMap[item['code']] = item
+                else:
+                    handleMap[item['code']]['text'] += item['text']
         return list(handleMap.values())
 
     def remove_repeat(self, raw_list, key):

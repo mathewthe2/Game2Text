@@ -6,6 +6,7 @@ let hookOutputMap = {}
 const pidNameSelect = document.getElementById('pidNameSelect');
 const hookSelect = document.getElementById('hookSelect');
 const textractorLogLabel = document.getElementById('textractorLogLabel');
+let refreshApplicationListTimeout;
 
 
 initSetPIDs();
@@ -15,6 +16,11 @@ async function initSetPIDs() {
     if (pids) {
         mapProcessesToOptions(pids)
     }
+}
+
+function handleInputApplication() {
+    clearTimeout(refreshApplicationListTimeout);
+    refreshApplicationListTimeout = setTimeout(function(){ refreshPIDs() }, 500);
 }
 
 async function refreshPIDs() {

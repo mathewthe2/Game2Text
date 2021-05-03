@@ -3,6 +3,7 @@ const ANKI_CONFIG = 'ANKICONFIG';
 const OCR_CONFIG = 'OCRCONFIG';
 const TRANSLATION_CONFIG = 'TRANSLATIONCONFIG';
 const LOG_CONFIG = 'LOGCONFIG';
+const TEXTHOOKER_CONFIG = 'TEXTHOOKERCONFIG';
 
 const OEM_CONFIG = {
     'Tesseract Default': '3',
@@ -42,6 +43,9 @@ const deckSelectContainer = document.getElementById('deck_select_container');
 const cardModelSelect = document.getElementById('card_model_select');
 const cardModelSelectContainer = document.getElementById('card_model_select_container');
 
+// Texthooker Settings Elements
+const removeRepeatSentencesSwitch = document.getElementById('removeRepeatSentencesSwitch');
+
 initConfig();
 
 function initConfig () {
@@ -62,8 +66,10 @@ function initConfig () {
         initIsLogAudio();
         initSetAudioSources();
         initSetAudioDuration();
-        //Anki
+        // Anki
         initSetAnkiTags();
+        // Texthooker
+        initSetRemoveRepeatedSentencesSwitch();
     })()
 }
 
@@ -459,4 +465,23 @@ async function updateFieldValue() {
         }
     }
     eel.update_anki_card_models(savedAnkiCardModels)();
+}
+
+/**
+ * 
+ * Texthooker
+ */
+function toggleRemoveRepeatedSentences() {
+    isRemoveRepeatedSentences = !isRemoveRepeatedSentences;
+}
+async function toggleRemoveRepeatedSentencesAndPersist() {
+    toggleRemoveRepeatedSentences();
+    eel.update_config(LOG_CONFIG, {'remove_repeat': isRemoveRepeatedSentences ? 'true' : 'false'})();
+}
+async function initSetRemoveRepeatedSentencesSwitch() {
+    const isRemoveRepeatedSentences = await eel.read_config(TEXTHOOKER_CONFIG, 'remove_repeat')();
+    if (isRemoveRepeatedSentences === 'true') {
+        toggleRemoveRepeatedSentences();
+        document.getElementById("removeRepeatSentencesSwitch").parentElement.MaterialSwitch.on();
+    }
 }

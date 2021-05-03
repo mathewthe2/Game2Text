@@ -40,6 +40,9 @@ let ankiModelFieldMap = {}, fieldValueMap = {};
 let savedAnkiCardModels = [];
 let ankiDecks, ankiModels, ankitags, selectedDeck, selectedModel;
 
+// Texthooker
+let isRemoveRepeatedSentences = false
+
 const videoElement = document.getElementById("video");
 // const myImg = document.getElementById("my_img");
 const cv1 = document.getElementById("cv1");

@@ -484,7 +484,6 @@ async function initSetAnkiDictionaries() {
 }
 
 async function selectDictionary() {
-    console.log(dictionarySelect.value)
     if (dictionarySelect.value) {
         eel.set_dictionary(dictionarySelect.value)();
         eel.update_config(ANKI_CONFIG, {'dictionary': dictionarySelect.value});

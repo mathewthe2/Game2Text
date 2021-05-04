@@ -761,6 +761,29 @@ function getFieldValueMap() {
   return fieldValueMap;
 }
 
+/**
+ * Send selected word to log when user highlights words in result
+ * 
+ */
+ document.addEventListener('mouseup', event => {  
+  sendTextIfSelected();
+})
+
+setInterval(()=>sendTextIfSelected(), 1000)
+
+function sendTextIfSelected() {
+  if (window.getSelection) {
+    if (window.getSelection().toString() === '') {
+      return
+    }
+      if (window.getSelection().anchorNode.parentNode.id === 'output') {
+        // Selected Text in Output
+        const selectedText = window.getSelection().toString();
+        eel.highlight_text_in_logs(selectedText)();
+      } 
+  }
+}
+
 /*
  *
  Not yet implemented

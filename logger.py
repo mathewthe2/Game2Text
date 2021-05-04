@@ -170,6 +170,8 @@ def get_latest_log():
     if len(list_of_files) < 1:
         return {}
     latest_file = max(list_of_files, key=os.path.getctime)
+    if not latest_file:
+        return None
     with open(latest_file, 'r', encoding='utf-8') as f:
         for line in f:
             pass
@@ -260,3 +262,8 @@ def get_audio_file_name(log_id, folder_name):
     if platform.system() == 'Darwin':
         file_name = log_id + '.' + r_config(LOG_CONFIG, 'logaudiotype')
     return file_name
+
+# Middleman for selected main window to launch add card in log window
+@eel.expose
+def highlight_text_in_logs(text):
+    eel.showCardWithSelectedText(text)()

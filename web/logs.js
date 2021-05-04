@@ -3,6 +3,7 @@ const ANKI_CONFIG = 'ANKICONFIG';
 
 let currentLogs = [];
 window.tippyInstances = [];
+let activeCardLogId = '';
 const loadingScreenDelay = setTimeout("showLoadingScreen()", 400);
 
 // Audio
@@ -77,11 +78,13 @@ function updateLogDataById(logId, data) {
   }
 }
 
-function refreshLogElement(logId){
+function refreshLogElement(logId, refreshToolTips = true){
   const logElement = getLogElementById(logId);
   const newLogElement = logToHtml(getLogById(logId));
   logElement.innerHTML = newLogElement.innerHTML;
-  addToolTips();
+  if (refreshToolTips) {
+    addToolTips();
+  }
 }
 
 async function showLogs() {
@@ -160,7 +163,11 @@ function createLogMenu() {
 }
 
 function createAnkiFormCard() {
-  tippy(document.querySelectorAll('.showAnkiFormButton'), {
+  createAnkiFormCardTippy(document.querySelectorAll('.showAnkiFormButton'))
+}
+
+function createAnkiFormCardTippy(target) {
+  return tippy(target, {
     delay: [100, null],
     theme: 'material-light',
     arrow: false,
@@ -174,13 +181,18 @@ function createAnkiFormCard() {
       tippyInstances.length = 0; // clear it
       window.tippyInstances = tippyInstances.concat(instance);
       instance.setProps({trigger: 'click'});
+      activeCardLogId = instance.reference.getAttribute('log_id');
     },
     onHide(instance) {
+      activeCardLogId = ''
       instance.setProps({trigger: 'mouseenter'});
       // Update log element if user changed the log data
       const logId = instance.reference.getAttribute('log_id');
       if (isLogDataUpdated(logId)) {
-        refreshLogElement(logId);
+        // TODO: this may cause tippy to flicker
+        refreshLogElement(logId); // refresh log element text only
+        createMatchScriptDropdown();
+        createAnkiFormCard();
       }
     },
     content(reference) {
@@ -193,6 +205,19 @@ function createAnkiFormCard() {
   });
 }
 
+function launchAnkiFormByLogId(logId) {
+  const logElement = getLogElementById(logId);
+  const showAnkiFormButton = logElement.getElementsByClassName('showAnkiFormButton')[0];
+  if (showAnkiFormButton) {
+    // destroy tippy if exists
+    if (showAnkiFormButton._tippy) {
+      showAnkiFormButton._tippy.destroy();
+    }
+    const ankiFormCardTippy = createAnkiFormCardTippy(showAnkiFormButton, true);
+    ankiFormCardTippy.show();
+  }
+}
+ 
 function createMatchScriptDropdown() {
   tippy(document.querySelectorAll('.showMatchingGameScriptButton'), {
     delay: [100, null],
@@ -513,6 +538,24 @@ async function deleteLog(logId) {
   }
 }
 
+eel.expose(showCardWithSelectedText)
+function showCardWithSelectedText(selectedText) {
+  if (currentLogs.length > 0) {
+    const lastestLog = currentLogs[currentLogs.length - 1]
+    if (lastestLog.text.includes(selectedText)) {
+      if (lastestLog.selectedText !== selectedText) {
+        currentSelectedText = currentLogs.find(log=>log.id === lastestLog.id)['selectedText'] = selectedText;
+        refreshCardContent(lastestLog.id);
+        updateCardWithDictionaryEntry(lastestLog.id, selectedText);
+      }
+      if (activeCardLogId !== lastestLog.id) {
+        launchAnkiFormByLogId(lastestLog.id);
+      }
+    }
+  }
+
+}
+
 /**
  * Add selected word when user highlights words in log or addToAnkiCard
  * 
@@ -614,6 +657,15 @@ function resizeScreenshot(log) {
     return imgData
   }
   return log.image
+}
+
+eel.expose(addActiveCardToAnki)
+function addActiveCardToAnki() {
+  if (window.tippyInstances.length > 0) {
+    const activeTippy = window.tippyInstances[window.tippyInstances.length - 1];
+    const logId = activeTippy.reference.id.split('show_anki_form_button_')[1];
+    addCardToAnki(logId);
+  }
 }
 
 async function addCardToAnki(logId) {

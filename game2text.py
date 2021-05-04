@@ -3,7 +3,7 @@ import threading, os, platform, time
 from pathlib import Path
 from ocr import detect_and_log
 from translate import multi_translate
-from hotkeys import refresh_ocr_hotkey, esc_hotkey
+from hotkeys import hotkey_map
 from util import RepeatedTimer, open_folder_by_relative_path, create_directory_if_not_exists, get_default_browser_name, get_PID_list, remove_repeat_phrases
 from textractor import Textractor
 from tools import path_to_textractor
@@ -16,7 +16,7 @@ from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
 from gamescript import load_game_scripts, open_game_script
 from dictionary import load_all_dictionaries, look_up, get_local_dictionaries, load_dictionary
-from config import r_config, w_config, WINDOWS_HOTKEYS_CONFIG, APP_CONFIG, LOG_CONFIG, TEXTHOOKER_CONFIG
+from config import r_config, w_config, APP_CONFIG, LOG_CONFIG, TEXTHOOKER_CONFIG
 
 session_start_time = get_time_string()
 textractor = None
@@ -227,13 +227,5 @@ manual_audio_file_path = ''
 clipboard_timer = RepeatedTimer(1, clipboard_to_output)
 clipboard_timer.stop() # stop the initial timer
 
-refresh_hotkey_string = {
-    "Linux" : "<ctrl>+q",
-    "Darwin": "<cmd>+b",
-    "Windows": r_config(WINDOWS_HOTKEYS_CONFIG, "refresh")
-}
-
-with keyboard.GlobalHotKeys({
-    refresh_hotkey_string[platform.system()]: refresh_ocr_hotkey,
-    '<esc>': esc_hotkey}) as h:
+with keyboard.GlobalHotKeys(hotkey_map) as h:
     h.join()

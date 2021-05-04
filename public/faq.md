@@ -45,7 +45,7 @@ On Mac OS, automatic recording is disabled when you launch Game2Text but can be 
 
 Q. How do I record system sound on Windows?
 -
-System audio is recorded on Windows through WASAPI and is supposed to work for all your devices. 
+System audio is recorded on Windows through WASAPI and is supposed to work for all your audio devices. 
 
 Windows booted through a VM or Bootcamp may not work. In that case install a [VAC (Virtual Audio Cable)](https://vb-audio.com/Cable/).
 
@@ -55,7 +55,7 @@ Set the VAC as the **recording device** and click **Properties**. Select the **L
 
 <img height="600" alt="vac_settings" src="https://user-images.githubusercontent.com/13146030/116955699-da8adb00-acc5-11eb-86db-733e97efebe0.png">
 
-Back in Game2Text, click *Settings** and select the **Media** tab. Select the VAC as your audio  
+Back in Game2Text, click **Settings** and select the **Media** tab. Select the VAC as your audio device.
 
 <img width="590" alt="sound_settings" src="https://user-images.githubusercontent.com/13146030/116955941-8502fe00-acc6-11eb-906a-8ac593e1f7ab.png">
 

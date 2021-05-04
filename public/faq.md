@@ -1,6 +1,7 @@
 ## FAQ
 [Mac OS: Why is my application not showing in screen share?](#screen) <br/>
-[Mac OS: How do I record sound?](#sound) <br/>
+[Mac OS: How do I record sound?](#q-how-do-i-record-system-sound-on-mac-os-) <br/>
+[Windows: How do I record sound?](#q-how-do-i-record-system-sound-on-windows-) <br/>
 [How do I use Game2Text without Chrome?](#browser) <br/>
 [How do do I perform OCR without leaving my game?](#hotkey)
 
@@ -12,9 +13,7 @@ On MacOS, make sure you have allowed screen recording for your browser in **Secu
 
 <img width="580" alt="Screenshot" src="https://user-images.githubusercontent.com/13146030/113811992-d7243280-979f-11eb-8bdf-bcea6bd4e9bd.png">
 
-<a name="sound"/>
-
-Q. How do I record system sound on Mac OS? <br/>
+Q. How do I record system sound on Mac OS?
 -
 First, make sure you have allowed microphone for the **Terminal** application in  **Security & Privacy** settings.
 
@@ -43,6 +42,22 @@ Click on Audio Device and select Blackhole 16ch.
 <img width="580" alt="Screenshot 2021-05-01 at 9 50 10 PM" src="https://user-images.githubusercontent.com/13146030/116784528-405d4400-aac7-11eb-86a3-69d89e98e330.png">
 
 On Mac OS, automatic recording is disabled when you launch Game2Text but can be re-enabled afterwards.
+
+Q. How do I record system sound on Windows?
+-
+System audio is recorded on Windows through WASAPI and is supposed to work for all your devices. 
+
+Windows booted through a VM or Bootcamp may not work. In that case install a [VAC (Virtual Audio Cable)](https://vb-audio.com/Cable/).
+
+After installing the VAC, on the bottom right of your Windows task bar right click on **Soundtray** and select **Sound**.
+
+Set the VAC as the **recording device** and click **Properties**. Select the **Listen** tab and enable **Listen to this device**
+
+<img height="600" alt="vac_settings" src="https://user-images.githubusercontent.com/13146030/116955699-da8adb00-acc5-11eb-86db-733e97efebe0.png">
+
+Back in Game2Text, click *Settings** and select the **Media** tab. Select the VAC as your audio  
+
+<img width="590" alt="sound_settings" src="https://user-images.githubusercontent.com/13146030/116955941-8502fe00-acc6-11eb-906a-8ac593e1f7ab.png">
 
 <a name="browser"/>
 

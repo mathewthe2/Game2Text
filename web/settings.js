@@ -476,7 +476,7 @@ function toggleRemoveRepeatedSentences() {
 }
 async function toggleRemoveRepeatedSentencesAndPersist() {
     toggleRemoveRepeatedSentences();
-    eel.update_config(LOG_CONFIG, {'remove_repeat': isRemoveRepeatedSentences ? 'true' : 'false'})();
+    eel.update_config(TEXTHOOKER_CONFIG, {'remove_repeat': isRemoveRepeatedSentences ? 'true' : 'false'})();
 }
 async function initSetRemoveRepeatedSentencesSwitch() {
     const isRemoveRepeatedSentences = await eel.read_config(TEXTHOOKER_CONFIG, 'remove_repeat')();

@@ -21,9 +21,9 @@ init();
 
 function init() {
   (async() => {
-    loadGameScripts();
-    showLogs();
-    initSetAnkiScreenshotMaxDimensions();
+    await loadGameScripts();
+    await showLogs();
+    await initSetAnkiScreenshotMaxDimensions();
   })();
 }
 
@@ -44,9 +44,10 @@ async function loadGameScripts() {
     if (gameScript) {
       gameScriptSelect.value = gameScript.name;
     } else {
-      eel.update_config(LOG_CONFIG, {'gamescriptfile': ''})();
+      const result = await eel.update_config(LOG_CONFIG, {'gamescriptfile': ''})();
     }
   }
+  return
 }
 
 function selectGameScript(gameScriptSelect) {
@@ -89,6 +90,7 @@ async function showLogs() {
         addLogs(newlogs);
     }
     hideLoadingScreen();
+    return
 }
 
 function showLoadingScreen() {

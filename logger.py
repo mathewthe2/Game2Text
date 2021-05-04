@@ -94,7 +94,8 @@ def get_base64_image_with_log(log_id, folder_name):
 
 @eel.expose
 def show_logs():
-    saved_logs = get_logs()
+    last_session_max_log_size = int(r_config(LOG_CONFIG, 'lastsessionmaxlogsize'))
+    saved_logs = get_logs(limit=last_session_max_log_size)
     if len(saved_logs) > 0:
         # Workaround to fix the problem first image data is not transferred to log window
         image_data_list = eel.getCachedScreenshots()() 
@@ -141,7 +142,7 @@ def add_gamescript_to_logs(logs):
                 eel.updateLogDataById(log['id'], {'matches': log['matches'],})()    
     return
     
-def get_logs():
+def get_logs(limit=0):
     output = []
     if not os.path.exists(TEXT_LOG_PATH):
         return []
@@ -154,6 +155,8 @@ def get_logs():
             log = text_to_log(line, latest_file)
             output.append(log)
         f.close()
+    if limit > 0 and len(output) > limit:
+        output = output[:limit]
     # Start another thread to match logs to game script
     thread = threading.Thread(target = add_gamescript_to_logs,  args=[output])
     thread.start()

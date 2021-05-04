@@ -8,7 +8,8 @@
 [Improve OCR with image filters](#filters) <br/>
 [Improve OCR with Game Script Matching](#matching) <br/>
 [Create game flashcards in Anki](#anki) <br/>
-[Hotkeys](#hotkeys)
+[Hotkeys](#hotkeys) <br/>
+[Themes](#themes)
 
 <a name="browser"/>
 
@@ -160,3 +161,25 @@ You can change hotkeys in the *config.ini* file
 Action | Windows | Mac OSX | Linux | 
 --- | --- | --- | --- |
 Refresh OCR | Ctrl-Q | Cmd-B | Ctrl-Q |
+
+<a name="themes"/>
+
+## Themes
+
+Since Game2Text runs on your browser, it is easy to customize it.
+
+### Dark Theme
+
+You can toggle **dark theme** and font size in **Settings** > **Appearances**.
+
+### Window Color
+
+![image](https://user-images.githubusercontent.com/13146030/117010743-ae03ad00-ad1f-11eb-9fff-56574a46aee5.png)
+
+The Window bar color is based on the color of your Chrome.
+
+Open a new tab in Chrome and click **Customize** on the bottom right. 
+
+![image](https://user-images.githubusercontent.com/13146030/117010335-48afbc00-ad1f-11eb-9f87-6adf14d22373.png)
+
+To match the toolbar color in Game2Text, set the custom color code to **#2E2E2E**.

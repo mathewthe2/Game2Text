@@ -148,18 +148,26 @@
     <i class="material-icons">translate</i>
     </button>
     <div id="showTranslationTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="showTranslationButton">Enable Translation</div>
-    <button id="settingsButton" onclick="openSettings()" class="mdl-button mdl-js-button mdl-button--icon">
-      <i class="material-icons">settings</i>
-    </button>
-    <div id="settingsTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="settingsButton">Settings</div>
+
     <button id="texthookerButton" onclick="openTexthookerSettings()" class="mdl-button mdl-js-button mdl-button--icon">
       <i class="material-icons">menu_book</i>
     </button>
     <div id="texthookerTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="texthookerButton">Visual Novel Hooker</div>
+
+    <button id="AnkiSettingsButton" onclick="openAnkiSettingsDialog()" class="mdl-button mdl-js-button mdl-button--icon">
+      <i class="material-icons">style</i>
+    </button>
+    <div id="texthookerTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="AnkiSettingsButton">Anki</div>
+
+    <button id="settingsButton" onclick="openSettings()" class="mdl-button mdl-js-button mdl-button--icon">
+      <i class="material-icons">settings</i>
+    </button>
+    <div id="settingsTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="settingsButton">Settings</div>
+
     <button style="float: right; margin-right: 12px" id="toggleLogsButton" onclick="openLogWindow()" class="mdl-button mdl-js-button mdl-button--icon">
       <i class="material-icons">view_list</i>
     </button>
-    <div id="settingsTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="toggleLogsButton">Logs</div>
+    <div id="logsTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="toggleLogsButton">Logs</div>
   </div>
 </div>
 
@@ -171,10 +179,10 @@
             <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
               <div class="mdl-tabs__tab-bar">
                 <a href="#general" class="mdl-tabs__tab is-active">General</a>
-                <a href="#anki" class="mdl-tabs__tab">Anki</a> 
                 <a href="#media" class="mdl-tabs__tab">Media</a> 
                 <a href="#translation" class="mdl-tabs__tab">Translation</a> 
                 <a href="#clipboard" class="mdl-tabs__tab">Clipboard</a> 
+                <a href="#hotkeys" class="mdl-tabs__tab">Hotkeys</a> 
               </div>
               <div class="mdl-tabs__panel is-active" id="general">
                 <div class="tab_section_label">Appearance</div>
@@ -243,66 +251,10 @@
                     </ul>
               </div>
 
-              <div class="mdl-tabs__panel" id="anki">
+              <div class="mdl-tabs__panel" id="hotkeys">
                 <ul class="mdl-list">
-
-                  <div class="tab_select_wrapper">
-                    Make sure <a href="https://ankiweb.net/shared/info/2055492159" target="_blank" alt="anki_connect_link">AnkiConnect</a> is installed and Anki is open.
-                  </div>
-
-                  <div class="tab_select_wrapper">
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                      <input onchange="changeAnkiTags()" class="mdl-textfield__input" type="text" id="anki_tags_input">
-                      <label class="mdl-textfield__label" for="sample4">Card tags (space-separated)</label>
-                    </div>
-                  </div>
-                  
-                  <div  class="tab_select_wrapper">
-                    <div id="deck_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
-                      <input onchange="changeDeck()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="deck_select" readonly>
-                      <input type="hidden" value=""  name="deck_select">
-                      <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-                      <label for="deck_select" class="mdl-textfield__label">Deck</label>
-                      <ul id="deck_selector" for="deck_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div class="tab_select_wrapper">
-                    <div id="card_model_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
-                      <input onchange="changeCardModel()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="card_model_select" readonly>
-                      <input type="hidden" value=""  name="card_model_select">
-                      <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-                      <label for="card_model_select" class="mdl-textfield__label">Model</label>
-                      <ul id="card_model_selector" for="card_model_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-                      </ul>
-                    </div>
-                  </div>
-
-                   <!-- Fields and Values -->
-          <table hidden id="field_values_table" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-            <thead>
-              <tr>
-                <th class="mdl-data-table__cell--non-numeric">Field</th>
-                <th class="mdl-data-table__cell--non-numeric">Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr hidden id="field_values_tuple_template">
-                <td class="mdl-data-table__cell--non-numeric tuple_label"></td>
-                <td>
-                  <select onchange="updateFieldValue()" class="field_value_select"></select>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <button onclick="reloadAnki()" class="mdl-button mdl-js-button mdl-button--primary">
-            Reload
-          </button>
-                 
-                  <!-- list ends here-->
-                </ul>
-              </div> 
+                  </ul>
+              </div>
 
               <div class="mdl-tabs__panel" id="translation">
                 <ul class="mdl-list">
@@ -435,6 +387,113 @@
       <button id="dialogCloseButton" onclick="closeSettings()" type="button" class="mdl-button close">Close</button>
     </div>
   </dialog>
+
+  <!-- Anki Settings Dialog -->
+   <dialog hidden id="ankiSettingsDialog" class="mdl-dialog" style="width: 600px">
+    <h4 class="mdl-dialog__title">Anki</h4>
+    <div class="mdl-dialog__content">
+       <div>
+        <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+          <div class="mdl-tabs__tab-bar">
+            <a href="#ankiconnect" class="mdl-tabs__tab is-active">AnkiConnect</a> 
+            <a href="#anki_dictionaries" class="mdl-tabs__tab">Dictionaries</a> 
+            <a href="#anki_media" class="mdl-tabs__tab">Media</a>
+          </div>
+          
+          <div class="mdl-tabs__panel is-active" id="ankiconnect">
+            <!-- <div class="tab_section_label">Appearance</div> -->
+            <ul class="mdl-list">
+
+              <div class="tab_select_wrapper">
+                Make sure <a href="https://ankiweb.net/shared/info/2055492159" target="_blank" alt="anki_connect_link">AnkiConnect</a> is installed and Anki is running.
+              </div>
+
+              <div class="tab_select_wrapper">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input onchange="changeAnkiTags()" class="mdl-textfield__input" type="text" id="anki_tags_input">
+                  <label class="mdl-textfield__label" for="sample4">Card tags (space-separated)</label>
+                </div>
+              </div>
+              
+              <div  class="tab_select_wrapper">
+                <div id="deck_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
+                  <input onchange="changeDeck()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="deck_select" readonly>
+                  <input type="hidden" value=""  name="deck_select">
+                  <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                  <label for="deck_select" class="mdl-textfield__label">Deck</label>
+                  <ul id="deck_selector" for="deck_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                  </ul>
+                </div>
+              </div>
+
+              <div class="tab_select_wrapper">
+                <div id="card_model_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
+                  <input onchange="changeCardModel()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="card_model_select" readonly>
+                  <input type="hidden" value=""  name="card_model_select">
+                  <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                  <label for="card_model_select" class="mdl-textfield__label">Model</label>
+                  <ul id="card_model_selector" for="card_model_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                  </ul>
+                </div>
+              </div>
+
+               <!-- Fields and Values -->
+      <table hidden id="field_values_table" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+        <thead>
+          <tr>
+            <th class="mdl-data-table__cell--non-numeric">Field</th>
+            <th class="mdl-data-table__cell--non-numeric">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr hidden id="field_values_tuple_template">
+            <td class="mdl-data-table__cell--non-numeric tuple_label"></td>
+            <td>
+              <select onchange="updateFieldValue()" class="field_value_select"></select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button onclick="reloadAnki()" class="mdl-button mdl-js-button mdl-button--primary">
+        Reload
+      </button>
+             
+              <!-- list ends here-->
+            </ul>
+          </div> 
+
+          <div class="mdl-tabs__panel" id="anki_dictionaries">
+            <div>
+            <ul class="mdl-list">
+              <li class="mdl-list__item">
+                <span class="mdl-list__item-primary-content">
+                  <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">book</i>
+                  <span style="padding-right: 50px">Dictionary</span>
+                    <select style="width: 200px" onchange="selectDictionary(this)" id="dictionarySelect" name="dictionary">
+                    </select>
+                  </span>
+                </span>
+                <li>
+              </ul>
+            
+          </div>
+          </div>
+
+          <div class="mdl-tabs__panel" id="anki_media">
+            <!-- <div class="tab_section_label">Appearance</div> -->
+            <ul class="mdl-list">
+            </ul>
+          </div>
+          
+        </div>
+        </div>
+    </div>
+    <hr>
+    <div class="mdl-dialog__actions">
+      <button id="ankiSettingsDialogCloseButton" onclick="closeAnkiSettingsDialog()" type="button" class="mdl-button close">Close</button>
+    </div>
+  </dialog>
+
 
   <!-- Texthooker Dialog -->
   <dialog hidden id="texthookerSettingsDialog" class="mdl-dialog" style="width: 600px">

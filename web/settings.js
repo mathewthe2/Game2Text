@@ -42,6 +42,7 @@ const deckSelect = document.getElementById('deck_select');
 const deckSelectContainer = document.getElementById('deck_select_container');
 const cardModelSelect = document.getElementById('card_model_select');
 const cardModelSelectContainer = document.getElementById('card_model_select_container');
+const dictionarySelect = document.getElementById('dictionarySelect');
 
 // Texthooker Settings Elements
 const removeRepeatSentencesSwitch = document.getElementById('removeRepeatSentencesSwitch');
@@ -68,6 +69,7 @@ function initConfig () {
         initSetAudioDuration();
         // Anki
         initSetAnkiTags();
+        initSetAnkiDictionaries();
         // Texthooker
         initSetRemoveRepeatedSentencesSwitch();
     })()
@@ -465,6 +467,28 @@ async function updateFieldValue() {
         }
     }
     eel.update_anki_card_models(savedAnkiCardModels)();
+}
+
+async function initSetAnkiDictionaries() {
+    const dictionaries = await eel.get_dictionaries()();
+    const defaultDictionary = await eel.read_config(ANKI_CONFIG, 'dictionary')();
+    dictionaries.forEach(dictionary=>{
+        const dictionaryOption = document.createElement('option');
+        dictionaryOption.value = dictionary;
+        dictionaryOption.innerHTML = dictionary;
+        if (dictionary === defaultDictionary) {
+            dictionaryOption.selected = true;
+        }
+        dictionarySelect.add(dictionaryOption);
+    })
+}
+
+async function selectDictionary() {
+    console.log(dictionarySelect.value)
+    if (dictionarySelect.value) {
+        eel.set_dictionary(dictionarySelect.value)();
+        eel.update_config(ANKI_CONFIG, {'dictionary': dictionarySelect.value});
+    }
 }
 
 /**

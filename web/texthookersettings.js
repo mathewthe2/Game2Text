@@ -67,7 +67,6 @@ function textractorPipe(textractorOutput) {
         hookOutputMap[hook] = textractorOutputObject
         updateHooksSelectOptions(hookOutputMap)
         if (textractorOutputObject.name === 'Console') {
-            console.log(textractorOutputObject.text)
             textractorLogLabel.innerText = textractorOutputObject.text
         }
             // if (textractorOutputObject.text) {
@@ -105,7 +104,6 @@ function updateHooksSelectOptions(hookOutputMap) {
 
 function selectHook(hookSelect) {
     // currentHook = hookSelect.value;
-    console.log('changed!')
     currentHook = hookSelect.value;
     currentHookLabel.innerText = hookSelect.value;
     const output = parseText(hookOutputMap[currentHook].text);

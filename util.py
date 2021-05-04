@@ -102,6 +102,23 @@ def get_PID_list():
 
     return pids
 
-def remove_repeat_string(s):
+def remove_repeat_characters(s):
     i = (s+s).find(s, 1, -1)
     return s if i == -1 else s[:i]
+
+# TODO: use algorithm in textractor
+def remove_repeat_phrases(s):
+    prefix_array=[]
+    for i in range(len(s)):
+        prefix_array.append(s[:i])
+
+    #stop at 1st element to avoid checking for the ' ' char
+    for i in prefix_array[:1:-1]:
+        if s.count(i) > 1 :
+            #find where the next repetition starts
+            offset = s[len(i):].find(i)
+
+            return s[:len(i)+offset]
+            break
+
+    return s

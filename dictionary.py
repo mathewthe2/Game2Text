@@ -4,6 +4,8 @@ from sudachipy import tokenizer
 from sudachipy import dictionary
 from logger import SCRIPT_DIR
 from pathlib import Path
+from config import r_config, ANKI_CONFIG
+import glob
 
 dictionary_map = {}
 pitch_dictionary_map = {}
@@ -12,9 +14,15 @@ pitch_dictionary_map = {}
 tokenizer_obj = dictionary.Dictionary(dict_type='small').create()
 mode = tokenizer.Tokenizer.SplitMode.A
 
-def load_dictionary(dictionary):
+DICTIONARY_PATH =  Path(SCRIPT_DIR, 'resources', 'dictionaries')
+
+def get_local_dictionaries():
+    files = glob.glob(str(DICTIONARY_PATH) + '/*.zip')
+    return [Path(file).stem for file in files]
+
+def load_dictionary_by_path(dictionary_path):
     output_map = {}
-    archive = zipfile.ZipFile(dictionary, 'r')
+    archive = zipfile.ZipFile(dictionary_path, 'r')
 
     result = list()
     for file in archive.namelist():
@@ -32,9 +40,13 @@ def load_dictionary(dictionary):
     return output_map
 
 def load_all_dictionaries():
-    global dictionary_map
-    dictionary_map = load_dictionary(str(Path(SCRIPT_DIR, 'resources', 'dictionaries', 'jmdict_english.zip')))
+    default_dictionary = r_config(ANKI_CONFIG, 'dictionary')
+    load_dictionary(default_dictionary)
     # pitch_dictionary_map = load_sdictionary(str(Path(SCRIPT_DIR, 'dictionaries', 'kanjium_pitch_accents.zip')))
+
+def load_dictionary(dictionary_name):
+    global dictionary_map
+    dictionary_map = load_dictionary_by_path(str(Path(DICTIONARY_PATH, dictionary_name + '.zip')))
 
 def look_up(word):
     word = word.replace(" ", "")
@@ -51,6 +63,10 @@ def look_up(word):
         'sequence': entry[6]
     } for entry in dictionary_map[word]]
     return result
+
+# load_all_dictionaries()
+# a = look_up('好')
+# print(a)
 
 # def look_up_pitch(word):
 #     word = word.strip()

@@ -398,6 +398,16 @@ function closeSettings() {
   setTimeout(()=>settingsDialog.hidden = true, 300);
 }
 
+function openAnkiSettingsDialog() {
+  ankiSettingsDialog.hidden = false;
+  setTimeout(()=>ankiSettingsDialog.showModal(), 300);
+}
+
+function closeAnkiSettingsDialog() {
+  ankiSettingsDialog.close();
+  setTimeout(()=>ankiSettingsDialog.hidden = true, 300);
+}
+
 function openTexthookerSettings() {
   texthookerSettingsDialog.hidden = false;
   setTimeout(()=>texthookerSettingsDialog.showModal(), 300);

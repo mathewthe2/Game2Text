@@ -1,7 +1,7 @@
 ## FAQ
 [Mac OS: Why is my application not showing in screen share?](#screen) <br/>
 [Mac OS: How do I record sound?](#q-how-do-i-record-system-sound-on-mac-os) <br/>
-[Windows: How do I record sound?](#q-how-do-i-record-system-sound-on-windows-) <br/>
+[Windows: How do I record sound?](#q-how-do-i-record-system-sound-on-windows) <br/>
 [How do I use Game2Text without Chrome?](#browser) <br/>
 [How do do I perform OCR without leaving my game?](#hotkey)
 

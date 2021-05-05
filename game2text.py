@@ -154,7 +154,7 @@ def attach_process(pids):
 def start_textractor(pids):
     try:
         global textractor
-        textractor = Textractor(exectuable=path_to_textractor(), callback=monitor_textractor)
+        textractor = Textractor(executable_path=path_to_textractor(), callback=monitor_textractor)
         time.sleep(1)
         for pid in pids:
             textractor.attach(pid)

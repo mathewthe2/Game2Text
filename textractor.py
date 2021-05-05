@@ -11,15 +11,15 @@ from util import RepeatedTimer
 os.environ['WEXPECT_LOGGER_LEVEL']='INFO'
 
 class Textractor(object):
-    def __init__(self, exectuable, callback, lines='', encoding='utf-8', codec_errors='ignore'):
-        self.spawn(exectuable=exectuable, encoding=encoding, codec_errors=codec_errors)
+    def __init__(self, executable_path, callback, lines='', encoding='utf-8', codec_errors='ignore'):
+        self.spawn(executable_path=executable_path, encoding=encoding, codec_errors=codec_errors)
         self.lines = ''
         self.flush_delay = 1
         self.callback = callback
         self.flush_thread = RepeatedTimer(self.flush_delay, self.handle_output)
         self.flush_thread.stop()
 
-    def spawn(self, exectuable, encoding, codec_errors):
+    def spawn(self, executable_path, encoding, codec_errors):
         real_executable = sys.executable
         try:
             is_compiled_with_pyinstaller = (sys._MEIPASS is not None)
@@ -27,7 +27,7 @@ class Textractor(object):
                 sys.executable = path_to_wexpect()
         except AttributeError:
             pass
-        self.process = wexpect.spawn(exectuable, encoding=encoding, codec_errors=codec_errors)
+        self.process = wexpect.spawn(executable_path, encoding=encoding, codec_errors=codec_errors)
         sys.executable = real_executable
 
     def handle_output(self):

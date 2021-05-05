@@ -1,8 +1,7 @@
 # Game2Text
 
-[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) 
+![image](https://user-images.githubusercontent.com/13146030/117099691-62471700-ada4-11eb-9b78-1ab42c6db348.png)
 
-![Game2Text Preview](https://game2text.com/images/header-software-app.png)
 
 [Game2Text](https://www.game2text.com) is an all-in-one application that helps you learn languages from the games you play.
 

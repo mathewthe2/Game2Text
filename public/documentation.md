@@ -161,6 +161,7 @@ You can change hotkeys in the *config.ini* file
 Action | Windows | Mac OSX | Linux | 
 --- | --- | --- | --- |
 Refresh OCR | Ctrl-Q | Cmd-B | Ctrl-Q |
+Add to Anki | Shift-E | Shift-E| Shift-E |
 
 <a name="themes"/>
 

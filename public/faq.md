@@ -3,7 +3,7 @@
 [Mac OS: How do I record sound?](#q-how-do-i-record-system-sound-on-mac-os) <br/>
 [Windows: How do I record sound?](#q-how-do-i-record-system-sound-on-windows) <br/>
 [How do I use Game2Text without Chrome?](#browser) <br/>
-[How do do I perform OCR without leaving my game?](#hotkey)
+[How do I perform OCR without leaving my game?](#hotkey)
 
 <a name="screen"/>
 
@@ -73,7 +73,7 @@ Replace the browser value in *browser=[your browser]* in the *config.ini* file.
 
 <a name="hotkey"/>
 
-Q. How do do I perform OCR without leaving my game?
+Q. How do I perform OCR without leaving my game?
 -
 There are two ways.
 

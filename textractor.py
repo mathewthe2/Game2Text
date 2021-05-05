@@ -105,9 +105,9 @@ class Textractor(object):
             format_string = '[{handle}:{pid}:{addr}:{ctx}:{ctx2}:{name}:{code}]{text}'
             result = parse(format_string, line)
             previous_result = result
-            line = result.named['text']
             output_objects = []
             if (result):
+                line = result.named['text']
                 format_grouped_string = '{prev_text}[{handle}:{pid}:{addr}:{ctx}:{ctx2}:{name}:{code}]{text}'
                 while (parse(format_grouped_string, line)):
                     result = parse(format_grouped_string, line)

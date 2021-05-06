@@ -4,6 +4,7 @@ const OCR_CONFIG = 'OCRCONFIG';
 const TRANSLATION_CONFIG = 'TRANSLATIONCONFIG';
 const LOG_CONFIG = 'LOGCONFIG';
 const TEXTHOOKER_CONFIG = 'TEXTHOOKERCONFIG';
+const HOTKEY_CONFIG = '$OS_HOTKEYS';
 
 const OEM_CONFIG = {
     'Tesseract Default': '3',
@@ -45,6 +46,10 @@ const dictionarySelect = document.getElementById('dictionarySelect');
 // Texthooker Settings Elements
 const removeRepeatSentencesSwitch = document.getElementById('removeRepeatSentencesSwitch');
 
+// Hotkeys
+const refreshHotkeyInput = document.getElementById('refreshHotkeyInput');
+const addToAnkiHotKeyInput = document.getElementById('addToAnkiHotKeyInput');
+
 initConfig();
 
 function initConfig () {
@@ -70,6 +75,8 @@ function initConfig () {
         initSetAnkiDictionaries();
         // Texthooker
         initSetRemoveRepeatedSentencesSwitch();
+        // Hotkeys
+        initHotkeys();
     })()
 }
 
@@ -504,4 +511,23 @@ async function initSetRemoveRepeatedSentencesSwitch() {
         toggleRemoveRepeatedSentences();
         document.getElementById("removeRepeatSentencesSwitch").parentElement.MaterialSwitch.on();
     }
+}
+
+/**
+ * 
+ * Hotkeys
+ */
+async function initHotkeys() {
+    const refreshHotkey = await eel.read_config(HOTKEY_CONFIG, 'refresh_ocr')();
+    const addToAnkiHotkey = await eel.read_config(HOTKEY_CONFIG, 'add_to_anki')();
+    refreshHotkeyInput.value = refreshHotkey;
+    addToAnkiHotKeyInput.value = addToAnkiHotkey;
+}
+
+function changeRefreshHotkey(input) {
+    eel.update_config(HOTKEY_CONFIG, {'refresh_ocr': input.value})();
+}
+
+function changeAddToAnkiHotkey(input) {
+    eel.update_config(HOTKEY_CONFIG, {'add_to_anki': input.value})();
 }

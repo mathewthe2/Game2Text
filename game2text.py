@@ -236,5 +236,5 @@ manual_audio_file_path = ''
 clipboard_timer = RepeatedTimer(1, clipboard_to_output)
 clipboard_timer.stop() # stop the initial timer
 
-with keyboard.GlobalHotKeys(hotkey_map) as h:
-    h.join()
+with keyboard.GlobalHotKeys(hotkey_map) as listener:
+    listener.join()

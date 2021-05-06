@@ -253,7 +253,32 @@
 
               <div class="mdl-tabs__panel" id="hotkeys">
                 <ul class="mdl-list">
-                  </ul>
+                  <li class="mdl-list__item">
+                  <table id="hotkey_table" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                    <thead>
+                      <tr>
+                        <th class="mdl-data-table__cell--non-numeric">Action</th>
+                        <th class="mdl-data-table__cell--non-numeric">Hotkey</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr id="refreshHotkeyTuple">
+                        <td class="mdl-data-table__cell--non-numeric tuple_label">Refresh OCR</td>
+                        <td>
+                          <input onchange="changeRefreshHotkey(this)" id="refreshHotkeyInput"></input>
+                        </td>
+                      </tr>
+                      <tr id="addToAnkiHotkeyTuple">
+                        <td class="mdl-data-table__cell--non-numeric tuple_label">Add to Anki</td>
+                        <td>
+                          <input onchange="changeAddToAnkiHotkey(this)" id="addToAnkiHotKeyInput"></input>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </li>
+              </ul>
+              <div class="tab_section_label">Restarting Game2Text is required for hotkey changes to take effect.</div>
               </div>
 
               <div class="mdl-tabs__panel" id="translation">

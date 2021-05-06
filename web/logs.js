@@ -258,8 +258,15 @@ function formatCard(logId, cardElement) {
     if (log.dictionary) {
       selectedTextPreview = log.dictionary[0].headword;
       if (log.dictionary[0].reading) {
-        selectedTextPreview += ` (${log.dictionary[0].reading})`;
+        if (log.dictionary[0].reading !== log.dictionary[0].headword) {
+          selectedTextPreview = `<ruby>${log.dictionary[0].headword}<rt>${log.dictionary[0].reading}</rt></ruby>`;
+        }
       }
+      // Word Audio
+      selectedTextPreview += `
+      <button log_id=${log.id} onclick="playWordAudio(this)" class="logMenuButton mdl-button mdl-js-button mdl-button--icon">
+        <i style="line-height: 20px !important;" class="material-icons">play_circle_filled</i>
+      </button>`;
     }
     const cardSelectedText = createCardSectionElement(
       iconName = 'title', 
@@ -484,6 +491,20 @@ async function stopManualRecording() {
   }
 }
 
+function playWordAudio(audioButton) {
+  const logId = audioButton.getAttribute('log_id');
+  const log = getLogById(logId);
+  if (log) {
+    const kanji = log.dictionary[0].headword;
+    const kana = log.dictionary[0].reading;
+    const src =`https://assets.languagepod101.com/dictionary/japanese/audiomp3.php?kanji=${kanji}&kana=${kana}`;
+    const audio = new Audio(src);
+    audio.play();
+  } else {
+    notify('Cannot find Log');
+  }
+}
+
 function copyScreenshot(logId) {
   const log = getLogById(logId);
   if (log.image) {
@@ -684,6 +705,9 @@ async function addCardToAnki(logId) {
     if (log.dictionary[0].reading) {
       noteData['reading'] = log.dictionary[0].reading;
     }
+    if (log.dictionary[0].audio) {
+      noteData['wordaudio'] = log.dictionary[0].audio; 
+    }
   } 
   if (log.audio) {
     noteData['audio'] = log.audio;
@@ -696,19 +720,9 @@ async function addCardToAnki(logId) {
   const result = await eel.create_note(noteData)();
   if (result) {
     if (typeof result === 'string' && result.includes('Error')){
-      const notification = document.querySelector('.mdl-js-snackbar');
-      notification.MaterialSnackbar.showSnackbar(
-        {
-          message: result
-        }
-      );
+      notify(result);
     } else {
-      const notification = document.querySelector('.mdl-js-snackbar');
-      notification.MaterialSnackbar.showSnackbar(
-        {
-          message: 'Added to Anki'
-        }
-      );
+      notify('Added to Anki');
     }
   }
 }
@@ -717,4 +731,13 @@ async function initSetAnkiScreenshotMaxDimensions() {
   isResizeAnkiScreenshot = await eel.read_config(ANKI_CONFIG, 'resize_screenshot')(); 
   resizeAnkiScreenshotMaxWidth = await eel.read_config(ANKI_CONFIG, 'resize_screenshot_max_width')(); 
   resizeAnkiScreenshotMaxHeight = await eel.read_config(ANKI_CONFIG, 'resize_screenshot_max_height')(); 
+}
+
+function notify(message) {
+  const notification = document.querySelector('.mdl-js-snackbar');
+  notification.MaterialSnackbar.showSnackbar(
+    {
+      message: message
+    }
+  );
 }

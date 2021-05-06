@@ -1,5 +1,7 @@
-const deckSelector = document.getElementById('deck_selector');
-const cardModelSelector = document.getElementById('card_model_selector');
+// const deckSelector = document.getElementById('deck_selector');
+const deckSelector = document.getElementById('decks');
+// const cardModelSelector = document.getElementById('card_model_selector');
+const cardModelSelector = document.getElementById('card_models');
 
 async function initDecks() {
     const deckNames = await eel.invoke_anki('deckNames')();
@@ -9,13 +11,10 @@ async function initDecks() {
     }
     if (deckNames.length > 0) {
         deckNames.forEach(deckName => {
-            const deckOption = document.createElement("li");
-            deckOption.classList.add("mdl-menu__item")
-            deckOption.data_val = deckName.replace(' ', '_');
-            deckOption.innerHTML = deckName;
+            const deckOption = document.createElement("option");
+            deckOption.value = deckName.replace(' ', '_');
             deckSelector.append(deckOption);
         });
-        getmdlSelect.init('#deck_select_container');
     }
     return deckNames;
 }
@@ -28,13 +27,10 @@ async function initCardModels() {
     }
     if (cardModelNames.length > 0) {
         cardModelNames.forEach(cardModelName => {
-            const cardModelOption = document.createElement("li");
-            cardModelOption.classList.add("mdl-menu__item")
-            cardModelOption.data_val = cardModelName.replace(' ', '_');
-            cardModelOption.innerHTML = cardModelName;
+            const cardModelOption = document.createElement("option");
+            cardModelOption.value = cardModelName.replace(' ', '_');
             cardModelSelector.append(cardModelOption);
         });  
-        getmdlSelect.init('#card_model_select_container');
     }
     return cardModelNames;
 }

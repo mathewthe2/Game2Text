@@ -151,17 +151,26 @@ def attach_process(pids):
     textractor_thread = threading.Thread(target=start_textractor, args=[pids,])
     textractor_thread.start()
 
+@eel.expose
+def detach_process(pids):
+    try:
+        global textractor
+        for pid in pids:
+            textractor.detach(pid)
+    except Exception as e:
+        print('error', str(e))
+        return 'Error: failed to detach processes' + str(e)
+
 def start_textractor(pids):
     try:
         global textractor
         textractor = Textractor(executable_path=path_to_textractor(), callback=monitor_textractor)
         time.sleep(1)
-        for pid in pids:
-            textractor.attach(pid)
+        textractor.attach_multiple(pids)
         textractor.read()
     except Exception as e:
         print('error', str(e))
-        return 'Error: failed to attach process' + str(e)
+        return 'Error: failed to attach processes' + str(e)
 
 @eel.expose
 def hook_code(code, pids):

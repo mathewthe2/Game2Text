@@ -38,10 +38,8 @@ const audioDurationInput = document.getElementById("audio_duration_input");
 
 // Anki Control Elements
 const ankiTagsInput = document.getElementById('anki_tags_input');
-const deckSelect = document.getElementById('deck_select');
-const deckSelectContainer = document.getElementById('deck_select_container');
-const cardModelSelect = document.getElementById('card_model_select');
-const cardModelSelectContainer = document.getElementById('card_model_select_container');
+const deckSelect = document.getElementById('deckSelect');
+const cardModelSelect = document.getElementById('cardModelSelect');
 const dictionarySelect = document.getElementById('dictionarySelect');
 
 // Texthooker Settings Elements
@@ -398,22 +396,21 @@ async function initSetAnkiTags() {
     ankiTagsInput.parentElement.MaterialTextfield.change(ankitags);
 }
 async function setDeck() {
-    defaultDeck = await eel.read_config(ANKI_CONFIG, 'deck')(); 
-    const deckOptions = deckSelectContainer.querySelectorAll("li");
-    const selectedOption = Array.from(deckOptions).find(child=>child.innerHTML === defaultDeck);
+    const defaultDeck = await eel.read_config(ANKI_CONFIG, 'deck')(); 
+    const deckOptions = deckSelector.querySelectorAll("option");
+    const selectedOption = Array.from(deckOptions).find(child=>child.value === defaultDeck);
     if (selectedOption) {
         deck = defaultDeck;
-        selectedOption.setAttribute('data-selected', true);
-        getmdlSelect.init('#deck_select_container');
+        deckSelect.value = defaultDeck;
     } 
 }
 async function setCardModel() {
-    defaultCardModel = await eel.read_config(ANKI_CONFIG, 'model')(); 
-    const cardModelOptions = cardModelSelectContainer.querySelectorAll("li");
-    const selectedOption = Array.from(cardModelOptions).find(child=>child.innerHTML === defaultCardModel);
+    const defaultCardModel = await eel.read_config(ANKI_CONFIG, 'model')(); 
+    const cardModelOptions = cardModelSelector.querySelectorAll("option");
+    const selectedOption = Array.from(cardModelOptions).find(child=>child.value === defaultCardModel);
     if (selectedOption) {
         selectedOption.setAttribute('data-selected', true);
-        getmdlSelect.init('#card_model_select_container');
+        cardModelSelect.value = defaultCardModel;
         return defaultCardModel
     } 
     return ''
@@ -471,7 +468,7 @@ async function updateFieldValue() {
 
 async function initSetAnkiDictionaries() {
     const dictionaries = await eel.get_dictionaries()();
-    const defaultDictionary = await eel.read_config(ANKI_CONFIG, 'dictionary')();
+    const defaultDictionary = await eel.read_config(ANKI_CONFIG, 'anki_dictionary')();
     dictionaries.forEach(dictionary=>{
         const dictionaryOption = document.createElement('option');
         dictionaryOption.value = dictionary;
@@ -486,7 +483,7 @@ async function initSetAnkiDictionaries() {
 async function selectDictionary() {
     if (dictionarySelect.value) {
         eel.set_dictionary(dictionarySelect.value)();
-        eel.update_config(ANKI_CONFIG, {'dictionary': dictionarySelect.value});
+        eel.update_config(ANKI_CONFIG, {'anki_dictionary': dictionarySelect.value});
     }
 }
 

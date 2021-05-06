@@ -414,28 +414,20 @@
                   <label class="mdl-textfield__label" for="sample4">Card tags (space-separated)</label>
                 </div>
               </div>
-              
-              <div  class="tab_select_wrapper">
-                <div id="deck_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
-                  <input onchange="changeDeck()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="deck_select" readonly>
-                  <input type="hidden" value=""  name="deck_select">
-                  <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-                  <label for="deck_select" class="mdl-textfield__label">Deck</label>
-                  <ul id="deck_selector" for="deck_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-                  </ul>
-                </div>
-              </div>
 
-              <div class="tab_select_wrapper">
-                <div id="card_model_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
-                  <input onchange="changeCardModel()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="card_model_select" readonly>
-                  <input type="hidden" value=""  name="card_model_select">
-                  <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-                  <label for="card_model_select" class="mdl-textfield__label">Model</label>
-                  <ul id="card_model_selector" for="card_model_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-                  </ul>
-                </div>
-              </div>
+              <li class="mdl-list__item">
+                <label for="deck">Deck</label>
+                <input onchange="changeDeck()" style="width: 220px;margin-left: 28px;" list="decks" name="deck" id="deckSelect">
+                <datalist id="decks">
+                </datalist>
+              </li>
+
+              <li class="mdl-list__item">
+                <label for="card_model">Model</label>
+                <input onchange="changeCardModel()" style="width: 220px;margin-left: 20px;" list="card_models" name="card_model" id="cardModelSelect">
+                <datalist id="card_models">
+                </datalist>
+              </li>
 
                <!-- Fields and Values -->
       <table hidden id="field_values_table" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">

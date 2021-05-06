@@ -14,7 +14,7 @@ pitch_dictionary_map = {}
 tokenizer_obj = dictionary.Dictionary(dict_type='small').create()
 mode = tokenizer.Tokenizer.SplitMode.A
 
-DICTIONARY_PATH =  Path(SCRIPT_DIR, 'resources', 'dictionaries')
+DICTIONARY_PATH = Path(SCRIPT_DIR, 'resources', 'dictionaries')
 
 def get_local_dictionaries():
     files = glob.glob(str(DICTIONARY_PATH) + '/*.zip')
@@ -40,13 +40,17 @@ def load_dictionary_by_path(dictionary_path):
     return output_map
 
 def load_all_dictionaries():
-    default_dictionary = r_config(ANKI_CONFIG, 'dictionary')
+    default_dictionary = r_config(ANKI_CONFIG, 'anki_dictionary')
     load_dictionary(default_dictionary)
     # pitch_dictionary_map = load_sdictionary(str(Path(SCRIPT_DIR, 'dictionaries', 'kanjium_pitch_accents.zip')))
 
 def load_dictionary(dictionary_name):
     global dictionary_map
-    dictionary_map = load_dictionary_by_path(str(Path(DICTIONARY_PATH, dictionary_name + '.zip')))
+    dictionary_path = Path(DICTIONARY_PATH, dictionary_name + '.zip')
+    if dictionary_path:
+        dictionary_map = load_dictionary_by_path(str(dictionary_path))
+    else:
+        print('failed to find path for dictionary')
 
 def look_up(word):
     word = word.replace(" ", "")

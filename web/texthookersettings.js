@@ -43,8 +43,12 @@ function mapProcessesToOptions(processes) {
 async function selectTextHookerApplication(input) {
     const isValidApplication = pidNames.includes(input.value);
     if (isValidApplication) {
-        processPIDs = getProcessPIDsFromName(input.value)
-        const result = eel.attach_process(processPIDs)();
+        const newProcessPIDs = getProcessPIDsFromName(input.value);
+        if (newProcessPIDs.length > 0 && processPIDs[0] !== newProcessPIDs) {
+            hookOutputMap = {}
+            processPIDs = newProcessPIDs;
+            eel.attach_process(processPIDs)();
+        }
     } else {
         // TODO: Show error toaster
     }
@@ -68,15 +72,15 @@ function textractorPipe(textractorOutput) {
         updateHooksSelectOptions(hookOutputMap)
         if (textractorOutputObject.name === 'Console') {
             textractorLogLabel.innerText = textractorOutputObject.text
+            if (textractorOutputObject.text.includes('pipe connected')) {
+                const notification = document.querySelector('.mdl-js-snackbar');
+                notification.MaterialSnackbar.showSnackbar(
+                {
+                    message: textractorOutputObject.text
+                }
+                );
+            }
         }
-            // if (textractorOutputObject.text) {
-            //     const notification = document.querySelector('.mdl-js-snackbar');
-            //     notification.MaterialSnackbar.showSnackbar(
-            //     {
-            //         message: textractorOutputObject.text
-            //     }
-            //     );
-            // }
         if (currentHook == hook) {
             const output = parseText(textractorOutputObject.text)
             updateOutput(output)
@@ -84,7 +88,9 @@ function textractorPipe(textractorOutput) {
     }
 }
 function updateHooksSelectOptions(hookOutputMap) {
-    hookSelect.innerHTML = '';
+    while (hookSelect.length > 0) {
+        hookSelect.remove(hookSelect.length-1);
+    }
     for (const [hookCode, outputObject] of Object.entries(hookOutputMap)) {
         if (outputObject.name === 'Console' || outputObject.name === 'Clipboard') { 
             continue; 

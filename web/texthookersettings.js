@@ -20,7 +20,7 @@ async function initSetPIDs() {
 
 function handleInputApplication() {
     clearTimeout(refreshApplicationListTimeout);
-    refreshApplicationListTimeout = setTimeout(function(){ refreshPIDs() }, 500);
+    refreshApplicationListTimeout = setTimeout(function(){ refreshPIDs() }, 1000);
 }
 
 async function refreshPIDs() {

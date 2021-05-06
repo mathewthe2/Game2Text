@@ -48,6 +48,7 @@ const resizeScreenshotSwitch = document.getElementById('resizeScreenshotSwitch')
 
 // Texthooker Settings Elements
 const removeRepeatSentencesSwitch = document.getElementById('removeRepeatSentencesSwitch');
+const textractorPathInput = document.getElementById('textractorPathInput');
 
 // Hotkeys
 const refreshHotkeyInput = document.getElementById('refreshHotkeyInput');
@@ -79,6 +80,7 @@ function initConfig () {
         initSetAnkiMediaOptions();
         // Texthooker
         initSetRemoveRepeatedSentencesSwitch();
+        initSetTextractorPath();
         // Hotkeys
         initHotkeys();
     })()
@@ -543,6 +545,17 @@ async function initSetRemoveRepeatedSentencesSwitch() {
         document.getElementById("removeRepeatSentencesSwitch").parentElement.MaterialSwitch.on();
     }
 }
+async function initSetTextractorPath() {
+    const textractorPath = await eel.get_path_to_textractor()();
+    textractorPathInput.value = textractorPath;
+}
+
+async function changeTextractorExecutablePath() {
+    const path = await eel.open_folder_for_textractor()();
+    if (path) {
+        textractorPathInput.value = path;
+    }
+  }
 
 /**
  * 

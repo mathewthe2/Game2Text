@@ -540,6 +540,12 @@
     <h4 class="mdl-dialog__title">Visual Novel Hooker</h4>
     <div class="mdl-dialog__content">
        <div>
+        <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+          <div class="mdl-tabs__tab-bar">
+            <a href="#texthookers_general" class="mdl-tabs__tab is-active">General</a>
+            <a href="#texthookers_advanced" class="mdl-tabs__tab">Advanced</a> 
+          </div>
+          <div class="mdl-tabs__panel is-active" id="texthookers_general">
           <div class="tab_section_label">Text hookers extract text automatically. There is no need for manual OCR.</div>
             <ul class="mdl-list">
               <li class="mdl-list__item">
@@ -547,7 +553,7 @@
                   <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">sports_esports</i>
                   <span>Applications</span>
                   <span class="tab_select_wrapper" >
-                    <input style="width: 355px" onclick="handleInputApplication()" oninput="handleInputApplication()" onchange="selectTextHookerApplication(this)" type="text" name="application" list="pidNameSelect" placeholder="Select Application">
+                    <input style="width: 355px" onkeyup="handleInputApplication()" onchange="selectTextHookerApplication(this)" type="text" name="application" list="pidNameSelect" placeholder="Select Application">
                     <datalist id="pidNameSelect">
                     </datalist>
                   </span>
@@ -584,10 +590,8 @@
                       </span>
                     </li>
               </ul>
-          </div>
-          
-          <hr>
-          <div class="tab_section_label">Advanced</div>
+        </div>
+        <div class="mdl-tabs__panel" id="texthookers_advanced">
           <ul class="mdl-list">
             <li class="mdl-list__item">
               <span class="mdl-list__item-primary-content">
@@ -599,15 +603,28 @@
             </li>
             <li class="mdl-list__item">
               <span class="mdl-list__item-primary-content">
+              <span>TextractorCLI.exe</span>
+              <span style="padding-left: 25px" >
+                <input disabled style="width: 300px" id="textractorPathInput"></input>
+                <button id="selectTextractorExecutableButton"  onclick="changeTextractorExecutablePath()" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored">
+                  <i class="material-icons">folder</i>
+                </button>
+              </span>
+            </li>
+            <li class="mdl-list__item">
+              <span class="mdl-list__item-primary-content">
                 <span>Remove Repeat Sentences</span>
               </span>
               <span class="mdl-list__item-secondary-action">
-                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="removeRepeatSentencesSwitch">
+                <label style="margin-right: 20px" class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="removeRepeatSentencesSwitch">
                   <input type="checkbox" onclick="toggleRemoveRepeatedSentencesAndPersist()" id="removeRepeatSentencesSwitch" class="mdl-switch__input" />
                 </label>
               </span>
             </li>
           </ul>
+          </div>
+          </div>
+          </div>
 
     </div>
     <hr>

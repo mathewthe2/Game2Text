@@ -6,7 +6,7 @@ from translate import multi_translate
 from hotkeys import hotkey_map
 from util import RepeatedTimer, open_folder_by_relative_path, create_directory_if_not_exists, get_default_browser_name, get_PID_list, remove_repeat_phrases
 from textractor import Textractor
-from tools import path_to_textractor
+from tools import path_to_textractor, open_folder_textractor_path
 from audio import get_recommended_device_index, get_audio_objects
 from recordaudio import RecordThread
 from pynput import keyboard
@@ -143,6 +143,14 @@ def look_up_dictionary(word):
     return look_up(word)
 
 @eel.expose
+def get_path_to_textractor():
+    return path_to_textractor()
+
+@eel.expose
+def open_folder_for_textractor():
+    return open_folder_textractor_path()
+
+@eel.expose
 def get_PIDs():
     return get_PID_list()
 
@@ -217,8 +225,10 @@ dictionary_thread = threading.Thread(target=load_all_dictionaries, args=())
 dictionary_thread.start()
 
 # Thread to record audio continuously
-recommended_audio_device_index = get_recommended_device_index(r_config(LOG_CONFIG, 'logaudiohost'))
-audio_recorder = RecordThread(recommended_audio_device_index, int(r_config(LOG_CONFIG, "logaudioframes")))
+logaudiohost = r_config(LOG_CONFIG, 'logaudiohost')
+recommended_audio_device_index = get_recommended_device_index(logaudiohost)
+logaudioframes = int(r_config(LOG_CONFIG, "logaudioframes"))
+audio_recorder = RecordThread(recommended_audio_device_index, logaudioframes)
 is_log_audio = r_config(LOG_CONFIG, "logaudio").lower() == "true"
 # TODO: Fix input overflowed error if start logging audio on Mac automatically at launch
 is_mac = (platform.system() == 'Darwin')

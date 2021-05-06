@@ -1,7 +1,9 @@
 import os 
 import platform
 from pathlib import Path
-from config import r_config, OCR_CONFIG
+from config import r_config, w_config, OCR_CONFIG, PATHS_CONFIG
+from tkinter import *
+from tkinter.filedialog import asksaveasfile, askopenfile
 
 SCRIPT_DIR = Path(__file__).parent 
 OSX_TESSERACT_VERSION = "4.1.1"
@@ -46,7 +48,22 @@ def get_tessdata_dir():
     return ''
 
 def path_to_textractor():
-    return str(Path(SCRIPT_DIR, 'resources', 'bin', 'win', 'textractor', 'TextractorCLI.exe'))
+    path = r_config('PATHS', 'textractor')
+    return path if path != 'default' else str(Path(SCRIPT_DIR, 'resources', 'bin', 'win', 'textractor', 'TextractorCLI.exe'))
 
 def path_to_wexpect():
     return str(Path(SCRIPT_DIR, 'resources', 'bin', 'win', 'wexpect', 'wexpect.exe'))
+
+def open_folder_textractor_path():
+    root = Tk()
+    root.withdraw()
+    file = askopenfile(filetypes = (("EXE files","*.exe"),("all files","*.*")), defaultextension=".exe")
+    if not file:
+        return
+    try:
+        w_config(PATHS_CONFIG, {'textractor': file.name})
+    except:
+        print('File not selected')
+    file.close()
+    root.destroy()
+    return file.name

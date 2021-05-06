@@ -39,6 +39,7 @@ let blurImageRadius = 0;
 let ankiModelFieldMap = {}, fieldValueMap = {};
 let savedAnkiCardModels = [];
 let ankiDecks, ankiModels, ankitags, selectedDeck, selectedModel;
+let isResizeAnkiScreenshot = false
 
 // Texthooker
 let isRemoveRepeatedSentences = false

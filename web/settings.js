@@ -42,6 +42,9 @@ const ankiTagsInput = document.getElementById('anki_tags_input');
 const deckSelect = document.getElementById('deckSelect');
 const cardModelSelect = document.getElementById('cardModelSelect');
 const dictionarySelect = document.getElementById('dictionarySelect');
+const screenshotMaxWidthInput = document.getElementById('screenshotMaxWidthInput');
+const screenshotMaxHeightInput = document.getElementById('screenshotMaxHeightInput');
+const resizeScreenshotSwitch = document.getElementById('resizeScreenshotSwitch');
 
 // Texthooker Settings Elements
 const removeRepeatSentencesSwitch = document.getElementById('removeRepeatSentencesSwitch');
@@ -73,6 +76,7 @@ function initConfig () {
         // Anki
         initSetAnkiTags();
         initSetAnkiDictionaries();
+        initSetAnkiMediaOptions();
         // Texthooker
         initSetRemoveRepeatedSentencesSwitch();
         // Hotkeys
@@ -492,6 +496,33 @@ async function selectDictionary() {
         eel.set_dictionary(dictionarySelect.value)();
         eel.update_config(ANKI_CONFIG, {'anki_dictionary': dictionarySelect.value});
     }
+}
+
+function toggleResizeScreenshotSwitch() {
+    isResizeAnkiScreenshot = !isResizeAnkiScreenshot;
+    screenshotMaxWidthInput.disabled = !isResizeAnkiScreenshot;
+    screenshotMaxHeightInput.disabled = !isResizeAnkiScreenshot;
+}
+async function toggleResizeScreenshotSwitchAndPersist() {
+    toggleResizeScreenshotSwitch();
+    eel.update_config(ANKI_CONFIG, {'resize_screenshot': isResizeAnkiScreenshot ? 'true' : 'false'})();
+}
+async function initSetAnkiMediaOptions() {
+    const screenshotMaxWidth = await eel.read_config(ANKI_CONFIG, 'resize_screenshot_max_width')();
+    const screenshotMaxHeight = await eel.read_config(ANKI_CONFIG, 'resize_screenshot_max_height')();
+    const isResizeScreenshot = await eel.read_config(ANKI_CONFIG, 'resize_screenshot')();
+    if (isResizeScreenshot === 'true') {
+        toggleResizeScreenshotSwitch();
+        resizeScreenshotSwitch.parentElement.MaterialSwitch.on();
+    }
+    screenshotMaxWidthInput.value = screenshotMaxWidth;
+    screenshotMaxHeightInput.value = screenshotMaxHeight;
+}
+function changeScreenshotMaxWidth(input) {
+    eel.update_config(ANKI_CONFIG, {'resize_screenshot_max_width': input.value})();
+}
+function changeScreenshotMaxHeight(input) {
+    eel.update_config(ANKI_CONFIG, {'resize_screenshot_max_height': input.value})();
 }
 
 /**

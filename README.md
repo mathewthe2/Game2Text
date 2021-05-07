@@ -26,7 +26,7 @@
 [Read User Guide](https://game2text.com/user-guide/quick-start/)
 
 ## FAQ
-[Read FAQ](hhttps://game2text.com/faq/switch-browser/)
+[Read FAQ](https://game2text.com/faq/switch-browser/)
 
 ## Development
 

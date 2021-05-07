@@ -3,10 +3,14 @@ from pathlib import Path
 import time
 import re
 import os, sys
-import wexpect
 import threading
 from tools import path_to_wexpect
 from util import RepeatedTimer
+import platform
+
+is_windows = (platform.system() == 'Windows')
+if is_windows:
+    import wexpect
 
 os.environ['WEXPECT_LOGGER_LEVEL']='INFO'
 

@@ -16,7 +16,7 @@ from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
 from gamescript import load_game_scripts, open_game_script
 from dictionary import load_all_dictionaries, look_up, get_local_dictionaries, load_dictionary
-from config import r_config, w_config, APP_CONFIG, LOG_CONFIG, TEXTHOOKER_CONFIG
+from config import r_config, r_config_all, w_config, APP_CONFIG, LOG_CONFIG, TEXTHOOKER_CONFIG
 
 session_start_time = get_time_string()
 textractor = None
@@ -104,6 +104,10 @@ def copy_text_to_clipboard(text):
 @eel.expose
 def read_config(section, key):
     return r_config(section, key)
+
+@eel.expose
+def read_config_all():
+    return r_config_all()
 
 @eel.expose
 def update_config(section, d):

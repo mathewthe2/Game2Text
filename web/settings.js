@@ -58,56 +58,60 @@ initConfig();
 
 function initConfig () {
     (async() => {
-        // Appearance
-        initFontSize();
-        initDarkTheme();
-        initSelection();
-        // OCR
-        initOCREngine();
-        // Translation
-        initTranslation();  
-        initSetTranslationLanguages();
-        // Logs
-        initLaunchLogWindow();
-        initIsLogImages();
-        initSetLogImageTypeAndQuality();
-        initIsLogAudio();
-        initSetAudioSources();
-        initSetAudioDuration();
-        // Anki
-        initSetAnkiTags();
-        initSetAnkiDictionaries();
-        initSetAnkiMediaOptions();
-        // Texthooker
-        initSetRemoveRepeatedSentencesSwitch();
-        initSetTextractorPath();
-        // Hotkeys
-        initHotkeys();
+        const config = await eel.read_config_all()();
+        if (config) {
+            // Appearance
+            const appearanceConfig = config[APPEARANCE_CONFIG];
+            initFontSize(appearanceConfig['fontsize']);
+            initDarkTheme(appearanceConfig['darktheme']);
+            selectionColor = appearanceConfig['selection_color']
+            selectionLineWidth = appearanceConfig['selection_line_width'];
+            // OCR
+            const ocrConfig = config[OCR_CONFIG];
+            initOCREngine(ocrConfig['engine']);
+            // Translation
+            const translationConfig = config[TRANSLATION_CONFIG];
+            initTranslation(translationConfig['translation_service'])
+            initSetTranslationLanguages({sourceLang: translationConfig['source_lang'], targetLang: translationConfig['target_lang']});
+            // Logs
+            const logConfig = config[LOG_CONFIG];
+            initLaunchLogWindow(logConfig['launchlogwindow']);
+            initIsLogImages(logConfig['logimages']);
+            logImageType = logConfig['logimagetype']; 
+            logImageQuality = logConfig['logimagequality']; 
+            initIsLogAudio(logConfig['logaudio']);
+            initSetAudioSources(logConfig['logaudiohost']);
+            initSetAudioDuration(logConfig['logaudioduration']);
+            // Anki
+            const ankiConfig = config[ANKI_CONFIG];
+            initSetAnkiTags(ankiConfig['cardtags']);
+            initSetAnkiDictionaries(ankiConfig['anki_dictionary']);
+            initSetAnkiMediaOptions({isResizeAnkiScreenshot: ankiConfig['resize_screenshot'], screenshotMaxWidth: ankiConfig['resize_screenshot_max_width'], screenshotMaxHeight: ankiConfig['resize_screenshot_max_height']});
+            // Texthooker
+            const texthookerConfig = config[TEXTHOOKER_CONFIG];
+            initSetRemoveRepeatedSentencesSwitch(texthookerConfig['remove_repeat']);
+            initSetTextractorPath();
+            // Hotkeys
+            const hotkeyConfig = config[HOTKEY_CONFIG];
+            initHotkeys({refreshHotkey: hotkeyConfig['refresh_ocr'], addToAnkiHotkey: ['add_to_anki']});
+        }
     })()
 }
 
-async function initFontSize() {
-    const fontSize = await eel.read_config(APPEARANCE_CONFIG, 'fontsize')();
+function initFontSize(fontSize) {
     updateFontSize(fontSize);
     const fontSizeSlider = document.getElementById("font-size-slider");
     fontSizeSlider.MaterialSlider.change(fontSize);
 }
 
-async function initDarkTheme() {
-    const darkTheme = await eel.read_config(APPEARANCE_CONFIG, 'darktheme')();
+function initDarkTheme(darkTheme) {
     if (darkTheme === 'true') {
         toggleDarkTheme();
         document.getElementById("dark-theme-switch").parentElement.MaterialSwitch.on();
     }
 }
 
-async function initSelection() {
-    selectionColor = await eel.read_config(APPEARANCE_CONFIG, 'selection_color')(); 
-    selectionLineWidth = await eel.read_config(APPEARANCE_CONFIG, 'selection_line_width')(); 
-}
-
-async function initOCREngine() {
-    const engine = await eel.read_config(OCR_CONFIG, 'engine')();
+function initOCREngine(engine) {
     if (engine) {
         OCREngine = engine;
         const engineOptions = OCREngineSelectContainer.querySelectorAll("li");
@@ -129,8 +133,7 @@ async function initOCREngine() {
  *
 */
 
-async function initTranslation() {
-    const service = await eel.read_config(TRANSLATION_CONFIG, 'translation_service')();
+function initTranslation(service) {
     if (service) {
         translationService = service;
         const translationOptions = translationSelectContainer.querySelectorAll("li");
@@ -146,21 +149,21 @@ async function initTranslation() {
     }
 }
 
-async function initSetTranslationLanguages() {
-    sourceLanguage = await eel.read_config(TRANSLATION_CONFIG, 'source_lang')(); 
-    sourceLanguageInput.parentElement.MaterialTextfield.change(sourceLanguage);
+function initSetTranslationLanguages({sourceLang, targetLang}) {
+    sourceLanguage = sourceLang;
+    sourceLanguageInput.parentElement.MaterialTextfield.change(sourceLang);
 
-    targetLanguage = await eel.read_config(TRANSLATION_CONFIG, 'target_lang')(); 
-    targetLanguageInput.parentElement.MaterialTextfield.change(targetLanguage);
+    targetLanguage = targetLang;
+    targetLanguageInput.parentElement.MaterialTextfield.change(targetLang);
 }
 
-async function changeSourceLanguage() {
+function changeSourceLanguage() {
     if (sourceLanguageInput.value){
         eel.update_config(TRANSLATION_CONFIG, {'source_lang':sourceLanguageInput.value })();
     }
 }
 
-async function changeTargetLanguage() {
+function changeTargetLanguage() {
     if (sourceLanguageInput.value){
         eel.update_config(TRANSLATION_CONFIG, {'target_lang':targetLanguageInput.value })();
     }
@@ -172,28 +175,20 @@ async function changeTargetLanguage() {
  *
 */
 
-async function initLaunchLogWindow() {
-    const isLaunchLogWindow = await eel.read_config(LOG_CONFIG, 'launchlogwindow')();
+function initLaunchLogWindow(isLaunchLogWindow) {
     if (isLaunchLogWindow === 'true') {
         eel.open_new_window('logs.html');
     }
 }
 
-async function initIsLogImages() {
-    const isLogImages = await eel.read_config(LOG_CONFIG, 'logimages')();
+function initIsLogImages(isLogImages) {
     if (isLogImages === 'true') {
         toggleLogImages();
         document.getElementById("log-images-switch").parentElement.MaterialSwitch.on();
     }
 }
 
-async function initSetLogImageTypeAndQuality() {
-    logImageType = await eel.read_config(LOG_CONFIG, 'logimagetype')(); 
-    logImageQuality = await eel.read_config(LOG_CONFIG, 'logimagequality')(); 
-}
-
-async function initIsLogAudio() {
-    const isLogAudio = await eel.read_config(LOG_CONFIG, 'logaudio')();
+function initIsLogAudio(isLogAudio) {
     if (isLogAudio === 'true') {
         toggleLogAudio();
         document.getElementById("log-audio-switch").parentElement.MaterialSwitch.on();
@@ -320,12 +315,10 @@ function toggleLogAudioAndPersist() {
     isLogAudio = toggleLogAudio();
     eel.update_config(LOG_CONFIG, {'logaudio': isLogAudio ? 'true' : 'false'})();
 }
-async function initSetAudioDuration() {
-    audioDuration = await eel.read_config(LOG_CONFIG, 'logaudioduration')(); 
+function initSetAudioDuration(audioDuration) {
     audioDurationInput.parentElement.MaterialTextfield.change(parseInt(audioDuration, 10));
 }
-async function initSetAudioSources() {
-    const default_audio_host = await eel.read_config(LOG_CONFIG, 'logaudiohost')();
+async function initSetAudioSources(default_audio_host) {
     audio_sources = await eel.get_audio_objects()();
     for (const source in audio_sources) {
         const audioHostItem = document.createElement("li");
@@ -378,6 +371,8 @@ async function setAudioDevices(audio_host) {
     }
 }
 function changeAudioHost () {
+    // TODO: don't update audio host on launch
+    console.log('why am i updating audio host')
     eel.update_config(LOG_CONFIG, {'logaudiohost':audioHostSelect.value})();
     setAudioDevices(audioHostSelect.value);
 }
@@ -387,6 +382,8 @@ function restartAudioRecording() {
     eel.restart_audio_recording(deviceIndex); 
 }
 function changeAudioDevice() {
+    // TODO: don't update audio device on launch
+    console.log('why am i updating audio device')
     eel.update_config(LOG_CONFIG, {'logaudiodevice':audioDeviceSelect.value})();
     restartAudioRecording();
 }
@@ -404,9 +401,9 @@ function changeAudioDuration() {
  Anki Settings 
  *
 */
-async function initSetAnkiTags() {
-    ankitags = await eel.read_config(ANKI_CONFIG, 'cardtags')(); 
-    ankiTagsInput.parentElement.MaterialTextfield.change(ankitags);
+function initSetAnkiTags(tags) {
+    ankitags = tags;
+    ankiTagsInput.parentElement.MaterialTextfield.change(tags);
 }
 async function setDeck() {
     const defaultDeck = await eel.read_config(ANKI_CONFIG, 'deck')(); 
@@ -479,9 +476,8 @@ async function updateFieldValue() {
     eel.update_anki_card_models(savedAnkiCardModels)();
 }
 
-async function initSetAnkiDictionaries() {
+async function initSetAnkiDictionaries(defaultDictionary) {
     const dictionaries = await eel.get_dictionaries()();
-    const defaultDictionary = await eel.read_config(ANKI_CONFIG, 'anki_dictionary')();
     dictionaries.forEach(dictionary=>{
         const dictionaryOption = document.createElement('option');
         dictionaryOption.value = dictionary;
@@ -509,10 +505,7 @@ async function toggleResizeScreenshotSwitchAndPersist() {
     toggleResizeScreenshotSwitch();
     eel.update_config(ANKI_CONFIG, {'resize_screenshot': isResizeAnkiScreenshot ? 'true' : 'false'})();
 }
-async function initSetAnkiMediaOptions() {
-    const screenshotMaxWidth = await eel.read_config(ANKI_CONFIG, 'resize_screenshot_max_width')();
-    const screenshotMaxHeight = await eel.read_config(ANKI_CONFIG, 'resize_screenshot_max_height')();
-    const isResizeScreenshot = await eel.read_config(ANKI_CONFIG, 'resize_screenshot')();
+function initSetAnkiMediaOptions({isResizeScreenshot, screenshotMaxWidth, screenshotMaxHeight}) {
     if (isResizeScreenshot === 'true') {
         toggleResizeScreenshotSwitch();
         resizeScreenshotSwitch.parentElement.MaterialSwitch.on();
@@ -538,8 +531,7 @@ async function toggleRemoveRepeatedSentencesAndPersist() {
     toggleRemoveRepeatedSentences();
     eel.update_config(TEXTHOOKER_CONFIG, {'remove_repeat': isRemoveRepeatedSentences ? 'true' : 'false'})();
 }
-async function initSetRemoveRepeatedSentencesSwitch() {
-    const isRemoveRepeatedSentences = await eel.read_config(TEXTHOOKER_CONFIG, 'remove_repeat')();
+function initSetRemoveRepeatedSentencesSwitch(isRemoveRepeatedSentences) {
     if (isRemoveRepeatedSentences === 'true') {
         toggleRemoveRepeatedSentences();
         document.getElementById("removeRepeatSentencesSwitch").parentElement.MaterialSwitch.on();
@@ -561,9 +553,7 @@ async function changeTextractorExecutablePath() {
  * 
  * Hotkeys
  */
-async function initHotkeys() {
-    const refreshHotkey = await eel.read_config(HOTKEY_CONFIG, 'refresh_ocr')();
-    const addToAnkiHotkey = await eel.read_config(HOTKEY_CONFIG, 'add_to_anki')();
+function initHotkeys({refreshHotkey, addToAnkiHotkey}) {
     refreshHotkeyInput.value = refreshHotkey;
     addToAnkiHotKeyInput.value = addToAnkiHotkey;
 }

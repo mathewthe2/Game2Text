@@ -173,6 +173,7 @@ function createAnkiFormCardTippy(target) {
     arrow: false,
     trigger:'mouseenter',
     interactive: true,
+    boundary: 'window',
     onShow(instance) {
       // Remove all other add to anki tippy instances
       tippyInstances.forEach(inst => {
@@ -213,7 +214,7 @@ function launchAnkiFormByLogId(logId) {
     if (showAnkiFormButton._tippy) {
       showAnkiFormButton._tippy.destroy();
     }
-    const ankiFormCardTippy = createAnkiFormCardTippy(showAnkiFormButton, true);
+    const ankiFormCardTippy = createAnkiFormCardTippy(showAnkiFormButton);
     ankiFormCardTippy.show();
   }
 }
@@ -706,6 +707,7 @@ async function addCardToAnki(logId) {
       noteData['reading'] = log.dictionary[0].reading;
     }
     if (log.dictionary[0].audio) {
+      // TODO: add word audio
       noteData['wordaudio'] = log.dictionary[0].audio; 
     }
   } 

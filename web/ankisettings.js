@@ -58,7 +58,8 @@ function updateFieldValuesTable(fieldValues) {
             <option>Glossary</option>
             <option>Sentence</option>
             <option>Screenshot</option>
-            <option>Audio</option>`;
+            <option>Audio</option>
+            <option>Word Audio</option>`;
             tupleClone.hidden = false;
             fieldValuesTableBody.append(tupleClone);
         })
@@ -84,7 +85,8 @@ function applyFieldAndValuesToTable(fieldValueMap) {
             <option>Glossary</option>
             <option>Sentence</option>
             <option>Screenshot</option>
-            <option>Audio</option>`;
+            <option>Audio</option>
+            <option>Word Audio</option>`;
             fieldValueSelect.value = fieldValueMap[field];
             tupleClone.hidden = false;
             fieldValuesTableBody.append(tupleClone);

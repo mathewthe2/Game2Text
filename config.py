@@ -2,6 +2,7 @@ from configparser import ConfigParser
 import eel
 import os
 import platform
+import json
 
 OCR_CONFIG = 'OCRCONFIG'
 TRANSLATION_CONFIG = 'TRANSLATIONCONFIG'
@@ -14,7 +15,7 @@ HOTKEYS_CONFIG = '$OS_HOTKEYS'
 PATHS_CONFIG = 'PATHS'
 
 #Get the configparser object
-config_object = ConfigParser()
+# config_object = ConfigParser()
 
 #Path for config file
 config_file = os.path.join(os.path.dirname(__file__), 'config.ini')
@@ -32,18 +33,33 @@ def r_config(section, key):
     if '$OS' in section:
         section = get_platform_for_section(section)
     #Read config.ini file
-    # config_object = ConfigParser()
+    config_object = ConfigParser()
     config_object.read(config_file, encoding='utf-8')
 
     #Get the password
     section = config_object[section]
     return section[key]
 
+def r_config_all():
+    config_object = ConfigParser()
+    config_object.read(config_file, encoding='utf-8')
+    section_dict = {}
+    for section in config_object:
+        if 'WINDOWS' in section or 'MAC' in section or 'LINUX' in section:
+            continue
+        section_dict[section] = dict(config_object[section])
+    # Platform specific config
+    section_dict['$OS_HOTKEYS'] = dict(config_object[get_platform_for_section('$OS_HOTKEYS')])
+    return section_dict
+    
+# print(r_config_all())
+
+
 def w_config(section, to_update_dict):
     if '$OS' in section:
         section = get_platform_for_section(section)
     #Read config.ini file
-    # config_object = ConfigParser()
+    config_object = ConfigParser()
     config_object.read("config.ini", encoding='utf-8')
 
     #Get the USERINFO section

@@ -61,6 +61,7 @@ def create_anki_note(note_data):
     fields = {}
     picture_fields = []
     audio_fields = []
+    word_audio_fields = []
     for field in field_value_map:
         value = field_value_map[field].replace(' ', '').lower()
         if value in note_data:
@@ -68,6 +69,8 @@ def create_anki_note(note_data):
                 picture_fields.append(field)
             elif (value == 'audio'):
                 audio_fields.append(field)
+            elif (value == 'wordaudio'):
+                word_audio_fields.append(field)
             else:
                 fields[field] = note_data[value]
     note_params = {
@@ -93,9 +96,19 @@ def create_anki_note(note_data):
         audio_params = {
             'filename': note_data['audio'],
             'fields': audio_fields,
-            'path':  str(Path(AUDIO_LOG_PATH, note_data['folder'], note_data['audio'])),
+            'path':  str(Path(AUDIO_LOG_PATH, note_data['folder'], note_data['audio']))
         }
         note_params['note']['audio'] = [audio_params]
+    if (word_audio_fields):
+        word_audio_params = {
+            'filename': note_data['audio'],
+            'fields': word_audio_fields,
+            'url':  note_data['wordaudio']
+        }
+        if (note_params['note']['audio']):
+            note_params['note']['audio'].append(word_audio_params)
+        else:
+            note_params['note']['audio'] = [word_audio_params]
     result = invoke('addNote', note_params)
     print(result)
     return result

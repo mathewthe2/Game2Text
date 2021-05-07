@@ -22,11 +22,11 @@
 ## Download 
 [Download Game2Text](https://game2text.com/download.html) 
 
-## FAQ
-[Read FAQ](https://github.com/mathewthe2/Game2Text/blob/main/public/faq.md)
+## User Guide
+[Read User Guide](https://game2text.com/user-guide/quick-start/)
 
-## Documentation
-[Read Documentation](https://github.com/mathewthe2/Game2Text/blob/main/public/documentation.md)
+## FAQ
+[Read FAQ](hhttps://game2text.com/faq/switch-browser/)
 
 ## Development
 

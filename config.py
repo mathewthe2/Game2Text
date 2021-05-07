@@ -51,9 +51,6 @@ def r_config_all():
     # Platform specific config
     section_dict['$OS_HOTKEYS'] = dict(config_object[get_platform_for_section('$OS_HOTKEYS')])
     return section_dict
-    
-# print(r_config_all())
-
 
 def w_config(section, to_update_dict):
     if '$OS' in section:

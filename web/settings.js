@@ -240,15 +240,19 @@ function updateOCREngine() {
 
 function updateOCREngineAndPersist() {
     const OCREngine = updateOCREngine();
-    eel.update_config(OCR_CONFIG, {'engine':OCREngine})();
-    if (OCREngine.includes('Tesseract')) {
-        eel.update_config(OCR_CONFIG, {'oem': OEM_CONFIG[OCREngine]})();
+    if (currentConfig[OCR_CONFIG]['engine'] !== OCREngine) {
+        eel.update_config(OCR_CONFIG, {'engine':OCREngine})();
+        if (OCREngine.includes('Tesseract')) {
+            eel.update_config(OCR_CONFIG, {'oem': OEM_CONFIG[OCREngine]})();
+        }
     }
 }
 
 function updateTranslationServiceAndPersist() {
     translationService = translationSelect.value;
-    eel.update_config(TRANSLATION_CONFIG, {'translation_service':translationService})();
+    if (currentConfig[TRANSLATION_CONFIG]['translation_service'] !== translationService) {
+        eel.update_config(TRANSLATION_CONFIG, {'translation_service':translationService})();
+    }
 }
   
 function toggleTextOrientation() {

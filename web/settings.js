@@ -11,7 +11,7 @@ const OEM_CONFIG = {
     'Tesseract LSTM': '1', 
     'Tesseract Legacy': '0',
 }
-
+let currentConfig = {}
 let logImageType = 'jpg';
 let logImageQuality = 1.0;
 let audioDevices = {};
@@ -60,6 +60,7 @@ function initConfig () {
     (async() => {
         const config = await eel.read_config_all()();
         if (config) {
+            currentConfig = Object.assign(config);
             // Appearance
             const appearanceConfig = config[APPEARANCE_CONFIG];
             initFontSize(appearanceConfig['fontsize']);
@@ -93,7 +94,7 @@ function initConfig () {
             initSetTextractorPath();
             // Hotkeys
             const hotkeyConfig = config[HOTKEY_CONFIG];
-            initHotkeys({refreshHotkey: hotkeyConfig['refresh_ocr'], addToAnkiHotkey: ['add_to_anki']});
+            initHotkeys({refreshHotkey: hotkeyConfig['refresh_ocr'], addToAnkiHotkey: hotkeyConfig['add_to_anki']});
         }
     })()
 }
@@ -194,7 +195,6 @@ function initIsLogAudio(isLogAudio) {
         document.getElementById("log-audio-switch").parentElement.MaterialSwitch.on();
     }
 }
-
 
 /*
  *
@@ -371,9 +371,10 @@ async function setAudioDevices(audio_host) {
     }
 }
 function changeAudioHost () {
-    // TODO: don't update audio host on launch
-    console.log('why am i updating audio host')
-    eel.update_config(LOG_CONFIG, {'logaudiohost':audioHostSelect.value})();
+    if (audioHostSelect.value !== currentConfig[LOG_CONFIG]['logaudiohost']) {
+        currentConfig[LOG_CONFIG]['logaudiohost'] = audioHostSelect.value
+        eel.update_config(LOG_CONFIG, {'logaudiohost': audioHostSelect.value})();
+    }
     setAudioDevices(audioHostSelect.value);
 }
 eel.expose(restartAudioRecording)
@@ -382,9 +383,10 @@ function restartAudioRecording() {
     eel.restart_audio_recording(deviceIndex); 
 }
 function changeAudioDevice() {
-    // TODO: don't update audio device on launch
-    console.log('why am i updating audio device')
-    eel.update_config(LOG_CONFIG, {'logaudiodevice':audioDeviceSelect.value})();
+    if (audioDeviceSelect.value !== currentConfig[LOG_CONFIG]['logaudiodevice']) {
+        currentConfig[LOG_CONFIG]['logaudiodevice'] = audioDeviceSelect.value
+        eel.update_config(LOG_CONFIG, {'logaudiodevice': audioDeviceSelect.value})();
+    }
     restartAudioRecording();
 }
 function changeAudioDuration() {

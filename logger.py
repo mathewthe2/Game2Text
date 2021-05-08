@@ -156,7 +156,7 @@ def get_logs(limit=0):
             output.append(log)
         f.close()
     if limit > 0 and len(output) > limit:
-        output = output[:limit]
+        output = output[-:limit]
     # Start another thread to match logs to game script
     thread = threading.Thread(target = add_gamescript_to_logs,  args=[output])
     thread.start()

@@ -39,6 +39,7 @@ let blurImageRadius = 0;
 let ankiModelFieldMap = {}, fieldValueMap = {};
 let savedAnkiCardModels = [];
 let ankiDecks, ankiModels, ankitags, selectedDeck, selectedModel;
+let modelFieldsNeedLoad = false;
 let isResizeAnkiScreenshot = false
 
 // Texthooker
@@ -736,8 +737,10 @@ async function loadAnki() {
         fieldValueMap =  {...savedAnkiCardModels[existingModelIndex]}; // get obj value
         delete fieldValueMap['model']; // remove model name from object
         applyFieldAndValuesToTable(fieldValueMap);
+      } else if (cardModel) {
+        modelFieldsNeedLoad = true;
       }
-    }
+    } 
     // python backend will send the result to setAnkiFields()
     eel.fetch_anki_fields_by_modals(ankiModels)();
     return true
@@ -748,6 +751,10 @@ async function loadAnki() {
 eel.expose(setAnkiFields);
 function setAnkiFields(modelName, fieldNames) {
   ankiModelFieldMap[modelName] = fieldNames;
+  if (modelFieldsNeedLoad && modelName === cardModel) {
+    updateFieldValuesTable(ankiModelFieldMap[cardModel]);
+    modelFieldsNeedLoad = false;
+  }
 }
 
 async function reloadAnki() {

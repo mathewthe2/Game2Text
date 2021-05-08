@@ -69,11 +69,9 @@ class Textractor(object):
                 print('timeout')
                 if (self.flush_thread.is_running):
                     self.flush_thread.stop()
-                output_objects = self.format_output(self.lines)
-                if output_objects:
-                    callback(output_objects)
+                self.handle_output()
                 time.sleep(1)
-                self.read_callback(callback)
+                self.read()
 
     def attach_multiple(self, pids):
         if len(self.attached_pids) > 0:

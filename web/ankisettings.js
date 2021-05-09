@@ -28,7 +28,7 @@ async function initCardModels() {
     if (cardModelNames.length > 0) {
         cardModelNames.forEach(cardModelName => {
             const cardModelOption = document.createElement("option");
-            cardModelOption.value = cardModelName.replace(' ', '_');
+            cardModelOption.value = cardModelName;
             cardModelSelector.append(cardModelOption);
         });  
     }

@@ -264,10 +264,13 @@ function formatCard(logId, cardElement) {
         }
       }
       // Word Audio
-      selectedTextPreview += `
-      <button log_id=${log.id} onclick="playWordAudio(this)" class="logMenuButton mdl-button mdl-js-button mdl-button--icon">
-        <i style="line-height: 20px !important;" class="material-icons">play_circle_filled</i>
-      </button>`;
+      if (log.dictionary[0].audio) {
+        // TODO: prevent rest of the text from moving when inserting audio icon
+        selectedTextPreview += `
+        <button log_id=${log.id} onclick="playWordAudio(this)" class="logMenuButton mdl-button mdl-js-button mdl-button--icon">
+          <i style="line-height: 20px !important;" class="material-icons">play_circle_filled</i>
+        </button>`;
+      }
     }
     const cardSelectedText = createCardSectionElement(
       iconName = 'title', 
@@ -611,10 +614,27 @@ async function updateCardWithDictionaryEntry(logId, word) {
   const dictionaryEntry = await eel.look_up_dictionary(word)();
   if (dictionaryEntry) {
     currentLogs.find(log=>log.id === logId)['dictionary'] = dictionaryEntry;
+    addLogAudioIfExists(logId);
   } else {
     currentLogs.find(log=>log.id === logId)['dictionary'] = null;
   }
   refreshCardContent(logId);
+}
+
+async function addLogAudioIfExists(logId) {
+  const log = getLogById(logId);
+  if (!log) {
+    return
+  }
+  if (log.dictionary[0].reading) {
+    const kanji = log['dictionary'][0].headword;
+    const kana = log['dictionary'][0].reading;
+    const audioUrl = await eel.get_jpod_url(kanji, kana)();
+    if (audioUrl) {
+      currentLogs.find(logObject=>logObject.id === log.id)['dictionary'][0].audio = audioUrl;
+      refreshCardContent(logId);
+    }
+  }
 }
 
 function updateLogFileById(logId) {

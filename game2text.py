@@ -15,7 +15,7 @@ from logger import get_time_string, log_text, log_media, AUDIO_LOG_PATH, SCRIPT_
 from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki_note, fetch_anki_fields
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
 from gamescript import load_game_scripts, open_game_script
-from dictionary import load_all_dictionaries, look_up, get_local_dictionaries, load_dictionary
+from dictionary import load_all_dictionaries, look_up, get_local_dictionaries, load_dictionary, get_jpod_audio_url
 from config import r_config, r_config_all, w_config, APP_CONFIG, LOG_CONFIG, TEXTHOOKER_CONFIG
 
 session_start_time = get_time_string()
@@ -137,6 +137,10 @@ def create_note(note_data):
 @eel.expose
 def set_dictionary(dictionary):
     load_dictionary(dictionary)
+
+@eel.expose
+def get_jpod_url(kanji, kana):
+    return get_jpod_audio_url(kanji=kanji, kana=kana)
 
 @eel.expose
 def get_dictionaries():

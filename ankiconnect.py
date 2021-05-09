@@ -6,6 +6,7 @@ from pathlib import Path
 from mimetypes import guess_extension
 from logger import AUDIO_LOG_PATH, IMAGE_LOG_PATH, get_base64_image_with_log
 from config import r_config, ANKI_CONFIG
+from dictionary import get_jpod_audio_base64
 
 SCRIPT_DIR = Path(__file__).parent
 ANKI_MODELS_FILENAME = 'ankimodels.yaml'
@@ -100,12 +101,14 @@ def create_anki_note(note_data):
         }
         note_params['note']['audio'] = [audio_params]
     if (word_audio_fields):
+        word_audio_url = note_data['wordaudio']
+        kana = word_audio_url.split('kana=')[1]
         word_audio_params = {
-            'filename': note_data['audio'],
+            'filename': kana + '_' + note_data['filename'] + '.mp3',
             'fields': word_audio_fields,
-            'url':  note_data['wordaudio']
+            'data': get_jpod_audio_base64(word_audio_url)
         }
-        if (note_params['note']['audio']):
+        if 'audio' in note_params['note']:
             note_params['note']['audio'].append(word_audio_params)
         else:
             note_params['note']['audio'] = [word_audio_params]

@@ -261,6 +261,15 @@ eel.expose(updateOutput)
 function updateOutput(text) {
   updateText(output, text);
   eel.log_output(text)();
+
+  // TODO: cache screenshots for clipboard mode and visual novel hooker mode, requires passing log id 
+  // if (isCacheScreenshots) {
+  //   const imageData = getVideoImage();
+  //   cachedScreenshots[response.id] = {'base64ImageString': imageData, 'imageType': logImageType};
+  // }
+  if (outputToClipboard && !clipboardMode) {
+    eel.copy_text_to_clipboard(text)();
+  }
   if (showTranslation) {
     translate(text)
   }

@@ -436,18 +436,22 @@ function changeDeck() {
     eel.update_config(ANKI_CONFIG, {'deck': selectedDeck})();
 }
 function changeCardModel() {
-    selectedModel = cardModelSelect.value;
-    updateFieldValuesTable(ankiModelFieldMap[selectedModel]);
-    if (savedAnkiCardModels) {
-        const existingModelIndex = savedAnkiCardModels.findIndex(obj=>obj['model'] === selectedModel);
-        if (existingModelIndex !== -1) {
-            // update table to saved settings
-            fieldValueMap =  {...savedAnkiCardModels[existingModelIndex]} // get obj
-            delete fieldValueMap['model']; //remove model name from object
-            applyFieldAndValuesToTable(fieldValueMap);
+    if (ankiModelFieldMap[cardModelSelect.value]) {
+        selectedModel = cardModelSelect.value;
+        updateFieldValuesTable(ankiModelFieldMap[selectedModel]);
+        if (savedAnkiCardModels) {
+            const existingModelIndex = savedAnkiCardModels.findIndex(obj=>obj['model'] === selectedModel);
+            if (existingModelIndex !== -1) {
+                // update table to saved settings
+                fieldValueMap =  {...savedAnkiCardModels[existingModelIndex]} // get obj
+                delete fieldValueMap['model']; //remove model name from object
+                applyFieldAndValuesToTable(fieldValueMap);
+            }
         }
+        eel.update_config(ANKI_CONFIG, {'model': selectedModel})();
+    } else {
+        updateFieldValuesTable({})
     }
-    eel.update_config(ANKI_CONFIG, {'model': selectedModel})();
 }
 function changeAnkiTags() {
     const tagList = ankiTagsInput.value.split(/[ ,]+/);

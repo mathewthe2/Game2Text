@@ -40,8 +40,8 @@ async function getFieldNamesForModel(modelName) {
 }
 
 function updateFieldValuesTable(fieldValues) {
-    if (fieldValues) {
-        const fieldValuesTable = document.getElementById('field_values_table');
+    const fieldValuesTable = document.getElementById('field_values_table');
+    if (Object.keys(fieldValues).length) {
         const fieldValuesTableBody = fieldValuesTable.getElementsByTagName('tbody')[0];
         const tupleTemplate = document.getElementById('field_values_tuple_template');
         fieldValuesTableBody.innerHTML = '';
@@ -64,6 +64,8 @@ function updateFieldValuesTable(fieldValues) {
             fieldValuesTableBody.append(tupleClone);
         })
         fieldValuesTable.hidden = false;
+    } else {
+        fieldValuesTable.hidden = true;
     }
 }
 function applyFieldAndValuesToTable(fieldValueMap) {

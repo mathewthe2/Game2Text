@@ -20,7 +20,7 @@
 - Create game flashcards with screenshot and game audio via Anki and AnkiConnect
 
 ## Download 
-[Download Game2Text](https://game2text.com/download.html) 
+[Download Game2Text](https://game2text.com/download/) 
 
 ## User Guide
 [Read User Guide](https://game2text.com/user-guide/quick-start/)

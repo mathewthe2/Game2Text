@@ -4,7 +4,7 @@ from pathlib import Path
 from ocr import detect_and_log
 from translate import multi_translate
 from hotkeys import hotkey_map
-from util import RepeatedTimer, open_folder_by_relative_path, create_directory_if_not_exists, get_default_browser_name, get_PID_list, remove_repeat_phrases
+from util import RepeatedTimer, open_folder_by_relative_path, create_directory_if_not_exists, get_default_browser_name, get_PID_list, remove_repeat_phrases, remove_spaces
 from textractor import Textractor
 from tools import path_to_textractor, open_folder_textractor_path
 from audio import get_recommended_device_index, get_audio_objects
@@ -199,10 +199,14 @@ def hook_code(code, pids):
         return 'Error: failed to hook code'
 
 def monitor_textractor(output_objects):
-    if r_config(TEXTHOOKER_CONFIG, 'remove_repeat') == 'true':
+    is_remove_repeat = r_config(TEXTHOOKER_CONFIG, 'remove_repeat') == 'true'
+    is_remove_spaces = r_config(TEXTHOOKER_CONFIG, 'remove_spaces') == 'true'
+
+    if is_remove_repeat or is_remove_spaces:
         for output in output_objects:
             output['text'] = output['text'].strip()
-            output['text'] = remove_repeat_phrases(output['text'])
+            output['text'] = remove_repeat_phrases(output['text']) if is_remove_repeat else output['text']
+            output['text'] = remove_spaces(output['text']) if is_remove_spaces else output['text']
 
     eel.textractorPipe(output_objects)
 

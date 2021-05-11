@@ -91,6 +91,7 @@ function initConfig () {
             // Texthooker
             const texthookerConfig = config[TEXTHOOKER_CONFIG];
             initSetRemoveRepeatedSentencesSwitch(texthookerConfig['remove_repeat']);
+            initSetRemoveWhiteSpacesSwitch(texthookerConfig['remove_spaces']);
             initSetTextractorPath();
             // Hotkeys
             const hotkeyConfig = config[HOTKEY_CONFIG];
@@ -547,6 +548,20 @@ function initSetRemoveRepeatedSentencesSwitch(isRemoveRepeatedSentences) {
         document.getElementById("removeRepeatSentencesSwitch").parentElement.MaterialSwitch.on();
     }
 }
+function toggleRemoveWhiteSpaces() {
+    isRemoveWhiteSpaces = !isRemoveWhiteSpaces;
+}
+async function toggleRemoveWhiteSpacesAndPersist() {
+    toggleRemoveWhiteSpaces();
+    eel.update_config(TEXTHOOKER_CONFIG, {'remove_spaces': isRemoveWhiteSpaces ? 'true' : 'false'})();
+}
+function initSetRemoveWhiteSpacesSwitch(isRemoveWhiteSpaces) {
+    if (isRemoveWhiteSpaces === 'true') {
+        toggleRemoveWhiteSpaces();
+        document.getElementById("removeWhiteSpacesSwitch").parentElement.MaterialSwitch.on();
+    }
+}
+
 async function initSetTextractorPath() {
     const textractorPath = await eel.get_path_to_textractor()();
     textractorPathInput.value = textractorPath;

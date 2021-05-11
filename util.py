@@ -106,6 +106,9 @@ def remove_repeat_characters(s):
     i = (s+s).find(s, 1, -1)
     return s if i == -1 else s[:i]
 
+def remove_spaces(s):
+    return "".join(s.split())
+
 # TODO: use algorithm in textractor
 def remove_repeat_phrases(s):
     prefix_array=[]

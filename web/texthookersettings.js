@@ -82,7 +82,7 @@ function textractorPipe(textractorOutput) {
             }
         }
         if (currentHook == hook) {
-            const output = parseText(textractorOutputObject.text)
+            const output = textractorOutputObject.text;
             updateOutput(output)
         }
     }
@@ -129,9 +129,9 @@ function hasSelectedPID() {
     return processPIDs.length > 0;
 }
 
-function parseText(text) {
-    // TODO: add custom regex
-    text = text.replace(/[\x00-\x20]/g, '')
-    text = text.replace(/_t.*?\//g, '')
-    return text
-}
+// function parseText(text) {
+//     // TODO: add custom regex
+//     text = text.replace(/[\x00-\x20]/g, '')
+//     text = text.replace(/_t.*?\//g, '')
+//     return text
+// }

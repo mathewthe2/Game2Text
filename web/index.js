@@ -44,6 +44,7 @@ let isResizeAnkiScreenshot = false
 
 // Texthooker
 let isRemoveRepeatedSentences = false
+let isRemoveWhiteSpaces = false
 
 const videoElement = document.getElementById("video");
 // const myImg = document.getElementById("my_img");

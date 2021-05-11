@@ -436,6 +436,12 @@ document.addEventListener("keydown", function(event) {
     if (!settingsDialog.hidden) {
       setTimeout(()=>settingsDialog.hidden = true, 300);
     }
+    if (!texthookerSettingsDialog.hidden) {
+      setTimeout(()=>texthookerSettingsDialog.hidden = true, 300);
+    }
+    if (!ankiSettingsDialog.hidden) {
+      setTimeout(()=>ankiSettingsDialog.hidden = true, 300);
+    }
   }
 });
 

@@ -122,6 +122,9 @@ function addLogs(newLogs) {
    })
 
   addToolTips();
+  tippyInstances.forEach(inst => {
+    inst.hide();
+  });
   window.scrollTo(0,document.body.scrollHeight);
 }
 

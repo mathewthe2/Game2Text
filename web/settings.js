@@ -80,6 +80,7 @@ function initConfig () {
             initIsLogImages(logConfig['logimages']);
             logImageType = logConfig['logimagetype']; 
             logImageQuality = logConfig['logimagequality']; 
+            logSessionMaxLogSize = logConfig['lastsessionmaxlogsize'];
             initIsLogAudio(logConfig['logaudio']);
             initSetAudioSources(logConfig['logaudiohost']);
             initSetAudioDuration(logConfig['logaudioduration']);

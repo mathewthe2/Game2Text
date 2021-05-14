@@ -29,6 +29,8 @@ let previousText = '';
 
 // Temporary screenshot cache before log window is launched
 let cachedScreenshots = {}, isCacheScreenshots = true;
+let cachedScreenshotNumber = 0;
+let logSessionMaxLogSize = 20;
 
 // Preprocessing Filters
 let imageProfiles = []
@@ -271,7 +273,7 @@ function updateOutput(text) {
   eel.log_output(text)((logId) => {
     if (isCacheScreenshots) {
       const imageData = getVideoImage();
-      cachedScreenshots[logId] = {'base64ImageString': imageData, 'imageType': logImageType};
+      cacheScreenshot(imageData, logId);
     }
   })
   if (outputToClipboard && !clipboardMode) {
@@ -383,10 +385,18 @@ function removeCachedScreenshot(key) {
   delete cachedScreenshots[key]; 
 }
 
-eel.expose(stopCachingScreenshots)
-function stopCachingScreenshots() {
-  cachedScreenshots = {}
-  isCacheScreenshots = false;
+function cacheScreenshot(imageData, logId) {
+  cachedScreenshotNumber += 1;
+  cachedScreenshots[logId] = {'base64ImageString': imageData, 'imageType': logImageType, 'number': cachedScreenshotNumber};
+  if (Object.keys(cachedScreenshots).length > logSessionMaxLogSize) {
+    let earliestProperty = Object.keys(cachedScreenshots)[0];
+    for (const property in cachedScreenshots) {
+      if (cachedScreenshots[property] < cachedScreenshots[earliestProperty]) {
+        earliestProperty = property;
+      }
+    }
+    delete cachedScreenshots[earliestProperty];
+  }
 }
 
 function toggleAutoMode() {
@@ -515,7 +525,7 @@ function recognize_image(image) {
 
       // Temporary fix: Cache screenshots before log window is opened. To remove in the future
       if (isCacheScreenshots) {
-        cachedScreenshots[response.id] = {'base64ImageString': imageData, 'imageType': logImageType};
+        cacheScreenshot(imageData, response.id);
       }
   
       if (outputToClipboard) {

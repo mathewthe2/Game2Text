@@ -112,7 +112,7 @@ function selectHook(hookSelect) {
     // currentHook = hookSelect.value;
     currentHook = hookSelect.value;
     currentHookLabel.innerText = hookSelect.value;
-    const output = parseText(hookOutputMap[currentHook].text);
+    const output = hookOutputMap[currentHook].text;
     updateOutput(output)
 }
 

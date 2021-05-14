@@ -151,7 +151,7 @@ def get_logs(limit=0):
         return []
     latest_file = max(list_of_files, key=os.path.getctime)
     with open(latest_file, 'r', encoding='utf-8') as f:
-        for index, line in enumerate(f):
+        for line in f:
             log = text_to_log(line, latest_file)
             output.append(log)
         f.close()

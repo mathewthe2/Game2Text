@@ -9,7 +9,7 @@ def clipboard_to_output():
         previous_text = eel.getOutputText()()
     if previous_text != pyperclip.paste():
         parsed_output = pyperclip.paste().replace('\r\n', ' ')
-        eel.updateOutput(parsed_output)
+        eel.updateOutput(parsed_output)()
         previous_text = pyperclip.paste()
 
 def text_to_clipboard(text):

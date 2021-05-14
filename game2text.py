@@ -4,14 +4,14 @@ from pathlib import Path
 from ocr import detect_and_log
 from translate import multi_translate
 from hotkeys import hotkey_map
-from util import RepeatedTimer, open_folder_by_relative_path, create_directory_if_not_exists, get_default_browser_name, get_PID_list, remove_repeat_phrases, remove_spaces
+from util import RepeatedTimer, create_directory_if_not_exists, get_default_browser_name, get_PID_list, remove_repeat_phrases, remove_spaces
 from textractor import Textractor
 from tools import path_to_textractor, open_folder_textractor_path
-from audio import get_recommended_device_index, get_audio_objects
+from audio import get_recommended_device_index
 from recordaudio import RecordThread
 from pynput import keyboard
 from clipboard import clipboard_to_output, text_to_clipboard
-from logger import get_time_string, log_text, log_media, AUDIO_LOG_PATH, SCRIPT_DIR
+from logger import get_time_string, log_text, log_media, AUDIO_LOG_PATH
 from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki_note, fetch_anki_fields
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
 from gamescript import load_game_scripts, open_game_script
@@ -36,8 +36,10 @@ def recognize_image(engine, image, orientation):
 
 @eel.expose
 def log_output(text):
-    log_text(session_start_time, get_time_string(), text)
-    log_media(session_start_time, get_time_string(), audio_recorder)
+    log_id = get_time_string()
+    log_text(session_start_time, log_id, text)
+    log_media(session_start_time, log_id, audio_recorder)
+    return log_id
 
 @eel.expose
 def export_image_filter_profile(profile):

@@ -275,7 +275,7 @@ function toggleClipboardMode() {
         // Disable OCR
         refreshButton.disabled = true;
         autoModeButton.disabled = true;
-        ctx.clearRect(0,0,canvas.width,canvas.height); // clear canvas
+        ctx.clearRect(0,0,cv1.width,cv1.height); // clear canvas
     } else {
         outputToClipboardSwitch.disabled = false;
         outputToClipboardSwitch.parentNode.classList.remove("is-disabled");

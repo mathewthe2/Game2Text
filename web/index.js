@@ -25,6 +25,8 @@ const displayMediaOptions = {
 let dialogWindow, autoModeTimer, croppedVideoTimer, currentText;
 let audioSources, audioDeviceIndex;
 
+let previousText = '';
+
 // Temporary screenshot cache before log window is launched
 let cachedScreenshots = {}, isCacheScreenshots = true;
 
@@ -260,14 +262,18 @@ function updateText(element, text) {
 /* Update result with possible translation */
 eel.expose(updateOutput)
 function updateOutput(text) {
+  // prevent duplicate output
+  if (text.trim() === previousText.trim()) {
+    return
+  } 
+  previousText = text;
   updateText(output, text);
-  eel.log_output(text)();
-
-  // TODO: cache screenshots for clipboard mode and visual novel hooker mode, requires passing log id 
-  // if (isCacheScreenshots) {
-  //   const imageData = getVideoImage();
-  //   cachedScreenshots[response.id] = {'base64ImageString': imageData, 'imageType': logImageType};
-  // }
+  eel.log_output(text)((logId) => {
+    if (isCacheScreenshots) {
+      const imageData = getVideoImage();
+      cachedScreenshots[logId] = {'base64ImageString': imageData, 'imageType': logImageType};
+    }
+  })
   if (outputToClipboard && !clipboardMode) {
     eel.copy_text_to_clipboard(text)();
   }

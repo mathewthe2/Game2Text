@@ -14,6 +14,8 @@ TEXTHOOKER_CONFIG = 'TEXTHOOKERCONFIG'
 HOTKEYS_CONFIG = '$OS_HOTKEYS'
 PATHS_CONFIG = 'PATHS'
 
+OS_STRING = '$OS'
+
 #Get the configparser object
 # config_object = ConfigParser()
 
@@ -27,10 +29,10 @@ def get_platform_for_section(section):
         'Linux': 'LINUX'
     }
     platform_name = platform.system()
-    return section.replace('$OS', platform_names_to_config_os_name[platform_name])
+    return section.replace(OS_STRING, platform_names_to_config_os_name[platform_name])
 
 def r_config(section, key):
-    if '$OS' in section:
+    if OS_STRING in section:
         section = get_platform_for_section(section)
     #Read config.ini file
     config_object = ConfigParser()
@@ -41,7 +43,7 @@ def r_config(section, key):
     return section[key]
 
 def r_config_section(section):
-    if '$OS' in section:
+    if OS_STRING in section:
         section = get_platform_for_section(section)
     config_object = ConfigParser()
     config_object.read(config_file, encoding='utf-8')
@@ -57,11 +59,11 @@ def r_config_all():
             continue
         section_dict[section] = dict(config_object[section])
     # Platform specific config
-    section_dict['$OS_HOTKEYS'] = dict(config_object[get_platform_for_section('$OS_HOTKEYS')])
+    section_dict[HOTKEYS_CONFIG] = dict(config_object[get_platform_for_section(HOTKEYS_CONFIG)])
     return section_dict
 
 def w_config(section, to_update_dict):
-    if '$OS' in section:
+    if OS_STRING in section:
         section = get_platform_for_section(section)
     #Read config.ini file
     config_object = ConfigParser()

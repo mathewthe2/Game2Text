@@ -16,7 +16,7 @@ from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
 from gamescript import load_game_scripts, open_game_script
 from dictionary import load_all_dictionaries, look_up, get_local_dictionaries, load_dictionary, get_jpod_audio_url
-from config import r_config, r_config_all, w_config, APP_CONFIG, LOG_CONFIG, TEXTHOOKER_CONFIG
+from config import r_config, r_config_all, r_config_section, w_config, APP_CONFIG, LOG_CONFIG, TEXTHOOKER_CONFIG
 
 session_start_time = get_time_string()
 textractor = None
@@ -201,8 +201,9 @@ def hook_code(code, pids):
         return 'Error: failed to hook code'
 
 def monitor_textractor(output_objects):
-    is_remove_repeat = r_config(TEXTHOOKER_CONFIG, 'remove_repeat') == 'true'
-    is_remove_spaces = r_config(TEXTHOOKER_CONFIG, 'remove_spaces') == 'true'
+    texthooker_config = r_config_section(TEXTHOOKER_CONFIG)
+    is_remove_repeat = texthooker_config['remove_repeat'] == 'true'
+    is_remove_spaces = texthooker_config['remove_spaces'] == 'true'
 
     if is_remove_repeat or is_remove_spaces:
         for output in output_objects:

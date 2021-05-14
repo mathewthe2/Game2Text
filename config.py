@@ -40,6 +40,14 @@ def r_config(section, key):
     section = config_object[section]
     return section[key]
 
+def r_config_section(section):
+    if '$OS' in section:
+        section = get_platform_for_section(section)
+    config_object = ConfigParser()
+    config_object.read(config_file, encoding='utf-8')
+    section = dict(config_object[section])
+    return section
+
 def r_config_all():
     config_object = ConfigParser()
     config_object.read(config_file, encoding='utf-8')

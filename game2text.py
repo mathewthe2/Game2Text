@@ -11,7 +11,7 @@ from audio import get_recommended_device_index
 from recordaudio import RecordThread
 from pynput import keyboard
 from clipboard import clipboard_to_output, text_to_clipboard
-from logger import get_time_string, log_text, log_media, AUDIO_LOG_PATH
+from logger import get_time_string, log_text, log_media, update_log_text, AUDIO_LOG_PATH
 from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki_note, fetch_anki_fields
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
 from gamescript import load_game_scripts, open_game_script
@@ -60,6 +60,16 @@ def load_game_text_scripts():
 @eel.expose
 def open_game_text_script():
     return open_game_script()
+
+@eel.expose
+def update_main_window_text(text):
+    is_log_text = False
+    eel.updateOutput(text, is_log_text)()
+
+@eel.expose
+def update_log_window_text(log_id, text):
+    update_log_text(log_id, session_start_time, text)
+    eel.updateLogDataById(log_id, {'text': text})()
 
 @eel.expose        
 def translate(text):

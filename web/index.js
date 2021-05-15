@@ -26,6 +26,7 @@ let dialogWindow, autoModeTimer, croppedVideoTimer, currentText;
 let audioSources, audioDeviceIndex;
 
 let previousText = '';
+let currentTextLogId = ''; 
 
 // Temporary screenshot cache before log window is launched
 let cachedScreenshots = {}, isCacheScreenshots = true;
@@ -263,24 +264,34 @@ function updateText(element, text) {
 
 /* Update result with possible translation */
 eel.expose(updateOutput)
-function updateOutput(text) {
+function updateOutput(text, logging=true) {
   // prevent duplicate output
   if (text.trim() === previousText.trim()) {
     return
   } 
   previousText = text;
   updateText(output, text);
-  eel.log_output(text)((logId) => {
-    if (isCacheScreenshots) {
-      const imageData = getVideoImage();
-      cacheScreenshot(imageData, logId);
-    }
-  })
+  if (logging) {
+    eel.log_output(text)((logId) => {
+      currentTextLogId = logId;
+      if (isCacheScreenshots) {
+        const imageData = getVideoImage();
+        cacheScreenshot(imageData, logId);
+      }
+    })
+  }
   if (outputToClipboard && !clipboardMode) {
     eel.copy_text_to_clipboard(text)();
   }
   if (showTranslation) {
     translate(text)
+  }
+}
+
+function changeOutputText(outputElement) {
+  const newText = outputElement.innerText;
+  if (currentTextLogId) {
+    eel.update_log_window_text(currentTextLogId, newText)();
   }
 }
 
@@ -520,12 +531,13 @@ function recognize_image(image) {
     let response = await eel.recognize_image(OCREngine, image, textOrientation)();
     if (response.result) {
       OCRrequests -= 1; // counter for auto-mode
+      currentTextLogId = response.id;
 
       updateText(output, response.result);
 
       // Temporary fix: Cache screenshots before log window is opened. To remove in the future
       if (isCacheScreenshots) {
-        cacheScreenshot(imageData, response.id);
+        cacheScreenshot(imageData, currentTextLogId);
       }
   
       if (outputToClipboard) {

@@ -374,6 +374,11 @@ function changeLogText(element) {
   }
   if (logId) {
     updateLogFileById(logId);
+    // update main window text if updating latest log
+    const latestLog = currentLogs[currentLogs.length-1];
+    if (logId === latestLog.id) {
+      eel.update_main_window_text(newLogText)();
+    }
     // TODO: update matching card options after updating log text
   }
 }
@@ -730,7 +735,6 @@ async function addCardToAnki(logId) {
       noteData['reading'] = log.dictionary[0].reading;
     }
     if (log.dictionary[0].audio) {
-      // TODO: add word audio
       noteData['wordaudio'] = log.dictionary[0].audio; 
     }
   } 

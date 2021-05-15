@@ -41,7 +41,7 @@ function replaceSelectedText(replacementText) {
    rangeOfSelectedText.deleteContents();
    rangeOfSelectedText.insertNode(document.createTextNode(replacementText));
    tooltip.style.visibility = "hidden";
-   // TODO: update text in logs
+   changeOutputText(outputText);
 }
 
 function clearTooltips(e) {

@@ -3,12 +3,11 @@ import urllib.request
 import eel
 import yaml
 from pathlib import Path
-from mimetypes import guess_extension
-from logger import AUDIO_LOG_PATH, IMAGE_LOG_PATH, get_base64_image_with_log
+from logger import AUDIO_LOG_PATH
 from config import r_config, ANKI_CONFIG
 from dictionary import get_jpod_audio_base64
+from tools import bundle_dir 
 
-SCRIPT_DIR = Path(__file__).parent
 ANKI_MODELS_FILENAME = 'ankimodels.yaml'
 
 NOTE_SCREENSHOT = 'screenshot'
@@ -35,7 +34,7 @@ def invoke(action, params):
 
 
 def get_anki_models():
-    filename = str(Path(SCRIPT_DIR, 'anki', ANKI_MODELS_FILENAME))
+    filename = str(Path(bundle_dir, 'anki', ANKI_MODELS_FILENAME))
     ankiModels = []
     with open(filename, 'r') as stream:
         try:
@@ -48,7 +47,7 @@ def get_anki_models():
 
 def update_anki_models(ankiModels):
     # save ankimodels
-    with open(str(Path(SCRIPT_DIR, 'anki', ANKI_MODELS_FILENAME)), 'w') as outfile:
+    with open(str(Path(bundle_dir, 'anki', ANKI_MODELS_FILENAME)), 'w') as outfile:
         yaml.dump(ankiModels, outfile, sort_keys=False, default_flow_style=False)
         return outfile.name
 

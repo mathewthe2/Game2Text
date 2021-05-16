@@ -4,7 +4,7 @@ import requests
 import base64
 from sudachipy import tokenizer
 from sudachipy import dictionary
-from logger import SCRIPT_DIR
+from tools import bundle_dir
 from pathlib import Path
 from config import r_config, ANKI_CONFIG
 import glob
@@ -16,7 +16,7 @@ pitch_dictionary_map = {}
 tokenizer_obj = dictionary.Dictionary(dict_type='small').create()
 mode = tokenizer.Tokenizer.SplitMode.A
 
-DICTIONARY_PATH = Path(SCRIPT_DIR, 'resources', 'dictionaries')
+DICTIONARY_PATH = Path(bundle_dir, 'resources', 'dictionaries')
 
 def get_local_dictionaries():
     files = glob.glob(str(DICTIONARY_PATH) + '/*.zip')
@@ -44,7 +44,7 @@ def load_dictionary_by_path(dictionary_path):
 def load_all_dictionaries():
     default_dictionary = r_config(ANKI_CONFIG, 'anki_dictionary')
     load_dictionary(default_dictionary)
-    # pitch_dictionary_map = load_sdictionary(str(Path(SCRIPT_DIR, 'dictionaries', 'kanjium_pitch_accents.zip')))
+    # pitch_dictionary_map = load_sdictionary(str(Path(bundle_dir, 'dictionaries', 'kanjium_pitch_accents.zip')))
 
 def load_dictionary(dictionary_name):
     global dictionary_map

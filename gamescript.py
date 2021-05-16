@@ -1,15 +1,13 @@
-import eel
 import glob
 from pathlib import Path
 from tkinter import *
 from tkinter.filedialog import askopenfile
 from shutil import copyfile
-from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 from config import w_config, LOG_CONFIG
+from tools import bundle_dir
 
-SCRIPT_DIR = Path(__file__).parent 
-GAME_SCRIPT_PATH = Path(SCRIPT_DIR, 'gamescripts')
+GAME_SCRIPT_PATH = Path(bundle_dir, 'gamescripts')
 MATCH_LIMIT= 4
 
 def open_game_script():

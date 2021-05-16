@@ -1,21 +1,30 @@
-import os 
+import sys, os
 import platform
 from pathlib import Path
 from config import r_config, w_config, OCR_CONFIG, PATHS_CONFIG
 from tkinter import *
-from tkinter.filedialog import asksaveasfile, askopenfile
+from tkinter.filedialog import askopenfile
 
-SCRIPT_DIR = Path(__file__).parent 
+bundle_dir = Path(__file__).parent
+
+if getattr(sys, 'frozen', False):
+        # we are running in a bundle
+        frozen = 'ever so'
+        bundle_dir = sys._MEIPASS
+else:
+        # we are running in a normal Python environment
+        bundle_dir = os.path.dirname(os.path.abspath(__file__))
+
 OSX_TESSERACT_VERSION = "4.1.1"
-WIN_TESSERACT_DIR = Path(SCRIPT_DIR, "resources", "bin", "win", "tesseract")
-OSX_TESSERACT_DIR = Path(SCRIPT_DIR, "resources", "bin", "mac", "tesseract", OSX_TESSERACT_VERSION)
+WIN_TESSERACT_DIR = Path(bundle_dir, "resources", "bin", "win", "tesseract")
+OSX_TESSERACT_DIR = Path(bundle_dir, "resources", "bin", "mac", "tesseract", OSX_TESSERACT_VERSION)
 
 def path_to_ffmpeg():
     platform_name = platform.system()
     if platform_name == 'Windows':
-        return str(Path(SCRIPT_DIR, "resources", "bin", "win", "ffmpeg", "ffmpeg.exe"))
+        return str(Path(bundle_dir, "resources", "bin", "win", "ffmpeg", "ffmpeg.exe"))
     elif platform_name == 'Darwin':
-        return str(Path(SCRIPT_DIR, "resources", "bin", "mac", "ffmpeg", "ffmpeg"))
+        return str(Path(bundle_dir, "resources", "bin", "mac", "ffmpeg", "ffmpeg"))
     return ''
 
 def path_to_ffmpeg_folder():
@@ -49,10 +58,10 @@ def get_tessdata_dir():
 
 def path_to_textractor():
     path = r_config('PATHS', 'textractor')
-    return path if path != 'default' else str(Path(SCRIPT_DIR, 'resources', 'bin', 'win', 'textractor', 'TextractorCLI.exe'))
+    return path if path != 'default' else str(Path(bundle_dir, 'resources', 'bin', 'win', 'textractor', 'TextractorCLI.exe'))
 
 def path_to_wexpect():
-    return str(Path(SCRIPT_DIR, 'resources', 'bin', 'win', 'wexpect', 'wexpect.exe'))
+    return str(Path(bundle_dir, 'resources', 'bin', 'win', 'wexpect', 'wexpect.exe'))
 
 def open_folder_textractor_path():
     root = Tk()

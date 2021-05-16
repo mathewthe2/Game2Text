@@ -1,8 +1,6 @@
 from configparser import ConfigParser
-import eel
 import os
 import platform
-import json
 
 OCR_CONFIG = 'OCRCONFIG'
 TRANSLATION_CONFIG = 'TRANSLATIONCONFIG'

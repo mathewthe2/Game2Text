@@ -4,9 +4,9 @@ import glob
 from pathlib import Path
 from tkinter import *
 from tkinter.filedialog import asksaveasfile, askopenfile
+from tools import bundle_dir
 
-SCRIPT_DIR = Path(__file__).parent 
-IMAGE_PROFILE_PATH = Path(SCRIPT_DIR, 'profiles')
+IMAGE_PROFILE_PATH = Path(bundle_dir, 'profiles')
 
 def open_image_profile():
     root = Tk()

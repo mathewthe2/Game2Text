@@ -1,7 +1,6 @@
 import time
 import os
 import re
-import sys
 import eel
 import glob
 import base64
@@ -14,11 +13,11 @@ from config import r_config, LOG_CONFIG
 from util import create_directory_if_not_exists, base64_to_image_path
 from audio import play_audio_from_file
 from gamescript import add_matching_script_to_logs
+from tools import bundle_dir
 
-SCRIPT_DIR = Path(__file__).parent 
-TEXT_LOG_PATH = Path(SCRIPT_DIR, 'logs', 'text')
-IMAGE_LOG_PATH = Path(SCRIPT_DIR, 'logs', 'images')
-AUDIO_LOG_PATH = Path(SCRIPT_DIR, 'logs', 'audio')
+TEXT_LOG_PATH = Path(bundle_dir, 'logs', 'text')
+IMAGE_LOG_PATH = Path(bundle_dir, 'logs', 'images')
+AUDIO_LOG_PATH = Path(bundle_dir, 'logs', 'audio')
 
 def get_time_string():
     return time.strftime('%Y%m%d-%H%M%S')

@@ -6,13 +6,12 @@ import platform
 import base64
 import cv2
 import eel
+from tools import bundle_dir
 try:
     from winreg import HKEY_CURRENT_USER, OpenKey, QueryValueEx
 except ImportError:
     if platform.system() == 'Windows':
         print('failed to import winreg')
-
-SCRIPT_DIR = Path(__file__).parent 
 
 class RepeatedTimer(object):
     def __init__(self, interval, function, *args, **kwargs):
@@ -56,7 +55,7 @@ def create_directory_if_not_exists(filename):
 def open_folder_by_relative_path(relative_path):
     platform_name = platform.system() 
     if platform_name == 'Windows':
-        path = os.path.realpath(str(Path(SCRIPT_DIR, relative_path)))
+        path = os.path.realpath(str(Path(bundle_dir, relative_path)))
         os.startfile(path)
 
 def base64_to_image(base64string, path):

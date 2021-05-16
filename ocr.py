@@ -1,19 +1,16 @@
 import pytesseract
 from pathlib import Path
-import platform
-from logger import log_text, log_media, get_time_string
+from logger import log_text, log_media
 from config import r_config, OCR_CONFIG
-from util import create_directory_if_not_exists, base64_to_image, base64_to_image_path
-from tools import path_to_tesseract, get_tessdata_dir
-import requests
-import eel
+from util import base64_to_image, base64_to_image_path
+from tools import path_to_tesseract, get_tessdata_dir, bundle_dir
 from ocr_space import ocr_space_file, OCRSPACE_API_URL_USA, OCRSPACE_API_URL_EU
 
 HORIZONTAL_TEXT_DETECTION = 6
 VERTICAL_TEXT_DETECTON = 5
 
 def get_temp_image_path():
-    return str(Path(SCRIPT_DIR,"logs", "images", "temp.png"))
+    return str(Path(bundle_dir,"logs", "images", "temp.png"))
 
 def detect_and_log(engine, cropped_image,  text_orientation, session_start_time, request_time, audio_recorder):
     result = image_to_text(engine, cropped_image, text_orientation)
@@ -50,6 +47,5 @@ def tesseract_ocr(image, text_orientation):
     result = pytesseract.image_to_string(image, config=custom_config, lang=language)
     return result
 
-SCRIPT_DIR = Path(__file__).parent 
 tesseract_cmd, platform_name = path_to_tesseract()
 pytesseract.pytesseract.tesseract_cmd = tesseract_cmd

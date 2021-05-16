@@ -7,6 +7,7 @@ let activeCardLogId = '';
 const loadingScreenDelay = setTimeout("showLoadingScreen()", 400);
 
 // Audio
+let recordingLogId;
 let isRecording = false;
 let currentlyPlayingAudio = '';
 
@@ -407,7 +408,7 @@ function logToHtml(log) {
   const recordAudioButton = logItemClone.getElementsByClassName('recordAudioButton')[0];
   recordAudioButton.id = `record_audio_button_${log.id}`;
   recordAudioButton.setAttribute('log_id', log.id);
-  recordAudioButton.setAttribute('onclick', `startManualRecording(this.getAttribute('log_id'), this)`)
+  recordAudioButton.setAttribute('onclick', `toggleManualRecording(this.getAttribute('log_id'), this)`)
 
   if (log.audio) {
     playAudioButton.hidden = false;
@@ -465,7 +466,7 @@ function finishPlayingAudio(logId) {
 }
 
 
-async function startManualRecording(logId, recordAudioButton) {
+async function toggleManualRecording(logId, recordAudioButton) {
   // Manual Recording: first click to record, second click to stop recording
   const log = getLogById(logId);
   if (log) {
@@ -474,10 +475,12 @@ async function startManualRecording(logId, recordAudioButton) {
       recordAudioIcon.style.color = '#E21549';
       eel.start_manual_recording(log.id, log.folder)();
       isRecording = true;
+      recordingLogId = logId;
     } else {
       recordAudioIcon.style.color = '#3F51B5';
       stopManualRecording(); 
       isRecording = false;
+      recordingLogId  = '';
     }
   }
 }
@@ -486,7 +489,6 @@ async function stopManualRecording() {
   const audioFileName = await eel.stop_manual_recording()();
   if (audioFileName) {
     const logId = fileBaseName(audioFileName)
-    const log = getLogById(logId);
     const recordAudioButton = document.getElementById(`record_audio_button_${logId}`);
     recordAudioButton.hidden = true;
     const playAudioButton = document.getElementById(`play_audio_button_${logId}`);
@@ -508,6 +510,33 @@ function playWordAudio(audioButton) {
     audio.play();
   } else {
     notify('Cannot find Log');
+  }
+}
+
+function getRecordAudioButtonByLogId(logId) {
+  const logElement = getLogElementById(logId);
+  return logElement.getElementsByClassName('recordAudioButton')[0];
+}
+
+eel.expose(resetAudioRecording)
+function resetAudioRecording() {
+  if (isRecording) {
+    const recordAudioButton = getRecordAudioButtonByLogId(recordingLogId);
+    toggleManualRecording(recordingLogId, recordAudioButton);
+  } else {
+    const latestLog = currentLogs[currentLogs.length-1];
+    if (latestLog.audio) {
+        // delete recording
+        deleteRecording(latestLog.id).then(()=>{
+          // start recording
+          const recordAudioButton = getRecordAudioButtonByLogId(latestLog.id);
+          toggleManualRecording(latestLog.id, recordAudioButton);
+        })
+    } else {
+      // start recording
+      const recordAudioButton = getRecordAudioButtonByLogId(latestLog.id);
+      toggleManualRecording(latestLog.id, recordAudioButton);
+    }
   }
 }
 
@@ -551,6 +580,10 @@ async function deleteRecording(logId) {
       playAudioButton.hidden = true;
       const recordAudioButton = logElement.getElementsByClassName('recordAudioButton')[0];
       recordAudioButton.hidden = false;
+      return true
+    } else {
+      notify('Failed to delete recording');
+      return false
     }
   }
 }

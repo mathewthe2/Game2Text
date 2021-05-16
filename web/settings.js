@@ -55,7 +55,8 @@ const textractorPathInput = document.getElementById('textractorPathInput');
 
 // Hotkeys
 const refreshHotkeyInput = document.getElementById('refreshHotkeyInput');
-const addToAnkiHotKeyInput = document.getElementById('addToAnkiHotKeyInput');
+const addToAnkiHotkeyInput = document.getElementById('addToAnkiHotkeyInput');
+const recordAudioHotkeyInput = document.getElementById('recordAudioHotkeyInput');
 
 initConfig();
 
@@ -99,7 +100,11 @@ function initConfig () {
             initSetTextractorPath();
             // Hotkeys
             const hotkeyConfig = config[HOTKEY_CONFIG];
-            initHotkeys({refreshHotkey: hotkeyConfig['refresh_ocr'], addToAnkiHotkey: hotkeyConfig['add_to_anki']});
+            initHotkeys({
+                refreshHotkey: hotkeyConfig['refresh_ocr'], 
+                addToAnkiHotkey: hotkeyConfig['add_to_anki'],
+                recordHotkey: hotkeyConfig['record_audio']
+            });
         }
     })()
 }
@@ -595,9 +600,10 @@ async function changeTextractorExecutablePath() {
  * 
  * Hotkeys
  */
-function initHotkeys({refreshHotkey, addToAnkiHotkey}) {
+function initHotkeys({refreshHotkey, addToAnkiHotkey, recordHotkey}) {
     refreshHotkeyInput.value = refreshHotkey;
-    addToAnkiHotKeyInput.value = addToAnkiHotkey;
+    addToAnkiHotkeyInput.value = addToAnkiHotkey;
+    recordAudioHotkeyInput.value = recordHotkey;
 }
 
 function changeRefreshHotkey(input) {

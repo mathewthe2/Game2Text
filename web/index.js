@@ -447,6 +447,16 @@ function closeAnkiSettingsDialog() {
   setTimeout(()=>ankiSettingsDialog.hidden = true, 300);
 }
 
+function openClipboardSettings() {
+  clipboardDialog.hidden = false;
+  setTimeout(()=>clipboardDialog.showModal(), 300);
+}
+
+function closeClipboardSettingsDialog() {
+  clipboardDialog.close();
+  setTimeout(()=>clipboardDialog.hidden = true, 300);
+}
+
 function openTexthookerSettings() {
   texthookerSettingsDialog.hidden = false;
   setTimeout(()=>texthookerSettingsDialog.showModal(), 300);

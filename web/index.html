@@ -6,7 +6,7 @@
   <link rel="shortcut icon" href="static/favicon.ico">
   <!-- MDL Material Design Lite -->
   <link rel="stylesheet" href="static/icon.css">
-  <link rel="stylesheet" href="static/material.indigo-pink.min.css">
+  <link rel="stylesheet" href="static/material.min.css">
   <script src="static/material.min.js"></script>
   <!-- MDL Select -->
   <link rel="stylesheet" href="static/getmdl-select.min.css">
@@ -154,6 +154,11 @@
     </button>
     <div id="texthookerTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="texthookerButton">Visual Novel Hooker</div>
 
+    <button id="clipboardButton" onclick="openClipboardSettings()" class="mdl-button mdl-js-button mdl-button--icon">
+      <i class="material-icons">content_paste</i>
+    </button>
+    <div id="clipboardTooltip" class="mdl-tooltip mdl-tooltip--large mdl-tooltip--bottom" data-mdl-for="clipboardButton">Clipboard</div>
+
     <button id="AnkiSettingsButton" onclick="openAnkiSettingsDialog()" class="mdl-button mdl-js-button mdl-button--icon">
       <i class="material-icons">style</i>
     </button>
@@ -179,76 +184,96 @@
             <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
               <div class="mdl-tabs__tab-bar">
                 <a href="#general" class="mdl-tabs__tab is-active">General</a>
-                <a href="#media" class="mdl-tabs__tab">Media</a> 
+                <a href="#audio" class="mdl-tabs__tab">Audio</a> 
+                <a href="#picture" class="mdl-tabs__tab">Picture</a> 
                 <a href="#translation" class="mdl-tabs__tab">Translation</a> 
-                <a href="#clipboard" class="mdl-tabs__tab">Clipboard</a> 
+                <!-- <a href="#clipboard" class="mdl-tabs__tab">Clipboard</a>  -->
                 <a href="#hotkeys" class="mdl-tabs__tab">Hotkeys</a> 
               </div>
               <div class="mdl-tabs__panel is-active" id="general">
-                <div class="tab_section_label">Appearance</div>
+                <div class="settingsCard mdl-card mdl-shadow--2dp">
+                    <ul class="mdl-list">
+                      <li class="sectionTitle mdl-list__item">
+                        Appearance
+                      </li>
+                      <li class="mdl-list__item">
+                        <span class="mdl-list__item-primary-content">
+                          <i class="settingsIcon material-icons mdl-list__item-avatar">format_size</i>
+                          <span>Font Size</span>
+                        </span>
+                        <span class="mdl-list__item-secondary-action">
+                          <input id="font-size-slider" class="mdl-slider mdl-js-slider" type="range"
+                          min="7" max="60" value="24" tabindex="0" onchange="updateFontSizeAndPersist(this.value)">
+                        </span>
+                      </li>
+                      <li class="mdl-list__item">
+                        <span class="mdl-list__item-primary-content">
+                          <i class="settingsIcon material-icons mdl-list__item-avatar">invert_colors</i>
+                          <span>Dark Theme</span>
+                        </span>
+                        <span class="mdl-list__item-secondary-action">
+                          <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="dark-theme-switch">
+                            <input type="checkbox" onclick="toggleDarkThemeAndPersist()" id="dark-theme-switch" class="mdl-switch__input" />
+                          </label>
+                        </span>
+                      </li>
+                      </ul>
+                </div>
+
+                 
+                    <!-- <div class="tab_section_label">Text Recognition</div> -->
+                    <div class="settingsCard mdl-card mdl-shadow--2dp">
+                      <ul class="mdl-list">
+                        <li class="sectionTitle mdl-list__item">
+                          Text Recognition
+                        </li>
+                        <li class="mdl-list__item">
+                        <span class="mdl-list__item-primary-content">
+                          <i class="settingsIcon material-icons mdl-list__item-avatar">remove_red_eye</i>
+                            <div id="ocr_engine_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
+                              <input onchange="updateOCREngineAndPersist()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="ocr_engine_select" readonly>
+                              <input type="hidden" value=""  name="ocr_engine_select">
+                              <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                              <label for="ocr_engine_select" class="mdl-textfield__label">OCR Engine</label>
+                              <ul for="ocr_engine_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                                  <li class="mdl-menu__item" data-val="tesseract_default">Tesseract Default</li>
+                                  <li class="mdl-menu__item" data-val="tesseract_lstm">Tesseract LSTM</li>
+                                  <li class="mdl-menu__item" data-val="tesseract_legacy">Tesseract Legacy</li>
+                                  <li class="mdl-menu__item" data-val="ocr_space_na">OCR Space NA</li>
+                                  <li class="mdl-menu__item" data-val="ocr_space_eu">OCR Space EU</li>
+                              </ul>
+                            </div>
+                        </span>
+                        </li>
+    
+                      <li class="mdl-list__item mdl-list__item--two-line">
+                        <span class="mdl-list__item-primary-content">
+                          <i class="settingsIcon material-icons mdl-list__item-avatar">text_rotate_vertical</i>
+                          <span>Detect Vertical Text</span>
+                          <span class="mdl-list__item-sub-title">Detect vertical text in books and manga</span>
+                          </span>
+                          <span class="mdl-list__item-secondary-action">
+                          <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="text-orientation-switch">
+                            <input type="checkbox" onclick="toggleTextOrientation()" id="text-orientation-switch" class="mdl-switch__input" />
+                          </label>
+                        </span>
+                      </li>
+                      </ul>
+                  </div>
+
                   <ul class="mdl-list">
                     <li class="mdl-list__item">
                       <span class="mdl-list__item-primary-content">
-                        <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">format_size</i>
-                        <span>Font Size</span>
+                        Select New Application Window
                       </span>
                       <span class="mdl-list__item-secondary-action">
-                        <input id="font-size-slider" class="mdl-slider mdl-js-slider" type="range"
-                        min="7" max="60" value="24" tabindex="0" onchange="updateFontSizeAndPersist(this.value)">
+                        <button onclick="selectApplication()" class="mdl-button mdl-js-button mdl-button--icon">
+                          <i class="material-icons">keyboard_arrow_right</i>
+                        </button>
                       </span>
                     </li>
-                    <li class="mdl-list__item">
-                      <span class="mdl-list__item-primary-content">
-                        <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">invert_colors</i>
-                        <span>Dark Theme</span>
-                      </span>
-                      <span class="mdl-list__item-secondary-action">
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="dark-theme-switch">
-                          <input type="checkbox" onclick="toggleDarkThemeAndPersist()" id="dark-theme-switch" class="mdl-switch__input" />
-                        </label>
-                      </span>
-                    </li>
-                    </ul>
-                    <div class="tab_section_label">Text Recognition</div>
-                    <ul class="mdl-list">
-                      <div class="tab_select_wrapper">
-                        <div id="ocr_engine_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
-                          <input onchange="updateOCREngineAndPersist()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="ocr_engine_select" readonly>
-                          <input type="hidden" value=""  name="ocr_engine_select">
-                          <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-                          <label for="ocr_engine_select" class="mdl-textfield__label">OCR Engine</label>
-                          <ul for="ocr_engine_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-                              <li class="mdl-menu__item" data-val="tesseract_default">Tesseract Default</li>
-                              <li class="mdl-menu__item" data-val="tesseract_lstm">Tesseract LSTM</li>
-                              <li class="mdl-menu__item" data-val="tesseract_legacy">Tesseract Legacy</li>
-                              <li class="mdl-menu__item" data-val="ocr_space_na">OCR Space NA</li>
-                              <li class="mdl-menu__item" data-val="ocr_space_eu">OCR Space EU</li>
-                          </ul>
-                        </div>
-                      </div>
-  
-                    <li class="mdl-list__item mdl-list__item--two-line">
-                      <span class="mdl-list__item-primary-content">
-                        <span>Detect Vertical Text</span>
-                        <span class="mdl-list__item-sub-title">Detect vertical text in books and manga</span>
-                        </span>
-                        <span class="mdl-list__item-secondary-action">
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="text-orientation-switch">
-                          <input type="checkbox" onclick="toggleTextOrientation()" id="text-orientation-switch" class="mdl-switch__input" />
-                        </label>
-                      </span>
-                    </li>
-                        <li class="mdl-list__item">
-                          <span class="mdl-list__item-primary-content">
-                            Select New Application Window
-                          </span>
-                          <span class="mdl-list__item-secondary-action">
-                            <button onclick="selectApplication()" class="mdl-button mdl-js-button mdl-button--icon">
-                              <i class="material-icons">keyboard_arrow_right</i>
-                            </button>
-                          </span>
-                        </li>
-                    </ul>
+                  </ul>
+                   
               </div>
 
               <div class="mdl-tabs__panel" id="hotkeys">
@@ -276,14 +301,16 @@
                       </tr>
                     </tbody>
                   </table>
-                </li>
+              </li>
               </ul>
               <div class="tab_section_label">Restarting Game2Text is required for hotkey changes to take effect.</div>
               </div>
 
               <div class="mdl-tabs__panel" id="translation">
                 <ul class="mdl-list">
-                  <div class="tab_select_wrapper" style="padding-bottom: 30px">
+                  <li class="mdl-list__item" >
+                    <span class="mdl-list__item-primary-content">
+                      <i class="settingsIcon material-icons mdl-list__item-avatar">g_translate</i>
                     <div id="translation_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
                       <input onchange="updateTranslationServiceAndPersist()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="translation_select" readonly>
                       <input type="hidden" value=""  name="translation_select">
@@ -295,57 +322,41 @@
                           <li class="mdl-menu__item" data-val="tesseract_legacy">Google Translate</li>
                       </ul>
                     </div>
-                  </div>
+                    </span>
+                  </li>
 
-                  <div class="tab_select_wrapper">
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <li class="mdl-list__item" >
+                    <span class="mdl-list__item-primary-content">
+                      <i class="settingsIcon material-icons mdl-list__item-avatar">translate</i>
+                      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                       <input onchange="changeSourceLanguage()" class="mdl-textfield__input" type="text" id="source_language_input">
                       <label class="mdl-textfield__label" for="sample4">Source Language</label>
                     </div>
-                  </div>
+                  </span>
+                  </li>
 
-                  <div class="tab_select_wrapper">
+                  <li class="mdl-list__item" >
+                    <span class="mdl-list__item-primary-content">
+                      <i class="settingsIcon material-icons mdl-list__item-avatar">language</i>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                       <input onchange="changeTargetLanguage()" class="mdl-textfield__input" type="text" id="target_language_input">
                       <label class="mdl-textfield__label" for="sample4">Target Language</label>
                     </div>
-                  </div>
+                  </span>
+                  </li>
 
                 </ul>
               </div>
-
-              <div class="mdl-tabs__panel" id="clipboard">
-                  <ul class="mdl-list">
-                    <li class="mdl-list__item mdl-list__item--two-line">
-                      <span class="mdl-list__item-primary-content">
-                        <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">content_paste</i>
-                        <span> Clipboard Inserter</span>
-                        <span class="mdl-list__item-sub-title">Use with 3rd party texthookers</span>
-                      </span>
-                      <span class="mdl-list__item-secondary-content">
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="clipboard-mode-switch">
-                          <input type="checkbox" onclick="toggleClipboardMode()" id="clipboard-mode-switch" class="mdl-switch__input" />
-                        </label>
-                      </span>
-                    </li>
-                    <li class="mdl-list__item">
-                      <span class="mdl-list__item-primary-content">
-                        <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">content_copy</i>
-                        <span> Text to Clipboard</span>
-                      </span>
-                      <span class="mdl-list__item-secondary-content">
-                      <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="output-to-clipboard-mode-switch">
-                          <input type="checkbox" onclick="toggleOutputToClipboard()" id="output-to-clipboard-mode-switch" class="mdl-switch__input" />
-                        </label>
-                      </span>
-                    </li>
-                  </ul>
-                </div>
                 
-                <div class="mdl-tabs__panel" id="media">
-                  <ul class="mdl-list">
-                        <!-- Audio Host Selection -->
-                        <div class="tab_select_wrapper">
+                <div class="mdl-tabs__panel" id="audio">
+                  <div class="settingsCard mdl-card mdl-shadow--2dp">
+                    <ul class="mdl-list">
+                      <li class="sectionTitle mdl-list__item">
+                        Audio Device
+                      </li>
+                      <li class="mdl-list__item">
+                      <span class="mdl-list__item-primary-content">
+                        <i class="settingsIcon material-icons mdl-list__item-avatar">graphic_eq</i>
                           <div id="audio_host_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
                             <input onchange="changeAudioHost()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="audio_host_select" readonly>
                             <input type="hidden" value=""  name="audio_host_select">
@@ -353,11 +364,14 @@
                             <label for="audio_host_select" class="mdl-textfield__label">Audio Host</label>
                             <ul id="audio_host_selector" for="audio_host_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
                             </ul>
-                          </div>
                         </div>
+                      </span>
+                      </li>
 
                         <!-- Audio Device Selection -->
-                        <div class="tab_select_wrapper">
+                        <li class="mdl-list__item">
+                          <span class="mdl-list__item-primary-content">
+                            <i class="settingsIcon material-icons mdl-list__item-avatar">headphones</i>
                           <div id="audio_device_select_container" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
                             <input onchange="changeAudioDevice()" style="padding-top: 8px" type="text" value="" class="mdl-textfield__input" id="audio_device_select" readonly>
                             <input type="hidden" value=""  name="audio_device_select">
@@ -365,24 +379,21 @@
                             <label for="audio_device_select" class="mdl-textfield__label">Audio Device</label>
                             <ul id="audio_device_selector" for="audio_device_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
                             </ul>
-                          </div>
+                            </div>
+                            </span>
+                            </li>
+                        </ul>
                         </div>
-                        <li class="mdl-list__item mdl-list__item--two-line">
-                          <span class="mdl-list__item-primary-content">
-                            <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">photo_library</i>
-                            <span>Save screenshots</span>
-                            <span class="mdl-list__item-sub-title" >Images are saved to <a onclick="openFolder('logs/images')" href="#"><b>logs/images/</b></a> directory</span>
-                          </span>
-                          <span class="mdl-list__item-secondary-content">
-                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="log-images-switch">
-                              <input type="checkbox" onclick="toggleLogImagesAndPersist()" id="log-images-switch" class="mdl-switch__input" />
-                            </label>
-                          </span>
-                        </li>
+
+                        <div class="settingsCard mdl-card mdl-shadow--2dp">
+                          <ul class="mdl-list">
+                            <li class="sectionTitle mdl-list__item">
+                              Automatic Recording
+                            </li>
 
                         <li class="mdl-list__item mdl-list__item--two-line">
                           <span class="mdl-list__item-primary-content">
-                            <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">video_library</i>
+                            <i class="settingsIcon material-icons mdl-list__item-avatar">video_library</i>
                             <span>Automatic recording</span>
                             <span class="mdl-list__item-sub-title" >Audio files are saved to <a onclick="openFolder('logs/audio')" href="#"><b>logs/audio/</b></a> directory</span>
                           </span>
@@ -393,16 +404,40 @@
                           </span>
                         </li>
 
-                        <div class="tab_select_wrapper">
+               
+                        <li class="mdl-list__item mdl-list__item--two-line">
+                          <span class="mdl-list__item-primary-content">
+                            <i class="settingsIcon material-icons mdl-list__item-avatar">timelapse</i>
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input onchange="changeAudioDuration()" class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="audio_duration_input">
-                            <label class="mdl-textfield__label" for="sample4">Automatic Recording Duration (seconds)</label>
+                            <label class="mdl-textfield__label" for="sample4">Duration (seconds)</label>
                             <span class="mdl-textfield__error">Input is not a number!</span>
                           </div>
-                        </div>
+                          </span>
+                          </li>
                     <!-- end of list -->
                     </ul>
+                  </div>
+
                 </div>
+
+                <div class="mdl-tabs__panel" id="picture">
+                  <ul class="mdl-list">
+                    <li class="mdl-list__item mdl-list__item--two-line">
+                      <span class="mdl-list__item-primary-content">
+                        <i class="settingsIcon material-icons mdl-list__item-avatar">photo_library</i>
+                        <span>Save screenshots</span>
+                        <span class="mdl-list__item-sub-title" >Images are saved to <a onclick="openFolder('logs/images')" href="#"><b>logs/images/</b></a> directory</span>
+                      </span>
+                      <span class="mdl-list__item-secondary-content">
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="log-images-switch">
+                          <input type="checkbox" onclick="toggleLogImagesAndPersist()" id="log-images-switch" class="mdl-switch__input" />
+                        </label>
+                      </span>
+                    </li>
+                    </ul>
+                </div>
+
             </div>
           <!-- extra settings here-->
           <hr>
@@ -413,10 +448,45 @@
     </div>
   </dialog>
 
+  <!-- Clipboard Dialog -->
+  <dialog hidden id="clipboardDialog" class="mdl-dialog" style="width: 600px">
+    <h4 class="mdl-dialog__title">Clipboard</h4>
+    <div class="mdl-dialog__content">
+      <ul class="mdl-list">
+        <li class="mdl-list__item mdl-list__item--two-line">
+          <span class="mdl-list__item-primary-content">
+            <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">content_paste</i>
+            <span> Clipboard Inserter</span>
+            <span class="mdl-list__item-sub-title">Use with 3rd party texthookers</span>
+          </span>
+          <span class="mdl-list__item-secondary-content">
+            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="clipboard-mode-switch">
+              <input type="checkbox" onclick="toggleClipboardMode()" id="clipboard-mode-switch" class="mdl-switch__input" />
+            </label>
+          </span>
+        </li>
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">
+            <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">content_copy</i>
+            <span> Text to Clipboard</span>
+          </span>
+          <span class="mdl-list__item-secondary-content">
+          <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="output-to-clipboard-mode-switch">
+              <input type="checkbox" onclick="toggleOutputToClipboard()" id="output-to-clipboard-mode-switch" class="mdl-switch__input" />
+            </label>
+          </span>
+        </li>
+      </ul>
+      </div>
+      <div class="mdl-dialog__actions">
+        <button id="clipboardDialogCloseButton" onclick="closeClipboardSettingsDialog()" type="button" class="mdl-button close">Close</button>
+      </div>
+  </dialog>
+
   <!-- Anki Settings Dialog -->
    <dialog hidden id="ankiSettingsDialog" class="mdl-dialog" style="width: 600px">
     <h4 class="mdl-dialog__title">Anki</h4>
-    <div class="mdl-dialog__content">
+    <div style="padding-bottom: 0px" class="mdl-dialog__content">
        <div>
         <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
           <div class="mdl-tabs__tab-bar">
@@ -426,36 +496,43 @@
           </div>
           
           <div class="mdl-tabs__panel is-active" id="ankiconnect">
-            <!-- <div class="tab_section_label">Appearance</div> -->
             <ul class="mdl-list">
-
               <div class="tab_select_wrapper">
                 Make sure <a href="https://ankiweb.net/shared/info/2055492159" target="_blank" alt="anki_connect_link">AnkiConnect</a> is installed and Anki is running.
               </div>
 
-              <div class="tab_select_wrapper">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input onchange="changeAnkiTags()" class="mdl-textfield__input" type="text" id="anki_tags_input">
-                  <label class="mdl-textfield__label" for="sample4">Card tags (space-separated)</label>
-                </div>
-              </div>
+              <li class="mdl-list__item mdl-list__item--two-line">
+                <span class="mdl-list__item-primary-content">
+                  <i class="settingsIcon material-icons mdl-list__item-avatar">local_offer</i>
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input onchange="changeAnkiTags()" class="mdl-textfield__input" type="text" id="anki_tags_input">
+                    <label class="mdl-textfield__label" for="sample4">Card tags (space-separated)</label>
+                  </div>
+                </span>
+              </li>
+
+              <div class="settingsCard mdl-card mdl-shadow--2dp">
+                <ul class="mdl-list">
 
               <li class="mdl-list__item">
                 <label for="deck">Deck</label>
-                <input onchange="changeDeck()" style="width: 220px;margin-left: 28px;" list="decks" name="deck" id="deckSelect">
+                <input onchange="changeDeck()" style="width: 100%;margin-left: 28px;" list="decks" name="deck" id="deckSelect">
                 <datalist id="decks">
                 </datalist>
               </li>
 
               <li class="mdl-list__item">
                 <label for="card_model">Model</label>
-                <input onchange="changeCardModel()" style="width: 220px;margin-left: 20px;" list="card_models" name="card_model" id="cardModelSelect">
+                <input onchange="changeCardModel()" style="width: 100%;margin-left: 20px;" list="card_models" name="card_model" id="cardModelSelect">
                 <datalist id="card_models">
                 </datalist>
               </li>
 
+              </ul>
+              </div>
+
                <!-- Fields and Values -->
-      <table hidden id="field_values_table" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+      <table style="margin-top: 12px; width: 100%" hidden id="field_values_table" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
         <thead>
           <tr>
             <th class="mdl-data-table__cell--non-numeric">Field</th>
@@ -466,12 +543,12 @@
           <tr hidden id="field_values_tuple_template">
             <td class="mdl-data-table__cell--non-numeric tuple_label"></td>
             <td>
-              <select onchange="updateFieldValue()" class="field_value_select"></select>
+              <select style="width: 100%" onchange="updateFieldValue()" class="field_value_select"></select>
             </td>
           </tr>
         </tbody>
       </table>
-      <button onclick="reloadAnki()" class="mdl-button mdl-js-button mdl-button--primary">
+      <button style="width: 100%; margin-top: 12px;" onclick="reloadAnki()" class="mdl-button mdl-js-button mdl-button--primary">
         Reload
       </button>
              
@@ -484,7 +561,7 @@
             <ul class="mdl-list">
               <li class="mdl-list__item">
                 <span class="mdl-list__item-primary-content">
-                  <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">book</i>
+                  <i class="settingsIcon material-icons mdl-list__item-avatar">book</i>
                   <span style="padding-right: 50px">Dictionary</span>
                     <select style="width: 200px" onchange="selectDictionary(this)" id="dictionarySelect" name="dictionary">
                     </select>
@@ -497,11 +574,10 @@
           </div>
 
           <div class="mdl-tabs__panel" id="anki_media">
-            <!-- <div class="tab_section_label">Appearance</div> -->
             <ul class="mdl-list">
               <li class="mdl-list__item">
                 <span class="mdl-list__item-primary-content">
-                  <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">aspect_ratio</i>
+                  <i class="settingsIcon material-icons mdl-list__item-avatar">aspect_ratio</i>
                   <span>Resize Screenshot</span>
                 </span>
                 <span class="mdl-list__item-secondary-action">
@@ -546,14 +622,13 @@
             <a href="#texthookers_advanced" class="mdl-tabs__tab">Advanced</a> 
           </div>
           <div class="mdl-tabs__panel is-active" id="texthookers_general">
-          <div class="tab_section_label">Text hookers extract text automatically. There is no need for manual OCR.</div>
             <ul class="mdl-list">
               <li class="mdl-list__item">
                 <span class="mdl-list__item-primary-content">
                   <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">sports_esports</i>
-                  <span>Applications</span>
+                  <span>Application</span>
                   <span class="tab_select_wrapper" >
-                    <input style="width: 355px" onkeyup="handleInputApplication()" onchange="selectTextHookerApplication(this)" type="text" name="application" list="pidNameSelect" placeholder="Select Application">
+                    <input style="margin-left: 10px; width: 355px" onkeyup="handleInputApplication()" onchange="selectTextHookerApplication(this)" type="text" name="application" list="pidNameSelect" placeholder="Select Application">
                     <datalist id="pidNameSelect">
                     </datalist>
                   </span>
@@ -611,6 +686,12 @@
                 </button>
               </span>
             </li>
+            </ul>
+            <div class="settingsCard mdl-card mdl-shadow--2dp">
+              <ul class="mdl-list">
+                <li class="sectionTitle mdl-list__item">
+                  Text Parsing
+                </li>
             <li class="mdl-list__item">
               <span class="mdl-list__item-primary-content">
                 <span>Remove Repeat Sentences</span>
@@ -632,6 +713,9 @@
               </span>
             </li>
           </ul>
+          </div>
+
+
           </div>
           </div>
           </div>

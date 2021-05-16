@@ -97,7 +97,7 @@ dialog[open] {
   padding-left: 16px;
   padding-top: 10px;
   font-size: 16px;
-  color: rgb(63,81,181);
+  color: rgb(103,58,183)
 }
 .tab_select_wrapper {
   padding-left: 16px;
@@ -204,4 +204,35 @@ video, canvas {
 }
 .canvasMenuActionsContainer > mdl-button {
   width: 30%;
+}
+.settingsIcon {
+  color: rgba(0, 0, 0, 0.54) !important;
+  background: white !important;
+}
+.settingsCard {
+  width: 100%; 
+  margin-top: 12px; 
+  padding-top: 0px; 
+  padding-bottom: 0px;
+  overflow: visible !important;
+  z-index: initial;
+  min-height: initial;
+}
+.settingsCard > .mdl-list {
+  padding-top: 0px; 
+  padding-left: 10px; 
+  padding-right: 10px; 
+  margin-top: 0px;
+}
+.settingsCard > .mdl-list > .mdl-list__item {
+  overflow: visible !important;
+}
+.mdl-tabs__panel > .mdl-list > .mdl-list__item {
+  overflow: visible !important;
+}
+.settingsCard > .mdl-list > .sectionTitle {
+  color: rgba(0, 0, 0, 0.8)
+}
+.primaryColor {
+  color: rgb(103,58,183)
 }

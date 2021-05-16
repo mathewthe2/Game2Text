@@ -530,13 +530,13 @@ function getVideoImage() {
   ctx3.drawImage(videoElement, 0, 0, cv3.width, cv3.height);
   let fullImageDataURL = cv3.toDataURL(`image/${logImageType === 'jpg' ? 'jpeg' : logImageType}`, logImageQuality);
   if (isResizeAnkiScreenshot) {
-    fullImageDataURL = resizeImage(fullImageDataURL);
+    fullImageDataURL = resizeImageData(fullImageDataURL);
   }
   fullImageb64 = fullImageDataURL.slice(fullImageDataURL.indexOf(',') + 1)
   return fullImageb64
 }
 
-function resizeImage(imageDataURL) {
+function resizeImageData(imageDataURL) {
   const imgBase64 = resizeImage(imageDataURL, resizeAnkiScreenshotMaxWidth, resizeAnkiScreenshotMaxHeight);
   const imgData = imgBase64.split(';base64,')[1]; 
   return imgData

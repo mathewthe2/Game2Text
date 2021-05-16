@@ -45,7 +45,9 @@ let ankiModelFieldMap = {}, fieldValueMap = {};
 let savedAnkiCardModels = [];
 let ankiDecks, ankiModels, ankitags, selectedDeck, selectedModel;
 let modelFieldsNeedLoad = false;
-let isResizeAnkiScreenshot = false
+let isResizeScreenshot = false;
+let resizeScreenshotMaxWidth = 1280;
+let resizeScreenshotMaxHeight = 720;
 
 // Texthooker
 let isRemoveRepeatedSentences = false
@@ -527,19 +529,14 @@ function getVideoImage() {
   cv3.width = videoElement.videoWidth;
   cv3.height = videoElement.videoHeight;
   var ctx3 = cv3.getContext('2d');
-  ctx3.drawImage(videoElement, 0, 0, cv3.width, cv3.height);
-  let fullImageDataURL = cv3.toDataURL(`image/${logImageType === 'jpg' ? 'jpeg' : logImageType}`, logImageQuality);
-  if (isResizeAnkiScreenshot) {
-    fullImageDataURL = resizeImageData(fullImageDataURL);
+  if (isResizeScreenshot) {
+    cv3 = resizeCanvasImage(cv3, videoElement, resizeScreenshotMaxWidth, resizeScreenshotMaxHeight)
+  } else {
+    ctx3.drawImage(videoElement, 0, 0, cv3.width, cv3.height);
   }
-  fullImageb64 = fullImageDataURL.slice(fullImageDataURL.indexOf(',') + 1)
+  let fullImageDataURL = cv3.toDataURL(`image/${logImageType === 'jpg' ? 'jpeg' : logImageType}`, logImageQuality);
+  const fullImageb64 = fullImageDataURL.slice(fullImageDataURL.indexOf(',') + 1)
   return fullImageb64
-}
-
-function resizeImageData(imageDataURL) {
-  const imgBase64 = resizeImage(imageDataURL, resizeAnkiScreenshotMaxWidth, resizeAnkiScreenshotMaxHeight);
-  const imgData = imgBase64.split(';base64,')[1]; 
-  return imgData
 }
 
 function recognize_image(image) {

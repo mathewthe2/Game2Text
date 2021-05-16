@@ -83,6 +83,7 @@ function initConfig () {
             initLaunchLogWindow(logConfig['launchlogwindow']);
             initIsLogImages(logConfig['logimages']);
             initImageType(logConfig['logimagetype']);
+            initSetImageResize({isResizeScreenshot: logConfig['resize_screenshot'], screenshotMaxWidth: logConfig['resize_screenshot_max_width'], screenshotMaxHeight: logConfig['resize_screenshot_max_height']});
             logImageQuality = logConfig['logimagequality']; 
             logSessionMaxLogSize = logConfig['lastsessionmaxlogsize'];
             initIsLogAudio(logConfig['logaudio']);
@@ -92,7 +93,6 @@ function initConfig () {
             const ankiConfig = config[ANKI_CONFIG];
             initSetAnkiTags(ankiConfig['cardtags']);
             initSetAnkiDictionaries(ankiConfig['anki_dictionary']);
-            initSetAnkiMediaOptions({isResizeAnkiScreenshot: ankiConfig['resize_screenshot'], screenshotMaxWidth: ankiConfig['resize_screenshot_max_width'], screenshotMaxHeight: ankiConfig['resize_screenshot_max_height']});
             // Texthooker
             const texthookerConfig = config[TEXTHOOKER_CONFIG];
             initSetRemoveRepeatedSentencesSwitch(texthookerConfig['remove_repeat']);
@@ -331,6 +331,34 @@ function toggleLogImagesAndPersist() {
     isLogImages = toggleLogImages();
     eel.update_config(LOG_CONFIG, {'logimages': isLogImages ? 'true' : 'false'})();
 }
+
+function toggleResizeScreenshotSwitch() {
+    isResizeScreenshot = !isResizeScreenshot;
+    screenshotMaxWidthInput.disabled = !isResizeScreenshot;
+    screenshotMaxHeightInput.disabled = !isResizeScreenshot;
+}
+async function toggleResizeScreenshotSwitchAndPersist() {
+    toggleResizeScreenshotSwitch();
+    eel.update_config(LOG_CONFIG, {'resize_screenshot': isResizeScreenshot ? 'true' : 'false'})();
+}
+function initSetImageResize({isResizeScreenshot, screenshotMaxWidth, screenshotMaxHeight}) {
+    if (isResizeScreenshot === 'true') {
+        toggleResizeScreenshotSwitch();
+        resizeScreenshotSwitch.parentElement.MaterialSwitch.on();
+    }
+    resizeScreenshotMaxWidth = parseInt(screenshotMaxWidth, 10);
+    resizeScreenshotMaxHeight = parseInt(screenshotMaxHeight, 10);
+    screenshotMaxWidthInput.value = screenshotMaxWidth;
+    screenshotMaxHeightInput.value = screenshotMaxHeight;
+}
+function changeScreenshotMaxWidth(input) {
+    resizeScreenshotMaxWidth = parseInt(screenshotMaxWidth, 10);
+    eel.update_config(LOG_CONFIG, {'resize_screenshot_max_width': input.value})();
+}
+function changeScreenshotMaxHeight(input) {
+    resizeScreenshotMaxHeight = parseInt(screenshotMaxHeight, 10);
+    eel.update_config(LOG_CONFIG, {'resize_screenshot_max_height': input.value})();
+}
 function openFolder(relative_path) {
     eel.open_folder_by_relative_path(relative_path);
 }
@@ -527,30 +555,6 @@ async function selectDictionary() {
         eel.set_dictionary(dictionarySelect.value)();
         eel.update_config(ANKI_CONFIG, {'anki_dictionary': dictionarySelect.value});
     }
-}
-
-function toggleResizeScreenshotSwitch() {
-    isResizeAnkiScreenshot = !isResizeAnkiScreenshot;
-    screenshotMaxWidthInput.disabled = !isResizeAnkiScreenshot;
-    screenshotMaxHeightInput.disabled = !isResizeAnkiScreenshot;
-}
-async function toggleResizeScreenshotSwitchAndPersist() {
-    toggleResizeScreenshotSwitch();
-    eel.update_config(ANKI_CONFIG, {'resize_screenshot': isResizeAnkiScreenshot ? 'true' : 'false'})();
-}
-function initSetAnkiMediaOptions({isResizeScreenshot, screenshotMaxWidth, screenshotMaxHeight}) {
-    if (isResizeScreenshot === 'true') {
-        toggleResizeScreenshotSwitch();
-        resizeScreenshotSwitch.parentElement.MaterialSwitch.on();
-    }
-    screenshotMaxWidthInput.value = screenshotMaxWidth;
-    screenshotMaxHeightInput.value = screenshotMaxHeight;
-}
-function changeScreenshotMaxWidth(input) {
-    eel.update_config(ANKI_CONFIG, {'resize_screenshot_max_width': input.value})();
-}
-function changeScreenshotMaxHeight(input) {
-    eel.update_config(ANKI_CONFIG, {'resize_screenshot_max_height': input.value})();
 }
 
 /**

@@ -37,6 +37,9 @@ const audioDeviceSelector = document.getElementById("audio_device_selector");
 const audioDeviceSelect = document.getElementById("audio_device_select");
 const audioDurationInput = document.getElementById("audio_duration_input");
 
+// Picture Control Elements
+const imageTypeInput = document.getElementById('image_type_input');
+
 // Anki Control Elements
 const ankiTagsInput = document.getElementById('anki_tags_input');
 const deckSelect = document.getElementById('deckSelect');
@@ -78,7 +81,7 @@ function initConfig () {
             const logConfig = config[LOG_CONFIG];
             initLaunchLogWindow(logConfig['launchlogwindow']);
             initIsLogImages(logConfig['logimages']);
-            logImageType = logConfig['logimagetype']; 
+            initImageType(logConfig['logimagetype']);
             logImageQuality = logConfig['logimagequality']; 
             logSessionMaxLogSize = logConfig['lastsessionmaxlogsize'];
             initIsLogAudio(logConfig['logaudio']);
@@ -190,6 +193,19 @@ function initIsLogImages(isLogImages) {
         document.getElementById("log-images-switch").parentElement.MaterialSwitch.on();
     }
 }
+
+function initImageType(imageType) {
+    logImageType = imageType;
+    imageTypeInput.parentElement.MaterialTextfield.change(imageType);
+}
+
+function changeImageType() {
+    if (imageTypeInput.value){
+        logImageType = imageTypeInput.value;
+        eel.update_config(LOG_CONFIG, {'logimagetype':imageTypeInput.value })();
+    }
+}
+
 
 function initIsLogAudio(isLogAudio) {
     if (isLogAudio === 'true') {

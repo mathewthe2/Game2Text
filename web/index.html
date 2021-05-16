@@ -422,20 +422,68 @@
                 </div>
 
                 <div class="mdl-tabs__panel" id="picture">
-                  <ul class="mdl-list">
-                    <li class="mdl-list__item mdl-list__item--two-line">
-                      <span class="mdl-list__item-primary-content">
-                        <i class="settingsIcon material-icons mdl-list__item-avatar">photo_library</i>
-                        <span>Save screenshots</span>
-                        <span class="mdl-list__item-sub-title" >Images are saved to <a onclick="openFolder('logs/images')" href="#"><b>logs/images/</b></a> directory</span>
-                      </span>
-                      <span class="mdl-list__item-secondary-content">
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="log-images-switch">
-                          <input type="checkbox" onclick="toggleLogImagesAndPersist()" id="log-images-switch" class="mdl-switch__input" />
-                        </label>
-                      </span>
-                    </li>
+
+                  <div class="settingsCard mdl-card mdl-shadow--2dp">
+                    <ul class="mdl-list">
+                      <li class="sectionTitle mdl-list__item">
+                        Screenshots
+                      </li>
+                      <li class="mdl-list__item mdl-list__item--two-line">
+                        <span class="mdl-list__item-primary-content">
+                          <i class="settingsIcon material-icons mdl-list__item-avatar">photo_library</i>
+                          <span>Save screenshots</span>
+                          <span class="mdl-list__item-sub-title" >Images are saved to <a onclick="openFolder('logs/images')" href="#"><b>logs/images/</b></a> directory</span>
+                        </span>
+                        <span class="mdl-list__item-secondary-content">
+                          <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="log-images-switch">
+                            <input type="checkbox" onclick="toggleLogImagesAndPersist()" id="log-images-switch" class="mdl-switch__input" />
+                          </label>
+                        </span>
+                      </li>
+  
+                      <li class="mdl-list__item mdl-list__item--two-line">
+                        <span class="mdl-list__item-primary-content">
+                          <i class="settingsIcon material-icons mdl-list__item-avatar">image</i>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                          <input onchange="changeImageType()" class="mdl-textfield__input" type="text" id="image_type_input">
+                          <label class="mdl-textfield__label" for="image_type_input">Image Type</label>
+                        </div>
+                        </span>
+                        </li>
+                      </ul>
+                  </div>
+                  
+  
+                  <div class="settingsCard mdl-card mdl-shadow--2dp">
+                    <ul class="mdl-list">
+                      <li class="mdl-list__item">
+                        <span class="mdl-list__item-primary-content">
+                          <i class="settingsIcon material-icons mdl-list__item-avatar">aspect_ratio</i>
+                          <span>Resize Screenshot</span>
+                        </span>
+                        <span class="mdl-list__item-secondary-action">
+                          <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="resizeScreenshotSwitch">
+                            <input type="checkbox" onclick="toggleResizeScreenshotSwitchAndPersist()" id="resizeScreenshotSwitch" class="mdl-switch__input" />
+                          </label>
+                        </span>
+                      </li>
+                      <li class="mdl-list__item">
+                        <span class="mdl-list__item-primary-content">
+                          <span style="padding-right: 50px;">Max Width</span>
+                          <input onchange="changeScreenshotMaxWidth(this)" disabled id="screenshotMaxWidthInput"></input>
+                        </span>
+                      </li>
+                      <li class="mdl-list__item">
+                        <span class="mdl-list__item-primary-content">
+                          <span style="padding-right: 44px;">Max Height</span>
+                          <input onchange="changeScreenshotMaxHeight(this)" disabled id="screenshotMaxHeightInput"></input>
+                        </span>
+                      </li>
                     </ul>
+                  </div>
+
+  
+                  <!-- next item -->
                 </div>
 
             </div>
@@ -492,7 +540,6 @@
           <div class="mdl-tabs__tab-bar">
             <a href="#ankiconnect" class="mdl-tabs__tab is-active">AnkiConnect</a> 
             <a href="#anki_dictionaries" class="mdl-tabs__tab">Dictionaries</a> 
-            <a href="#anki_media" class="mdl-tabs__tab">Media</a>
           </div>
           
           <div class="mdl-tabs__panel is-active" id="ankiconnect">
@@ -571,34 +618,6 @@
               </ul>
             
           </div>
-          </div>
-
-          <div class="mdl-tabs__panel" id="anki_media">
-            <ul class="mdl-list">
-              <li class="mdl-list__item">
-                <span class="mdl-list__item-primary-content">
-                  <i class="settingsIcon material-icons mdl-list__item-avatar">aspect_ratio</i>
-                  <span>Resize Screenshot</span>
-                </span>
-                <span class="mdl-list__item-secondary-action">
-                  <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="resizeScreenshotSwitch">
-                    <input type="checkbox" onclick="toggleResizeScreenshotSwitchAndPersist()" id="resizeScreenshotSwitch" class="mdl-switch__input" />
-                  </label>
-                </span>
-              </li>
-              <li class="mdl-list__item">
-                <span class="mdl-list__item-primary-content">
-                  <span style="padding-right: 50px;">Screenshot Max Width</span>
-                  <input onchange="changeScreenshotMaxWidth(this)" disabled id="screenshotMaxWidthInput"></input>
-                </span>
-              </li>
-              <li class="mdl-list__item">
-                <span class="mdl-list__item-primary-content">
-                  <span style="padding-right: 44px;">Screenshot Max Height</span>
-                  <input onchange="changeScreenshotMaxHeight(this)" disabled id="screenshotMaxHeightInput"></input>
-                </span>
-              </li>
-            </ul>
           </div>
           
         </div>

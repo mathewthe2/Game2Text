@@ -23,6 +23,17 @@ function init() {
   })();
 }
 
+function toggleDarkTheme() {
+  document.body.classList.toggle("dark-theme");
+  document.body.classList.toggle("light-theme");
+  const darkThemeToggleIcon = toggleDarkThemeButton.firstElementChild;
+  if (document.body.classList.contains('dark-theme')) {
+    darkThemeToggleIcon.innerHTML = 'brightness_low';
+  } else {
+    darkThemeToggleIcon.innerHTML = 'brightness_medium'
+  }
+}
+
 async function loadGameScripts() {
   gameScripts = await eel.load_game_text_scripts()();
   const gameScriptSelect = document.getElementById('gameScriptSelect');

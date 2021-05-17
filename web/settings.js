@@ -234,7 +234,6 @@ function updateFontSizeAndPersist(slideAmount) {
 }
 function toggleDarkTheme() {
     document.body.classList.toggle("dark-theme");
-    results.classList.toggle("dark-theme");
 }
 function toggleDarkThemeAndPersist() {
     toggleDarkTheme();

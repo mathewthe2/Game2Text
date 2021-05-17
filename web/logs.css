@@ -1,6 +1,53 @@
 html {
     scroll-behavior: smooth;
 }
+:root {
+    --white: #f8f8f8;
+    --black: #121212;
+    --dark: #2e2e2e;
+    --light-gray: #BDBDBD;
+    --gray: #eee;
+    --purple: rgb(103,58,183);
+    --purple-50: rgb(242, 231, 254);
+    --purple-100: rgb(219, 178, 255);
+    --purple-200: rgb(187, 134, 252);
+    --purple-700: rgb(55, 0, 179);
+}
+.light-theme {
+    --primary: var(--purple);
+    --mainBg: var(--white);
+    --secondaryBg: var(--gray);
+    --iconButton: var(--purple);
+    --header: var(--purple);
+    --dialogBg: var(--white);
+    --focus: var(--gray);
+    --disabled: var(--light-gray);
+    --fontColor: var(--black);
+}
+.dark-theme {
+    --primary: var(--purple);
+    --mainBg: var(--black);
+    --secondaryBg: var(--dark);
+    --iconButton: var(--purple-200);
+    --header: var(--dark);
+    --dialogBg: var(--dark);
+    --focus: var(--purple);
+    --disabled: var(--black);
+    --fontColor: var(--white);
+}
+* {
+    transition: background-color 0.3s ease, color 0.5s ease;
+}
+body {
+    background-color: var(--mainBg);
+}
+.mdl-list__item-primary-content {
+    color: var(--fontColor);
+}
+.mdl-card {
+    background-color: var(--dialogBg);
+    box-shadow: initial;
+}
 #loadingLogsScreen {
     margin: 0;
     position: absolute;
@@ -15,8 +62,8 @@ html {
     text-align: center;
 }
 #gameScriptLoader {
-    background: #2e2e2e;
-    color: white;
+    background: var(--header);
+    color: var(--white);
     min-height: 20px;
     padding: 12px;
     vertical-align: middle;
@@ -34,7 +81,13 @@ html {
     animation: fadein 0.6s;
 }
 .logItem:hover, .matchingScriptMenuCard > .mdl-list > .mdl-list__item:hover, .logMenuCard > .mdl-list > .mdl-list__item:hover {
-    background-color: #eee;
+    background-color: var(--secondaryBg);
+}
+.mdl-button--colored {
+    color: var(--iconButton) !important;
+}
+.matchingScriptMenuCard > .mdl-list > .mdl-list__item:hover, .logMenuCard > .mdl-list > .mdl-list__item:hover {
+    background-color: var(--focus);
 }
 .mdl-list__item-primary-content > .logMenuButton {
    visibility: hidden;
@@ -71,9 +124,11 @@ html {
     min-height: 0px;
 }
 .disabled_list__item {
-    pointer-events: none;
-    color: #BDBDBD;
-}
+    pointer-events: none; 
+ }
+ .disabled_list__item > .mdl-list__item-primary-content {
+     color: var(--disabled);
+ }
 .note-add-icon:hover {
     color: #E21549
 }
@@ -94,8 +149,13 @@ html {
     filter: brightness(150%);
 }
 .tippy-box[data-theme~='material-light'] {
-    background-color: white;
     color: black;
+    background-color: var(--dialogBg);
+    box-shadow:
+    /* offset-x | offset-y | blur-radius | spread-radius | color */
+    0px 6px 10px 0px hsla(0,0%,0%,0.14), 
+    0px 1px 18px 0px hsla(0,0%,0%,0.12), 
+    0px 3px 5px -1px hsla(0,0%,0%,0.2);
 }
 .demo-card-square.mdl-card {
     height: 400px;

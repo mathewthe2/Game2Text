@@ -1,3 +1,26 @@
+:root {
+  --white: #f8f8f8;
+  --black: #121212;
+  --gray: #eee;
+  --purple: rgb(103,58,183);
+}
+.light-theme {
+  --primary: var(--purple);
+  --mainBg: var(--goldCrayola);
+  --fontColor: var(--black);
+}
+.dark-theme {
+  --primary: var(--purple);
+  --mainBg: var(--black);
+  --fontColor: var(--white);
+}
+* {
+  transition: background-color 0.3s ease, color 0.5s ease;
+}
+body {
+  background-color: var(--mainBg);
+  color: var(--fontColor) !important;
+}
 #startMessage {
   z-index: 30;
   transition: height 0.3s ease-out;
@@ -12,6 +35,8 @@
   grid-row-end: 4;
 }
 .results {
+  background-color: var(--mainBg);
+  color: var(--fontColor) !important;
   max-height: 450px;
   overflow: auto;
   padding: 8px;
@@ -143,6 +168,7 @@ video, canvas {
 }
 .welcome-card-wide.mdl-card {
   width: 100vw;
+  background: white !important;
 }
 .welcome-card-wide > .mdl-card__title {
   color: #fff;
@@ -151,10 +177,6 @@ video, canvas {
 }
 .welcome-card-wide > .mdl-card__menu {
   color: #fff;
-}
-.dark-theme {
-  background-color: #121212;
-  color: white !important; 
 }
 .canvasContextMenu {
 /*   grid-template-areas:
@@ -232,7 +254,4 @@ video, canvas {
 }
 .settingsCard > .mdl-list > .sectionTitle {
   color: rgba(0, 0, 0, 0.8)
-}
-.primaryColor {
-  color: rgb(103,58,183)
 }

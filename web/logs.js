@@ -605,8 +605,21 @@ async function deleteLog(logId) {
   if (log && logElement) {
     const deleteLogEvent = await eel.delete_log(logId, log.folder)();
     currentLogs = currentLogs.filter(log=>log.id !== logId)
-    logElement.remove()
+    animateRemove(logElement);
   }
+}
+
+function animateRemove(element) {
+  element.style.opacity = 0;
+  setTimeout(() => {
+    element.style.paddingBottom = 0;
+    element.style.paddingTop = 0;
+    element.style.height = 0;
+    element.style.minHeight = 0;
+    setTimeout(()=>{
+      element.remove()
+    }, 300)
+  }, 300);
 }
 
 eel.expose(showCardWithSelectedText)

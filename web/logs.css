@@ -83,6 +83,7 @@ body {
     transition-property: background-color;  
     -webkit-animation: fadein 0.6s;
     animation: fadein 0.6s;
+    transition: all 0.3s ease;
 }
 .logItem:hover, .matchingScriptMenuCard > .mdl-list > .mdl-list__item:hover, .logMenuCard > .mdl-list > .mdl-list__item:hover {
     background-color: var(--secondaryBg);

@@ -73,6 +73,10 @@ body {
 #gameScriptLoader > i, span, select {
     padding-right: 10px
 }
+#toggleDarkThemeButton {
+    margin-left: auto;
+    right: 15px;
+}
 .logItem {
     transition-duration: .28s;
     transition-timing-function: cubic-bezier(.4,0,.2,1);

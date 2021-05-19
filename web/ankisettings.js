@@ -12,7 +12,7 @@ async function initDecks() {
     if (deckNames.length > 0) {
         deckNames.forEach(deckName => {
             const deckOption = document.createElement("option");
-            deckOption.value = deckName.replace(' ', '_');
+            deckOption.value = deckName;
             deckSelector.append(deckOption);
         });
     }

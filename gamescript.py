@@ -4,11 +4,11 @@ from tkinter import *
 from tkinter.filedialog import askopenfile
 from shutil import copyfile
 from fuzzywuzzy import process
-from config import w_config, LOG_CONFIG
+from config import r_config, w_config, LOG_CONFIG, SCRIPT_MATCH_CONFIG
 from tools import bundle_dir
 
 GAME_SCRIPT_PATH = Path(bundle_dir, 'gamescripts')
-MATCH_LIMIT= 4
+MATCH_LIMIT= int(r_config(SCRIPT_MATCH_CONFIG, 'match_limit'))
 
 def open_game_script():
     root = Tk()

@@ -138,7 +138,7 @@ def add_gamescript_to_logs(logs):
                 f.close()
             logs = add_matching_script_to_logs(lines, logs)
             for log in logs:
-                eel.updateLogDataById(log['id'], {'matches': log['matches'],})()    
+                eel.updateLogDataById(log['id'], {'matches': log['matches'], 'autoMatch': True, 'isMatched': False})()    
     return
     
 def get_logs(limit=0):

@@ -51,7 +51,7 @@ async function loadGameScripts() {
     if (gameScript) {
       gameScriptSelect.value = gameScript.name;
     } else {
-      const result = await eel.update_config(LOG_CONFIG, {'gamescriptfile': ''})();
+      await eel.update_config(LOG_CONFIG, {'gamescriptfile': ''})();
     }
   }
   return
@@ -81,6 +81,14 @@ function updateLogDataById(logId, data) {
       currentLogs.find(log=>log.id === logId)[property] = data[property]
     };
     refreshLogElement(logId);
+    // persist text logs and update main window if game script matches
+    if (getLogById(logId).isMatched) {
+        updateLogFileById(logId);
+        const latestLog = currentLogs[currentLogs.length-1];
+        if (logId === latestLog.id) {
+          eel.update_main_window_text(latestLog.text)();
+        }
+    }
   }
 }
 
@@ -232,7 +240,7 @@ function createMatchScriptDropdown() {
   tippy(document.querySelectorAll('.showMatchingGameScriptButton'), {
     delay: [100, null],
     offset: [-400, 0],
-    theme: 'material-light',
+    theme: 'material-light-long',
     placement: 'bottom',
     arrow: false,
     animation: 'shift-away',
@@ -399,8 +407,10 @@ function isLogDataUpdated(logId) {
 
 function replaceLogText(logId, newText) {
   updateLogDataById(logId, {
-    text: newText
-  })
+    text: newText,
+    isMatched: true,
+    autoMatch: false
+  });
 }
 
 function logToHtml(log) {
@@ -449,6 +459,14 @@ function logToHtml(log) {
     showMatchingScriptButton.id = `show_matching_script_button_${log.id}`
     showMatchingScriptButton.setAttribute("log_id", log.id);
     showMatchingScriptButton.style.visibility  = 'visible';
+    if (log.autoMatch) {
+      firstMatch = log.matches[0];
+      firstMatchConfidence = firstMatch[1];
+      if (firstMatchConfidence > confidenceThreshold) {
+        log.text = firstMatch[0];
+        log.isMatched = true;
+      }
+    }
   }
   
   logText.innerText = log.text;

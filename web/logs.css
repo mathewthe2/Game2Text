@@ -122,7 +122,10 @@ body {
     animation: fadein 0.6s;
 }
 .matchingScriptMenuCard {
-    min-width: 500px;
+    width: 100%;
+}
+.game-script-arrow-down-icon {
+    color: var(--fontColor);
 }
 .logMenuCard {
     width: 180px;
@@ -161,6 +164,16 @@ body {
     0px 6px 10px 0px hsla(0,0%,0%,0.14), 
     0px 1px 18px 0px hsla(0,0%,0%,0.12), 
     0px 3px 5px -1px hsla(0,0%,0%,0.2);
+}
+.tippy-box[data-theme~='material-light-long'] {
+    color: black;
+    background-color: var(--dialogBg);
+    box-shadow:
+    /* offset-x | offset-y | blur-radius | spread-radius | color */
+    0px 6px 10px 0px hsla(0,0%,0%,0.14), 
+    0px 1px 18px 0px hsla(0,0%,0%,0.12), 
+    0px 3px 5px -1px hsla(0,0%,0%,0.2);
+    min-width: 85vw;
 }
 .demo-card-square.mdl-card {
     height: 400px;

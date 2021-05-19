@@ -360,6 +360,10 @@ function formatMatchScriptMenu(logId, matchScriptContent) {
   const log = getLogById(logId);
   matchScriptContent.innerHTML = `<div class="matchingScriptMenuCard mdl-card mdl-shadow--2dp">
     <ul class="mdl-list">
+    ${(log.matches && log.originalText && log.originalText.trim() !== log.matches[0][0].trim()) ?
+      `<li class="mdl-list__item" log_id="${logId}" onclick="replaceLogText(this.getAttribute('log_id'), this.innerText)">
+        <span class="mdl-list__item-primary-content">${log.originalText}</span>
+      </li>` : ''}
       ${log.matches.map(match=>{
         return (
         `<li class="mdl-list__item" log_id="${logId}" onclick="replaceLogText(this.getAttribute('log_id'), this.innerText)">
@@ -406,7 +410,10 @@ function isLogDataUpdated(logId) {
 }
 
 function replaceLogText(logId, newText) {
+  const log = getLogById(logId);
+  const originalText = log.originalText ? log.originalText : log.text;
   updateLogDataById(logId, {
+    originalText: originalText,
     text: newText,
     isMatched: true,
     autoMatch: false
@@ -463,6 +470,7 @@ function logToHtml(log) {
       firstMatch = log.matches[0];
       firstMatchConfidence = firstMatch[1];
       if (firstMatchConfidence > confidenceThreshold) {
+        log.originalText = log.originalText ? log.originalText : log.text;
         log.text = firstMatch[0];
         log.isMatched = true;
       }

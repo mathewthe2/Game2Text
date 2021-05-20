@@ -307,12 +307,15 @@ cv1.addEventListener("mouseup", function (e) {
   mousedown = false;
   const isRightClick = e.button === 0;
   if (hasSelection() && !clipboardMode && isRightClick) {
-    // Invert selection if selection is from bottom right to top left
-    if (rect.width < 0 && rect.height < 0) {
-      rect.x += rect.width;
+    // Invert selection if selection is from  top left
+    if (rect.height < 0) {
       rect.y += rect.height;
-      rect.width *= -1;
       rect.height *= -1;
+    }
+    // invert selection if selection is from bottom right
+    if (rect.width < 0) {
+       rect.x += rect.width;
+       rect.width *= -1;
     }
     refreshOCR();
 

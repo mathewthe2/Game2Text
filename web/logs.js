@@ -544,6 +544,8 @@ async function stopManualRecording() {
     updateLogAudioById(logId, audioFileName);
     refreshLogMenuContent(logId);
     refreshCardContent(logId);
+  } else {
+    notify('No audio detected. Check your audio device in settings.')
   }
 }
 

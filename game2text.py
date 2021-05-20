@@ -98,9 +98,11 @@ def start_manual_recording(request_time, session_start_time):
 def stop_manual_recording():
     if manual_audio_recorder.is_recording():
         create_directory_if_not_exists(manual_audio_file_path)
+        audio_exists = manual_audio_recorder.has_audio()
         manual_audio_recorder.stop_recording(manual_audio_file_path, -1)
-        file_name = os.path.basename(manual_audio_file_path)
-        return file_name
+        if audio_exists:
+            file_name = os.path.basename(manual_audio_file_path)
+            return file_name
     return ''
 
 @eel.expose

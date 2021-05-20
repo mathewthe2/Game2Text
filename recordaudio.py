@@ -16,6 +16,7 @@ class RecordThread(threading.Thread):
         self.audiofile = "out.wav"
         self.duration = 10
         self.frames = frames
+        self.hasAudio = False
 
     def run(self):
         if self.deviceIndex == -1:
@@ -49,9 +50,11 @@ class RecordThread(threading.Thread):
         
             # Start recording
             self.isRecording = True
+            self.hasAudio = False
             while self.bRecord:
                 self.recorded_frames.append(stream.read(self.frames, exception_on_overflow = True))
-            
+                self.hasAudio = True
+
             stream.stop_stream()
             stream.close()
 
@@ -95,3 +98,6 @@ class RecordThread(threading.Thread):
 
     def is_recording(self):
         return self.isRecording
+
+    def has_audio(self):
+        return self.hasAudio

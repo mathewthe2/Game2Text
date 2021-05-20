@@ -4,6 +4,7 @@ const LOG_CONFIG = 'LOGCONFIG';
 
 let confidenceThreshold = 0.7;
 let currentSessionMaxLogSize = 30;
+let autoMatchMinimumCharacterLength = 5;
 
 initConfig();
 

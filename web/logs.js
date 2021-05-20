@@ -480,7 +480,7 @@ function logToHtml(log) {
     if (log.autoMatch) {
       firstMatch = log.matches[0];
       firstMatchConfidence = firstMatch[1];
-      if (firstMatchConfidence > confidenceThreshold) {
+      if (firstMatchConfidence > confidenceThreshold && firstMatch[0].length > autoMatchMinimumCharacterLength) {
         log.originalText = log.originalText ? log.originalText : log.text;
         log.text = firstMatch[0];
         log.isMatched = true;

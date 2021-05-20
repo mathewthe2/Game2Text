@@ -29,8 +29,10 @@ function toggleDarkTheme() {
   const darkThemeToggleIcon = toggleDarkThemeButton.firstElementChild;
   if (document.body.classList.contains('dark-theme')) {
     darkThemeToggleIcon.innerHTML = 'brightness_low';
+    toggleDarkThemeTooltip.innerHTML = 'Light Mode';
   } else {
     darkThemeToggleIcon.innerHTML = 'brightness_medium'
+    toggleDarkThemeTooltip.innerHTML = 'Dark Mode';
   }
 }
 

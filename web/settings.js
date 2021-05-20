@@ -351,11 +351,11 @@ function initSetImageResize({isResizeScreenshot, screenshotMaxWidth, screenshotM
     screenshotMaxHeightInput.value = screenshotMaxHeight;
 }
 function changeScreenshotMaxWidth(input) {
-    resizeScreenshotMaxWidth = parseInt(screenshotMaxWidth, 10);
+    resizeScreenshotMaxWidth = parseInt(input.value, 10);
     eel.update_config(LOG_CONFIG, {'resize_screenshot_max_width': input.value})();
 }
 function changeScreenshotMaxHeight(input) {
-    resizeScreenshotMaxHeight = parseInt(screenshotMaxHeight, 10);
+    resizeScreenshotMaxHeight = parseInt(input.value, 10);
     eel.update_config(LOG_CONFIG, {'resize_screenshot_max_height': input.value})();
 }
 function openFolder(relative_path) {

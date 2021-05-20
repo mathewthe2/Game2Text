@@ -1,4 +1,3 @@
-const LOG_CONFIG = 'LOGCONFIG';
 const ANKI_CONFIG = 'ANKICONFIG';
 
 let currentLogs = [];
@@ -131,17 +130,27 @@ function getLogsShown() {
 eel.expose(addLogs);
 function addLogs(newLogs) {
   const logsContainer = document.getElementById('logsContainer');
+  let needScroll = true;
   newLogs.forEach(newLog=>{
     const logItem = logToHtml(newLog);
     logsContainer.append(logItem);
     currentLogs.push(newLog);
+    if (currentLogs.length > currentSessionMaxLogSize) {
+      window.scrollTo(0,document.body.scrollHeight);
+      needScroll = false;
+      logElement = getLogElementById(currentLogs[0].id);
+      animateRemove(logElement);
+      currentLogs.shift();
+    }
    })
 
   addToolTips();
   tippyInstances.forEach(inst => {
     inst.hide();
   });
-  window.scrollTo(0,document.body.scrollHeight);
+  if (needScroll) {
+    window.scrollTo(0,document.body.scrollHeight);
+  }
 }
 
 function addToolTips() {

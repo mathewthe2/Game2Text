@@ -431,6 +431,9 @@ function toggleAutoMode() {
 
 function openSettings() {
   settingsDialog.hidden = false;
+  if (!settingsDialog.showModal) {
+    dialogPolyfill.registerDialog(settingsDialog);
+  }
   setTimeout(()=>settingsDialog.showModal(), 300);
 }
 
@@ -441,6 +444,9 @@ function closeSettings() {
 
 function openAnkiSettingsDialog() {
   ankiSettingsDialog.hidden = false;
+  if (!ankiSettingsDialog.showModal) {
+    dialogPolyfill.registerDialog(ankiSettingsDialog);
+  }
   setTimeout(()=>ankiSettingsDialog.showModal(), 300);
 }
 
@@ -451,6 +457,9 @@ function closeAnkiSettingsDialog() {
 
 function openClipboardSettings() {
   clipboardDialog.hidden = false;
+  if (!clipboardDialog.showModal) {
+    dialogPolyfill.registerDialog(clipboardDialog);
+  }
   setTimeout(()=>clipboardDialog.showModal(), 300);
 }
 
@@ -461,6 +470,9 @@ function closeClipboardSettingsDialog() {
 
 function openTexthookerSettings() {
   texthookerSettingsDialog.hidden = false;
+  if (!texthookerSettingsDialog.showModal) {
+    dialogPolyfill.registerDialog(texthookerSettingsDialog);
+  }
   setTimeout(()=>texthookerSettingsDialog.showModal(), 300);
 }
 

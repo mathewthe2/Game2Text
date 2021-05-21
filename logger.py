@@ -12,12 +12,14 @@ from datetime import datetime
 from config import r_config, LOG_CONFIG
 from util import create_directory_if_not_exists, base64_to_image_path
 from audio import play_audio_from_file
-from gamescript import add_matching_script_to_logs
+from gamescript import GameScriptMatcher
 from tools import bundle_dir
 
 TEXT_LOG_PATH = Path(bundle_dir, 'logs', 'text')
 IMAGE_LOG_PATH = Path(bundle_dir, 'logs', 'images')
 AUDIO_LOG_PATH = Path(bundle_dir, 'logs', 'audio')
+
+game_script_matcher = None
 
 def get_time_string():
     return time.strftime('%Y%m%d-%H%M%S')
@@ -133,10 +135,10 @@ def add_gamescript_to_logs(logs):
     gamescript = r_config(LOG_CONFIG, 'gamescriptfile',)
     if (gamescript):
         if (Path(gamescript).is_file()):
-            with open(gamescript, 'r', encoding='utf-8') as f:
-                lines = f.readlines()
-                f.close()
-            logs = add_matching_script_to_logs(lines, logs)
+            global game_script_matcher
+            if game_script_matcher is None:
+                game_script_matcher = GameScriptMatcher(gamescript)
+            logs = game_script_matcher.add_matching_script_to_logs(gamescript, logs)
             for log in logs:
                 eel.updateLogDataById(log['id'], {'matches': log['matches'], 'autoMatch': True, 'isMatched': False})()    
     return

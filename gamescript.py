@@ -10,6 +10,29 @@ from tools import bundle_dir
 GAME_SCRIPT_PATH = Path(bundle_dir, 'gamescripts')
 MATCH_LIMIT= int(r_config(SCRIPT_MATCH_CONFIG, 'match_limit'))
 
+class GameScriptMatcher(object):
+    def __init__(self, gamescript):
+        self.gamescript = ''
+        self.gamescript_dict = {}
+        self.init_game_script_dict(gamescript)
+
+    def init_game_script_dict(self, gamescript):
+         if (Path(gamescript).is_file()):
+            self.gamescript = gamescript
+            with open(gamescript, 'r', encoding='utf-8') as f:
+                self.gamescript_dict = {index: line for index, line in enumerate(f)}
+                f.close()
+
+    def add_matching_script_to_logs(self, gamescript, logs):
+        if (gamescript != self.gamescript):
+            self.init_game_script_dict(gamescript)
+        for log in logs:
+            matches = process.extract(log['text'], self.gamescript_dict, limit=MATCH_LIMIT)
+            log['matches'] = matches
+            print('matches', matches)
+            return logs
+    
+
 def open_game_script():
     root = Tk()
     root.withdraw()
@@ -33,9 +56,9 @@ def load_game_scripts():
         'path': str(Path(file))
     } for file in files]
 
-def add_matching_script_to_logs(gamescript, logs):
-    # TODO: do vicinity scan based on previous line number of highest confidence match
-    for log in logs:
-        matches = process.extract(log['text'], gamescript, limit=MATCH_LIMIT)
-        log['matches'] = matches
-    return logs
+# def add_matching_script_to_logs(gamescript, logs):
+#     # TODO: do vicinity scan based on previous line number of highest confidence match
+#     for log in logs:
+#         matches = process.extract(log['text'], gamescript, limit=MATCH_LIMIT)
+#         log['matches'] = matches
+#     return logs

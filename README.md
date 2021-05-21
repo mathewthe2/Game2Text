@@ -30,24 +30,32 @@
 
 ## Development
 
+Recommended Python Version: 3.7.4
+
 Create a venv, then once activated install requirements:
 ```
 pip install -r requirements.txt
 python game2text.py
 ```
 
-On Windows, install pyaudio_portaudio through wheel. This package includes **as_loopback** as an option to record system audio through *Windows WASAPI*. 
+## Extra Packages for Windows Development
+
+1. Install [C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+
+2. Install *pyaudio_portaudio* through wheel. This package includes **as_loopback** as an option to record system audio through *Windows WASAPI*. 
 ```
 pip uninstall pyaudio
 pip install https://github.com/intxcc/pyaudio_portaudio/releases/download/1.1.1/PyAudio-0.2.11-cp37-cp37m-win_amd64.whl
 ```
 
-On Windows, you would also need the wexpect library for running the text hooker program.
+3. Install the wexpect library for running the text hooker program.
 ```
 pip install wexpect==4.0.0
 ```
 
-On Linux, install Tesseract by following the installation instructions [here](https://tesseract-ocr.github.io/tessdoc/Home.html).
+## Extra Packages for Linux Development
+
+Install Tesseract by following the installation instructions [here](https://tesseract-ocr.github.io/tessdoc/Home.html).
 
 ## Distribution
 

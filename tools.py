@@ -5,11 +5,8 @@ from config import r_config, w_config, OCR_CONFIG, PATHS_CONFIG
 from tkinter import *
 from tkinter.filedialog import askopenfile
 
-bundle_dir = Path(__file__).parent
-
-if getattr(sys, 'frozen', False):
+if sys._MEIPASS is not None:
         # we are running in a bundle
-        frozen = 'ever so'
         bundle_dir = sys._MEIPASS
 else:
         # we are running in a normal Python environment

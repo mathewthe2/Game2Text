@@ -12,7 +12,7 @@ from datetime import datetime
 from config import r_config, LOG_CONFIG
 from util import create_directory_if_not_exists, base64_to_image_path
 from audio import play_audio_from_file
-from gamescript import GameScriptMatcher
+from gamescript import add_matching_script_to_logs
 from tools import bundle_dir
 
 TEXT_LOG_PATH = Path(bundle_dir, 'logs', 'text')
@@ -135,12 +135,10 @@ def add_gamescript_to_logs(logs):
     gamescript = r_config(LOG_CONFIG, 'gamescriptfile',)
     if (gamescript):
         if (Path(gamescript).is_file()):
-            global game_script_matcher
-            if game_script_matcher is None:
-                game_script_matcher = GameScriptMatcher(gamescript)
-            logs = game_script_matcher.add_matching_script_to_logs(gamescript, logs)
+            logs = add_matching_script_to_logs(gamescript, logs)
             for log in logs:
-                eel.updateLogDataById(log['id'], {'matches': log['matches'], 'autoMatch': True, 'isMatched': False})()    
+                if ('matches' in log):
+                    eel.updateLogDataById(log['id'], {'matches': log['matches'], 'autoMatch': True, 'isMatched': False})()    
     return
     
 def get_logs(limit=0):
@@ -159,8 +157,10 @@ def get_logs(limit=0):
     if limit > 0 and len(output) > limit:
         output = output[-limit:]
     # Start another thread to match logs to game script
-    thread = threading.Thread(target = add_gamescript_to_logs,  args=[output])
-    thread.start()
+    is_matching = eel.isMatchingScript()()
+    if is_matching:
+        thread = threading.Thread(target = add_gamescript_to_logs,  args=[output])
+        thread.start()
     return output
 
 def get_latest_log():
@@ -180,8 +180,10 @@ def get_latest_log():
         log = text_to_log(last_line, latest_file)
     f.close()
     # Start another thread to match log to game script
-    thread = threading.Thread(target = add_gamescript_to_logs,  args=[[log],]) 
-    thread.start()
+    is_matching = eel.isMatchingScript()()
+    if is_matching:
+        thread = threading.Thread(target = add_gamescript_to_logs,  args=[[log],]) 
+        thread.start()
     return log
 
 @eel.expose

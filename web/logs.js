@@ -122,6 +122,11 @@ function hideLoadingScreen() {
   loadingLogsScreen.hidden = true;
 }
 
+eel.expose(isMatchingScript)
+function isMatchingScript() {
+  return gameScriptSelect.value !== 'None';
+}
+
 eel.expose(getLogsShown);
 function getLogsShown() {
   return currentLogs;

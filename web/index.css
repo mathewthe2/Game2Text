@@ -255,3 +255,9 @@ video, canvas {
 .settingsCard > .mdl-list > .sectionTitle {
   color: rgba(0, 0, 0, 0.8)
 }
+#hotkey_table {
+  width: 100%
+}
+#hotkey_table > tbody > tr > td > input {
+  width: 100%
+}

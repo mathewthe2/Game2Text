@@ -96,9 +96,12 @@ body {
 }
 .mdl-list__item-primary-content > .logMenuButton {
    visibility: hidden;
+   opacity: 0;
 }
-.mdl-list__item-primary-content:hover > .logMenuButton {
-   visibility: visible;
+.logItem:hover .logMenuButton {
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.2s ease-in 0.3s;
 }
 .matchingScriptMenuCard > .mdl-list > .mdl-list__item {
     cursor: pointer;

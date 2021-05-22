@@ -5,13 +5,13 @@ from config import r_config, w_config, OCR_CONFIG, PATHS_CONFIG
 from tkinter import *
 from tkinter.filedialog import askopenfile
 
-if sys._MEIPASS is not None:
-        # we are running in a bundle
+try:
+    is_compiled_with_pyinstaller = (sys._MEIPASS is not None)
+    if is_compiled_with_pyinstaller:
         bundle_dir = sys._MEIPASS
-else:
-        # we are running in a normal Python environment
-        bundle_dir = os.path.dirname(os.path.abspath(__file__))
-
+except AttributeError:
+    bundle_dir = os.path.dirname(os.path.abspath(__file__))
+    
 OSX_TESSERACT_VERSION = "4.1.1"
 WIN_TESSERACT_DIR = Path(bundle_dir, "resources", "bin", "win", "tesseract")
 OSX_TESSERACT_DIR = Path(bundle_dir, "resources", "bin", "mac", "tesseract", OSX_TESSERACT_VERSION)

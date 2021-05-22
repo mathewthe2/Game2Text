@@ -56,7 +56,6 @@ Thumbs.db
 
 # Applications
 *.app
-*.exe
 *.war
 
 # Large media files

@@ -30,10 +30,16 @@
 
 ## Development
 
-Recommended Python Version: 3.7.4
+Create a venv and activate it.
 
-Create a venv, then once activated install requirements:
+```bash
+virtualenv venv --python=python3.7.4
+source venv/bin/activate
 ```
+
+Install requirements:
+
+```bash
 pip install -r requirements.txt
 python game2text.py
 ```

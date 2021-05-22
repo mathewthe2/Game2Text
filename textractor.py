@@ -75,7 +75,7 @@ class Textractor(object):
 
     def attach_multiple(self, pids):
         if len(self.attached_pids) > 0:
-            for pid in attached_pids:
+            for pid in self.attached_pids:
                 print('detaching...')
                 self.detach(pid)
         self.pids_to_attach = []

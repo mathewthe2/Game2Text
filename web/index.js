@@ -51,6 +51,7 @@ let resizeScreenshotMaxHeight = 720;
 
 // Texthooker
 let isRemoveRepeatedSentences = false
+let isRemoveDuplicateCharacters = false
 let isRemoveWhiteSpaces = false
 
 const videoElement = document.getElementById("video");

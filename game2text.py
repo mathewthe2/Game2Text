@@ -4,7 +4,7 @@ from pathlib import Path
 from ocr import detect_and_log
 from translate import multi_translate
 from hotkeys import hotkey_map
-from util import RepeatedTimer, create_directory_if_not_exists, get_default_browser_name, get_PID_list, remove_repeat_phrases, remove_spaces
+from util import RepeatedTimer, create_directory_if_not_exists, get_default_browser_name, get_PID_list, remove_duplicate_characters, remove_repeated_phrases, remove_spaces
 from textractor import Textractor
 from tools import path_to_textractor, open_folder_textractor_path
 from audio import get_recommended_device_index
@@ -215,12 +215,15 @@ def hook_code(code, pids):
 def monitor_textractor(output_objects):
     texthooker_config = r_config_section(TEXTHOOKER_CONFIG)
     is_remove_repeat = texthooker_config['remove_repeat'] == 'true'
+    is_remove_duplicates = texthooker_config['remove_duplicates'] == 'true'
     is_remove_spaces = texthooker_config['remove_spaces'] == 'true'
+
 
     if is_remove_repeat or is_remove_spaces:
         for output in output_objects:
             output['text'] = output['text'].strip()
-            output['text'] = remove_repeat_phrases(output['text']) if is_remove_repeat else output['text']
+            output['text'] = remove_repeated_phrases(output['text']) if is_remove_repeat else output['text']
+            output['text'] = remove_duplicate_characters(output['text']) if is_remove_duplicates else output['text']
             output['text'] = remove_spaces(output['text']) if is_remove_spaces else output['text']
 
     eel.textractorPipe(output_objects)

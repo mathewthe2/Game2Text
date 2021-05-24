@@ -96,6 +96,7 @@ function initConfig () {
             // Texthooker
             const texthookerConfig = config[TEXTHOOKER_CONFIG];
             initSetRemoveRepeatedSentencesSwitch(texthookerConfig['remove_repeat']);
+            initSetRemoveDuplicateCharactersSwitch(texthookerConfig['remove_duplicates']);
             initSetRemoveWhiteSpacesSwitch(texthookerConfig['remove_spaces']);
             initSetTextractorPath();
             // Hotkeys
@@ -571,6 +572,20 @@ function initSetRemoveRepeatedSentencesSwitch(isRemoveRepeatedSentences) {
     if (isRemoveRepeatedSentences === 'true') {
         toggleRemoveRepeatedSentences();
         document.getElementById("removeRepeatSentencesSwitch").parentElement.MaterialSwitch.on();
+    }
+}
+function toggleRemoveDuplicateCharacters() {
+    isRemoveDuplicateCharacters = !isRemoveDuplicateCharacters;
+}
+function toggleRemoveDuplicateCharactersAndPersist() {
+    toggleRemoveDuplicateCharacters();
+    eel.update_config(TEXTHOOKER_CONFIG, {'remove_duplicates': isRemoveDuplicateCharacters ? 'true' : 'false'})();
+
+}
+function initSetRemoveDuplicateCharactersSwitch(isRemoveDuplicateCharacters) {
+    if (isRemoveDuplicateCharacters === 'true') {
+        toggleRemoveDuplicateCharacters();
+        document.getElementById("removeDuplicateCharactersSwitch").parentElement.MaterialSwitch.on();
     }
 }
 function toggleRemoveWhiteSpaces() {

@@ -4,6 +4,7 @@ let autoMode = false;
 let logMode = false, logImages = false, logAudio = false;
 let selectionMode = 'ocr';
 let selectionLineWidth = 1, selectionColor = 'red';
+let showStartMessage = true;
 let OCRrequests = 0;
 let showSelection = true;
 let clipboardMode = false;
@@ -101,6 +102,7 @@ function videoOnLoad(element) {
   videoLoaded = true;
   resizeCanvas(element);
   startMessage.hidden = true;
+  showStartMessage = false;
   minimizeButton.disabled = false;
   // updateText(output, 'Drag and encircle the text portion of the game.');
   showSelectionButton.disabled = false;
@@ -195,6 +197,9 @@ function toggleCollapseVideo() {
   [videoElement, cv1, previewCanvas, croppedVideoCanvas].forEach(element=>toggleCollapse(element));
   minimizeButton.hidden = !minimizeButton.hidden;
   maximizeButton.hidden = !maximizeButton.hidden;
+  if (showStartMessage) {
+    startMessage.hidden = !startMessage.hidden;
+  }
 }
 
 function toggleShowSelection() {

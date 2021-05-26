@@ -52,6 +52,7 @@ const resizeScreenshotSwitch = document.getElementById('resizeScreenshotSwitch')
 // Texthooker Settings Elements
 const removeRepeatSentencesSwitch = document.getElementById('removeRepeatSentencesSwitch');
 const textractorPathInput = document.getElementById('textractorPathInput');
+const removeRepeatSelect = document.getElementById('removeRepeatSelect');
 
 // Hotkeys
 const refreshHotkeyInput = document.getElementById('refreshHotkeyInput');
@@ -95,7 +96,8 @@ function initConfig () {
             initSetAnkiDictionaries(ankiConfig['anki_dictionary']);
             // Texthooker
             const texthookerConfig = config[TEXTHOOKER_CONFIG];
-            initSetRemoveRepeatedSentencesSwitch(texthookerConfig['remove_repeat']);
+            // initSetRemoveRepeatedSentencesSwitch(texthookerConfig['remove_repeat_mode']);
+            initSetRemoveRepeatedMode(texthookerConfig['remove_repeat_mode']);
             initSetRemoveDuplicateCharactersSwitch(texthookerConfig['remove_duplicates']);
             initSetRemoveWhiteSpacesSwitch(texthookerConfig['remove_spaces']);
             initSetTextractorPath();
@@ -167,6 +169,13 @@ function initSetTranslationLanguages({sourceLang, targetLang}) {
 
     targetLanguage = targetLang;
     targetLanguageInput.parentElement.MaterialTextfield.change(targetLang);
+}
+
+function updateTranslationServiceAndPersist() {
+    translationService = translationSelect.value;
+    if (currentConfig[TRANSLATION_CONFIG]['translation_service'] !== translationService) {
+        eel.update_config(TRANSLATION_CONFIG, {'translation_service':translationService})();
+    }
 }
 
 function changeSourceLanguage() {
@@ -268,13 +277,6 @@ function updateOCREngineAndPersist() {
         if (OCREngine.includes('Tesseract')) {
             eel.update_config(OCR_CONFIG, {'oem': OEM_CONFIG[OCREngine]})();
         }
-    }
-}
-
-function updateTranslationServiceAndPersist() {
-    translationService = translationSelect.value;
-    if (currentConfig[TRANSLATION_CONFIG]['translation_service'] !== translationService) {
-        eel.update_config(TRANSLATION_CONFIG, {'translation_service':translationService})();
     }
 }
   
@@ -561,17 +563,23 @@ async function selectDictionary() {
  * 
  * Texthooker
  */
-function toggleRemoveRepeatedSentences() {
-    isRemoveRepeatedSentences = !isRemoveRepeatedSentences;
+function initSetRemoveRepeatedMode(removeRepeatedMode) {
+    if (removeRepeatedMode) {
+        const removeRepeatOptions = removeRepeatSelect.querySelectorAll("option");
+        const removeRepeatOption = Array.from(removeRepeatOptions).find(child=>child.innerText.toLowerCase() === removeRepeatedMode.toLowerCase());
+        if (removeRepeatOption) {
+            removeRepeatOption.setAttribute('selected', true);
+        } else { 
+            // Fallback to quick
+            const defaultOption = Array.from(removeRepeatOptions).find(child => child.innerText.toLowerCase() == "quick") 
+            defaultOption.setAttribute('selected', true);
+        }
+    }
 }
-async function toggleRemoveRepeatedSentencesAndPersist() {
-    toggleRemoveRepeatedSentences();
-    eel.update_config(TEXTHOOKER_CONFIG, {'remove_repeat': isRemoveRepeatedSentences ? 'true' : 'false'})();
-}
-function initSetRemoveRepeatedSentencesSwitch(isRemoveRepeatedSentences) {
-    if (isRemoveRepeatedSentences === 'true') {
-        toggleRemoveRepeatedSentences();
-        document.getElementById("removeRepeatSentencesSwitch").parentElement.MaterialSwitch.on();
+function updateRemoveRepeatedModeAndPersist() {
+    const removeRepeatedMode = removeRepeatSelect.value.toLowerCase();
+    if (currentConfig[TEXTHOOKER_CONFIG]['remove_repeat_mode'] !== removeRepeatedMode) {
+        eel.update_config(TEXTHOOKER_CONFIG, {'remove_repeat_mode':removeRepeatedMode})();
     }
 }
 function toggleRemoveDuplicateCharacters() {

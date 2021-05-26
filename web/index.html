@@ -649,13 +649,14 @@
             <a href="#texthookers_advanced" class="mdl-tabs__tab">Advanced</a> 
           </div>
           <div class="mdl-tabs__panel is-active" id="texthookers_general">
+            <div class="settingsCard mdl-card mdl-shadow--2dp">
             <ul class="mdl-list">
               <li class="mdl-list__item">
                 <span class="mdl-list__item-primary-content">
                   <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">sports_esports</i>
                   <span>Application</span>
                   <span class="tab_select_wrapper" >
-                    <input style="margin-left: 10px; width: 355px" onkeyup="handleInputApplication()" onchange="selectTextHookerApplication(this)" type="text" name="application" list="pidNameSelect" placeholder="Select Application">
+                    <input style="margin-left: 10px; width: 300px" onkeyup="handleInputApplication()" onchange="selectTextHookerApplication(this)" type="text" name="application" list="pidNameSelect" placeholder="Select Application">
                     <datalist id="pidNameSelect">
                     </datalist>
                   </span>
@@ -670,11 +671,14 @@
                     <i style="color: #2e2e2e; background: white" class="material-icons mdl-list__item-avatar">add_task</i>
                     <span>Hooks</span>
                     <span style="padding-left: 63px" >
-                      <select style="width: 360px" size="6" onchange="selectHook(this)" onfocus="this.selectedIndex=-1;this.blur()" id="hookSelect" name="hooks">
+                      <select style="width: 308px" size="6" onchange="selectHook(this)" onfocus="this.selectedIndex=-1;this.blur()" id="hookSelect" name="hooks">
                       </select>
                     </span>
                   </span>
-                  <li>
+                </li>
+              </ul>
+              </div>
+              <ul class="mdl-list">
                     <li class="mdl-list__item">
                       <span class="mdl-list__item-primary-content">
                         <span>Hook Code</span>
@@ -699,7 +703,7 @@
               <span class="mdl-list__item-primary-content">
               <span>Custom Hooks</span>
               <span style="padding-left: 50px" >
-                <input style="width: 300px" placeholder="Enter Hook Code" id="customHookCodeInput"></input>
+                <input style="width: 280px" placeholder="Enter Hook Code" id="customHookCodeInput"></input>
                 <button onclick="addCustomHook()">Add</button>
               </span>
             </li>
@@ -707,7 +711,7 @@
               <span class="mdl-list__item-primary-content">
               <span>TextractorCLI.exe</span>
               <span style="padding-left: 25px" >
-                <input disabled style="width: 300px" id="textractorPathInput"></input>
+                <input disabled style="width: 280px" id="textractorPathInput"></input>
                 <button id="selectTextractorExecutableButton"  onclick="changeTextractorExecutablePath()" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored">
                   <i class="material-icons">folder</i>
                 </button>
@@ -719,16 +723,19 @@
                 <li class="sectionTitle mdl-list__item">
                   Text Parsing
                 </li>
-            <li class="mdl-list__item">
-              <span class="mdl-list__item-primary-content">
-                <span>Remove Repeat Sentences</span>
-              </span>
-              <span class="mdl-list__item-secondary-action">
-                <label style="margin-right: 20px" class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="removeRepeatSentencesSwitch">
-                  <input type="checkbox" onclick="toggleRemoveRepeatedSentencesAndPersist()" id="removeRepeatSentencesSwitch" class="mdl-switch__input" />
-                </label>
-              </span>
-            </li>
+                <li class="mdl-list__item">
+                  <span class="mdl-list__item-primary-content">
+                    <span>Remove Repeat Sentences</span>
+                  </span>
+                  <span class="mdl-list__item-secondary-action">
+                  <select onchange="updateRemoveRepeatedModeAndPersist()" id="removeRepeatSelect" name="removeRepeat">
+                    <option>None</option>
+                    <option>Quick</option>
+                    <option>Brute Force</option>
+                    <option>Quick + Brute Force</option>
+                  </select>
+                  </span>
+                </li>
             <li class="mdl-list__item">
               <span class="mdl-list__item-primary-content">
                 <span>Remove Duplicate Characters</span>

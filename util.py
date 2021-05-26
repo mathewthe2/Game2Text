@@ -117,7 +117,23 @@ def remove_duplicate_characters(sentence):
  
     return ''.join(chars[:k])
 
-def remove_repeated_phrases(sentence):
+def quick_remove_repeated_phrases(s):
+    prefix_array=[]
+    for i in range(len(s)):
+        prefix_array.append(s[:i])
+
+    #stop at 1st element to avoid checking for the ' ' char
+    for i in prefix_array[:1:-1]:
+        if s.count(i) > 1 :
+            #find where the next repetition starts
+            offset = s[len(i):].find(i)
+
+            return s[:len(i)+offset]
+            break
+
+    return s
+
+def brute_remove_repeated_phrases(sentence):
     head = 1
     while 1:
         scan_sentence = sentence[head:len(sentence)]
@@ -130,3 +146,20 @@ def remove_repeated_phrases(sentence):
         if head == len(sentence):
             break
     return sentence
+
+def quick_and_brute_remove_repeated_phrases(sentence):
+    return brute_remove_repeated_phrases(quick_remove_repeated_phrases(sentence))
+
+def format_output(output_objects, remove_repeat_mode, is_remove_duplicates, is_remove_spaces):
+    remove_repeat_dict = {
+        'quick': quick_remove_repeated_phrases,
+        'brute force': brute_remove_repeated_phrases,
+        'quick + brute force': quick_and_brute_remove_repeated_phrases
+    }
+    for output in output_objects:
+        output['text'] = output['text'].strip()
+        if remove_repeat_mode in remove_repeat_dict:
+            remove_repeat_dict[remove_repeat_mode](output['text'])
+        output['text'] = remove_duplicate_characters(output['text']) if is_remove_duplicates else output['text']
+        output['text'] = remove_spaces(output['text']) if is_remove_spaces else output['text']
+    return output_objects

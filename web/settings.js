@@ -267,6 +267,7 @@ function updateOCREngine() {
         textOrientationSwitch.disabled = true;
         textOrientationSwitch.parentNode.classList.add("is-disabled");
     }
+    refreshOCR();
     return OCREngine;
 }
 
@@ -282,6 +283,7 @@ function updateOCREngineAndPersist() {
   
 function toggleTextOrientation() {
     verticalText = !verticalText;
+    refreshOCR();
 }
 
 /*

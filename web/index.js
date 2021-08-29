@@ -311,8 +311,8 @@ function changeOutputText(outputElement) {
 
 cv1.addEventListener("mouseup", function (e) {
   mousedown = false;
-  const isRightClick = e.button === 0;
-  if (hasSelection() && !clipboardMode && isRightClick) {
+  const isLeftClick = e.button === 0;
+  if (hasSelection() && !clipboardMode && isLeftClick) {
     // Invert selection if selection is from  top left
     if (rect.height < 0) {
       rect.y += rect.height;
@@ -338,11 +338,14 @@ cv1.addEventListener("mouseup", function (e) {
 cv1.addEventListener("mousedown", function (e) {
   // find correct position if scrolled down
   // there is no need for scrollXoffset because the video is always resized to 100% the width of the window
-  const scrollYOffset  = window.pageYOffset || document.documentElement.scrollTop;
+  const isLeftClick = e.button === 0;
 
-  last_mousex = parseInt(e.clientX-canvasx);
-	last_mousey = parseInt(e.clientY-canvasy+scrollYOffset);
-  mousedown = true;
+  if (isLeftClick) {
+      const scrollYOffset = window.pageYOffset || document.documentElement.scrollTop;
+      last_mousex = parseInt(e.clientX-canvasx);
+      last_mousey = parseInt(e.clientY-canvasy+scrollYOffset);
+      mousedown = true;
+  }
 }, false);
 
 cv1.addEventListener("mousemove", function (e) {

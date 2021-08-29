@@ -429,7 +429,10 @@ function toggleAutoMode() {
   if (autoMode) {
     refreshButton.disabled = true;
     autoModeTimer = setInterval(()=>{
-      if (rect.width > 0 && OCRrequests === 0) {
+      // Updating the OCR scrolls the page down to show it, which becomes
+      // very obnoxious when you're trying to position a box over the right text.
+      // To fix this, we just don't update when we're dragging a selection.
+      if (rect.width > 0 && OCRrequests === 0 && !mousedown) {
         showStuff(rect);
       }
     }, autoModeSpeed);

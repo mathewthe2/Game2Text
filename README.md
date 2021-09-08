@@ -10,8 +10,8 @@
 
 ## Text Extraction Modes
 - Classic OCR with Tesseract, Tesseract Legacy, or OCR Space.
-- OCR-assisted game script matching
-- Text hooking (for Visual Novels)
+- OCR-assisted game script matching. You can find game scripts in [this repository](https://github.com/mathewthe2/Game2Text-GameScripts). 
+- Text hooking for Visual Novels
 - Clipboard to Game2Text
 
 ## Features

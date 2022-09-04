@@ -124,6 +124,7 @@ X-DBUS-StartupType=
 X-KDE-SubstituteUID=false
 X-KDE-Username=
 ```
+Move game2text.desktop wherever you would like the shortcut to be. It should launch the app when double clicked.
 
 ## Acknowledgement
 

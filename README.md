@@ -83,15 +83,15 @@ Install Chromium or Chrome
 
 Extract the game2text tarball and open terminal in the game2text directory that was created
 
-Ensure you have Python 3 installed ('yay -S python3' on Arch distros)
+Ensure you have Python 3 installed (```yay -S python3``` on Arch distros)
 
-Install tk ('sudo pacman -S tk' on Arch distros)
+Install tk (```sudo pacman -S tk``` on Arch distros)
 
 Download the JPN data for Tesseract OCR here: https://github.com/tesseract-ocr/tessdata/blob/main/jpn.traineddata
 
-And move to /usr/share/tessdata 'mv jpn.traineddata /usr/share/tessdata'
+And move to /usr/share/tessdata ```mv jpn.traineddata /usr/share/tessdata```
 
-Enter command python game2text.py
+Enter command ```python game2text.py```
 
 If it runs, congratulations!
 
@@ -103,7 +103,8 @@ Create a file called game2text.desktop (this will be your shortcut icon)
 
 Open in text a editor and input the following:
 
-'[Desktop Entry]
+```
+[Desktop Entry]
 Comment[en_US]=
 Comment=
 Exec=bash game2text.sh
@@ -121,7 +122,8 @@ Type=Application
 X-DBUS-ServiceName=
 X-DBUS-StartupType=
 X-KDE-SubstituteUID=false
-X-KDE-Username='
+X-KDE-Username=
+```
 
 ## Acknowledgement
 

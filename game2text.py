@@ -233,9 +233,13 @@ def open_new_window(html_file, height=900, width=600):
 
 def run_eel():
     eel.init('web', allowed_extensions=['.js', '.html', '.map'])
+    browser_mode = get_default_browser_name() if r_config(APP_CONFIG, "browser") == 'default' else r_config(APP_CONFIG, "browser")
+    paths_config = r_config_section('PATHS')
+    if 'browser' in paths_config:
+        eel.browsers.set_path(browser_mode, paths_config['browser'])
     eel.start('index.html',
     close_callback=close, 
-    mode=get_default_browser_name() if r_config(APP_CONFIG, "browser") == 'default' else r_config(APP_CONFIG, "browser"), 
+    mode=browser_mode, 
     host=r_config(APP_CONFIG, "host"), 
     port=int(r_config(APP_CONFIG, "port"))
     )

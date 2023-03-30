@@ -155,8 +155,8 @@ function initTranslation(service) {
         if (selectedOption) {
             selectedOption.setAttribute('data-selected', true);
         } else { 
-            // Fallback to default Papago if option not found
-            const defaultOption = Array.from(translationOptions).find(child => child.innerText == "Papago") 
+            // Fallback to default DeepL if option not found
+            const defaultOption = Array.from(translationOptions).find(child => child.innerText == "DeepL Translate") 
             defaultOption.setAttribute('data-selected', true);
         }
         getmdlSelect.init('#translation_select_container');

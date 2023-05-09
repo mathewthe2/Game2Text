@@ -1,4 +1,3 @@
-import eel
 import yaml
 import glob
 from pathlib import Path

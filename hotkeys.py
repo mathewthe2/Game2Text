@@ -1,5 +1,4 @@
 import eel
-import platform
 from config import r_config, HOTKEYS_CONFIG
 
 def refresh_ocr_hotkey():

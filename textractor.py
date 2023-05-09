@@ -1,9 +1,9 @@
 from parse import parse
-from pathlib import Path
+# from pathlib import Path
 import time
-import re
+# import re
 import os, sys
-import threading
+# import threading
 from tools import path_to_wexpect
 from util import RepeatedTimer
 import platform

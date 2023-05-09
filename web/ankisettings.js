@@ -57,6 +57,7 @@ function updateFieldValuesTable(fieldValues) {
             <option>Reading</option>
             <option>Glossary</option>
             <option>Sentence</option>
+            <option>Sentence Translation</option>
             <option>Screenshot</option>
             <option>Audio</option>
             <option>Word Audio</option>`;
@@ -86,6 +87,7 @@ function applyFieldAndValuesToTable(fieldValueMap) {
             <option>Reading</option>
             <option>Glossary</option>
             <option>Sentence</option>
+            <option>Sentence Translation</option>
             <option>Screenshot</option>
             <option>Audio</option>
             <option>Word Audio</option>`;

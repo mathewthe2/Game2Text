@@ -436,6 +436,12 @@ function replaceLogText(logId, newText) {
   });
 }
 
+async function translate(text) {
+  let translatedText = await eel.translate(text)();
+  translation = { sourceText: text, translatedText };
+  return translatedText;
+}
+
 function logToHtml(log) {
   const logItem = document.getElementById('logItemTemplate');
   const logItemClone = logItem.cloneNode(true);
@@ -806,10 +812,12 @@ function addActiveCardToAnki() {
 
 async function addCardToAnki(logId) {
   const log = getLogById(logId);
+  const translation = await translate(log.text)
   const noteData = {
     folder: log.folder,
     filename: log.id,
-    sentence: log.text
+    sentence: log.text,
+    sentencetranslation: translation,
   }
   if (log.selectedText) {
     noteData['selectedtext'] = log.selectedText;

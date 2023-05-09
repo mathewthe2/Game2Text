@@ -1,5 +1,4 @@
-from googletrans import Translator
-import asyncio
+import translators as ts
 import requests
 import time
 from config import r_config, TRANSLATION_CONFIG
@@ -49,6 +48,6 @@ def deepl_translate(text):
     return 'Failed to Translate'
 
 def google_translate(text):
-    translator = Translator()
-    result = translator.translate(text)
-    return result.text
+    # ts.preaccelerate()
+    result = ts.translate_text(text, 'google')
+    return result

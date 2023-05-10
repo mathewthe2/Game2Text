@@ -319,8 +319,9 @@ function formatCard(logId, cardElement) {
     const cardGlossary = createCardSectionElement(
       iconName = 'book', 
       field = 'card_glossary',
-      value = log.dictionary[0].glossary_list.join(', ')
+      value = extractContent(log.dictionary[0].glossary_list).join('; ')
     );
+
     cardBodyList.append(cardGlossary);
   }
   if (log.text) {
@@ -876,4 +877,29 @@ function notify(message) {
       message: message
     }
   );
+}
+
+// Allow parsing of structured-content dictionaries
+function extractContent(obj) {
+  const content = [];
+
+  if (obj.data?.content === 'glossary') {
+    if (Array.isArray(obj.content)) {
+      obj.content.forEach(item => {
+        content.push(...extractContent(item.content));
+      });
+    } else {
+      content.push(obj.content?.content);
+    }
+  } else if (Array.isArray(obj)) {
+    obj.forEach(item => {
+      content.push(...extractContent(item));
+    });
+  } else if (obj.type === 'structured-content' && obj.content) {
+    content.push(...extractContent(obj.content));
+  } else if (typeof obj === 'string'){
+    content.push(obj)
+  }
+
+  return content;
 }

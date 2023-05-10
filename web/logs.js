@@ -13,6 +13,8 @@ let currentlyPlayingAudio = '';
 // Game Scripts
 let gameScripts = []
 
+const translations = {}
+
 init();
 
 function init() {
@@ -274,6 +276,7 @@ function createMatchScriptDropdown() {
 
 function formatCard(logId, cardElement) {
   const log = getLogById(logId);
+  translate(log.text)
   if (log.image) {
     const cardImage = cardElement.getElementsByClassName('addCardScreenshot')[0];
     cardImage.setAttribute('src', `data:image/${log.image_type};base64,${log.image}`);
@@ -329,6 +332,18 @@ function formatCard(logId, cardElement) {
       footerIcon = log.audio ? 'mic' : ''
     );
     cardBodyList.append(cardSentence);
+
+    const translation = translations[log.text]
+    if (translation) {
+      const cardTranslation = createCardSectionElement(
+        iconName = 'short_text',
+        field = 'card_sentence_translation',
+        value = translation,
+        contentEditable = true,
+        footerIcon = log.audio ? 'mic' : ''
+      );
+      cardBodyList.append(cardTranslation);
+    }
   }
   return cardElement
 }
@@ -436,9 +451,14 @@ function replaceLogText(logId, newText) {
   });
 }
 
+// Translates the given text and caches it if already called with the same text
 async function translate(text) {
+  const hashed = text
+  const translation = translations[hashed]
+  if (translation) { return translation }
+
   let translatedText = await eel.translate(text)();
-  translation = { sourceText: text, translatedText };
+  translations[hashed] = translatedText
   return translatedText;
 }
 

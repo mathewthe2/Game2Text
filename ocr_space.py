@@ -4,6 +4,7 @@ import requests
 OCRSPACE_API_KEY = "" # Contact owner for developer key
 OCRSPACE_API_URL_USA = "https://apipro1.ocr.space/parse/image"
 OCRSPACE_API_URL_EU = "https://apipro2.ocr.space/parse/image"
+tesseract_cmd = "/usr/bin/tesseract"
 
 def ocr_space_file(filename, overlay=False, api_key=OCRSPACE_API_KEY, language='jpn', url=OCRSPACE_API_URL_EU):
     """ OCR.space API request with local file.
@@ -31,6 +32,5 @@ def ocr_space_file(filename, overlay=False, api_key=OCRSPACE_API_KEY, language='
     result = r.json()
     if (result):
         if (result["ParsedResults"]):
-            parsedText = result["ParsedResults"][0]['ParsedText']
-            return " ".join(parsedText.splitlines()) # force output to one line
+            return result["ParsedResults"][0]['ParsedText']
     return "Error: OCR Failed"

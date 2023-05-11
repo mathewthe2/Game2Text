@@ -1,16 +1,19 @@
 import pytesseract
 from pathlib import Path
-from logger import log_text, log_media
+import platform
+from logger import log_text, log_media, get_time_string
 from config import r_config, OCR_CONFIG
-from util import base64_to_image, base64_to_image_path
-from tools import path_to_tesseract, get_tessdata_dir, bundle_dir
+from util import create_directory_if_not_exists, base64_to_image, base64_to_image_path
+from tools import path_to_tesseract, get_tessdata_dir
+import requests
+import eel
 from ocr_space import ocr_space_file, OCRSPACE_API_URL_USA, OCRSPACE_API_URL_EU
 
 HORIZONTAL_TEXT_DETECTION = 6
 VERTICAL_TEXT_DETECTON = 5
 
 def get_temp_image_path():
-    return str(Path(bundle_dir,"logs", "images", "temp.png"))
+    return str(Path(SCRIPT_DIR,"logs", "images", "temp.png"))
 
 def detect_and_log(engine, cropped_image,  text_orientation, session_start_time, request_time, audio_recorder):
     result = image_to_text(engine, cropped_image, text_orientation)
@@ -35,11 +38,6 @@ def image_to_text(engine, base64img, text_orientation):
 def tesseract_ocr(image, text_orientation):
     language = r_config(OCR_CONFIG, "tesseract_language")
     psm = HORIZONTAL_TEXT_DETECTION
-    # Add English Tessdata for legacy Tesseract (English is included in v4 Japanese trained data)
-    is_legacy_tesseract = r_config(OCR_CONFIG, "oem") == '0'
-    if is_legacy_tesseract:
-        language += '+eng'
-    # Manual Vertical Text Orientation
     if (text_orientation == 'vertical'):
         psm = VERTICAL_TEXT_DETECTON
         language += "_vert"
@@ -47,5 +45,6 @@ def tesseract_ocr(image, text_orientation):
     result = pytesseract.image_to_string(image, config=custom_config, lang=language)
     return result
 
+SCRIPT_DIR = Path(__file__).parent
 tesseract_cmd, platform_name = path_to_tesseract()
-pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"

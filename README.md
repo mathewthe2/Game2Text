@@ -77,6 +77,55 @@ Mac:
 
 Temporary fix for all read/write operations using *os.path* on Mac builds with pyinstaller: create a wrapper file that runs the Game2Text executable inside the package
 
+Linux:
+
+Install Chromium or Chrome
+
+Extract the game2text tarball and open terminal in the game2text directory that was created
+
+Ensure you have Python 3 installed (```yay -S python3``` on Arch distros)
+
+Install tk (```sudo pacman -S tk``` on Arch distros)
+
+Download the JPN data for Tesseract OCR here: https://github.com/tesseract-ocr/tessdata/blob/main/jpn.traineddata
+
+And move to /usr/share/tessdata ```mv jpn.traineddata /usr/share/tessdata```
+
+Enter command ```python game2text.py```
+
+If it runs, congratulations!
+
+Final steps:
+
+Move the game2text directory to where you want it to be permanently
+
+Create a file called game2text.desktop (this will be your shortcut icon)
+
+Open in text a editor and input the following:
+
+```
+[Desktop Entry]
+Comment[en_US]=
+Comment=
+Exec=bash game2text.sh
+GenericName[en_US]=
+GenericName=
+Icon=<location of game2text icon>
+MimeType=
+Name[en_US]=game2text
+Name=game2text
+Path=<game2text directory>
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=
+```
+Move game2text.desktop wherever you would like the shortcut to be. It should launch the app when double clicked.
+
 ## Acknowledgement
 
 #### Tools

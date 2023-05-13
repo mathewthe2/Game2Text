@@ -57,6 +57,13 @@ function launchAnkiFormByLogId(logId) {
   }
 }
 
+// Grab all entries from the glassory lists
+function getDictionaryEntries(dictionary) {
+  return dictionary.map((dic) => {
+    return extractContent(dic.glossary_list).join('; ')
+  })
+}
+
 function formatCard(logId, cardElement) {
   const log = getLogById(logId);
   translate(log.text)
@@ -99,10 +106,13 @@ function formatCard(logId, cardElement) {
     cardBodyList.append(cardSelectedText);
   }
   if (log.dictionary) {
+    const entries = getDictionaryEntries(dictionaries).map((entry) => {
+      return `<li>${entry}</li>`
+    })
     const cardGlossary = createCardSectionElement(
       iconName = 'book',
       field = 'card_glossary',
-      value = extractContent(log.dictionary[0].glossary_list).join('; ')
+      value = `<ul>${entries.join('')}</ul>`
     );
 
     cardBodyList.append(cardGlossary);
@@ -257,7 +267,7 @@ async function addCardToAnki(logId) {
   }
   if (log.dictionary) {
     noteData['selectedtext'] = log.dictionary[0].headword
-    noteData['glossary'] = log.dictionary[0].glossary_list.join(', ');
+    noteData['glossary'] = getDictionaryEntries(log.dictionary).map((entry) => `<li>${entry}</li>`).join('')
     if (log.dictionary[0].reading) {
       noteData['reading'] = log.dictionary[0].reading;
     }

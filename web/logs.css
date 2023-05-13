@@ -193,6 +193,11 @@ body {
     box-sizing:border-box;
     align-items: center;
 }
+
+.addCardBodyContainer .card_card_glossary ul {
+    padding: 0;
+}
+
 @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }

@@ -80,17 +80,19 @@ function formatCard(logId, cardElement) {
   addCardToAnkiButton.id = `add_card_to_anki_button_${logId}`
   addCardToAnkiButton.setAttribute("log_id", logId);
 
+  // Sort the dictionaries to match yomichan and then grab all entries that have the same sequence
+  const dictionaries = filterDicts(sortDicts(log.dictionary || []))
   if (log.selectedText) {
     let selectedTextPreview = log.selectedText;
-    if (log.dictionary) {
-      selectedTextPreview = log.dictionary[0].headword;
-      if (log.dictionary[0].reading) {
-        if (log.dictionary[0].reading !== log.dictionary[0].headword) {
-          selectedTextPreview = `<ruby>${log.dictionary[0].headword}<rt>${log.dictionary[0].reading}</rt></ruby>`;
+    if (dictionaries.length > 0) {
+      selectedTextPreview = dictionaries[0].headword;
+      if (dictionaries[0].reading) {
+        if (dictionaries[0].reading !== dictionaries[0].headword) {
+          selectedTextPreview = `<ruby>${dictionaries[0].headword}<rt>${dictionaries[0].reading}</rt></ruby>`;
         }
       }
       // Word Audio
-      if (log.dictionary[0].audio) {
+      if (dictionaries[0].audio) {
         // TODO: prevent rest of the text from moving when inserting audio icon
         selectedTextPreview += `
         <button log_id=${log.id} onclick="playWordAudio(this)" class="logMenuButton mdl-button mdl-js-button mdl-button--icon">
@@ -105,7 +107,8 @@ function formatCard(logId, cardElement) {
     );
     cardBodyList.append(cardSelectedText);
   }
-  if (log.dictionary) {
+
+  if (dictionaries.length > 0) {
     const entries = getDictionaryEntries(dictionaries).map((entry) => {
       return `<li>${entry}</li>`
     })
@@ -117,6 +120,7 @@ function formatCard(logId, cardElement) {
 
     cardBodyList.append(cardGlossary);
   }
+
   if (log.text) {
     const cardSentence = createCardSectionElement(
       iconName='short_text',
@@ -266,13 +270,15 @@ async function addCardToAnki(logId) {
     noteData['selectedtext'] = log.selectedText;
   }
   if (log.dictionary) {
-    noteData['selectedtext'] = log.dictionary[0].headword
-    noteData['glossary'] = getDictionaryEntries(log.dictionary).map((entry) => `<li>${entry}</li>`).join('')
-    if (log.dictionary[0].reading) {
-      noteData['reading'] = log.dictionary[0].reading;
+    const dictionaries = filterDicts(sortDicts(log.dictionary))
+
+    noteData['selectedtext'] = dictionaries[0].headword
+    noteData['glossary'] = getDictionaryEntries(dictionaries).map((entry) => `<li>${entry}</li>`).join('')
+    if (dictionaries[0].reading) {
+      noteData['reading'] = dictionaries[0].reading;
     }
-    if (log.dictionary[0].audio) {
-      noteData['wordaudio'] = log.dictionary[0].audio;
+    if (dictionaries[0].audio) {
+      noteData['wordaudio'] = dictionaries[0].audio;
     }
   }
   if (log.audio) {
@@ -338,4 +344,29 @@ function extractContent(obj) {
   }
 
   return content;
+}
+
+// Sorts the dictionaries based on their tags so that the first result matches yomichan
+function sortDicts(dicts) {
+  const sortedArr = dicts.sort((a, b) => {
+    const aNum = Number(a.tags.split(' ')[0]); // Get the number from the tags key of a
+    const bNum = Number(b.tags.split(' ')[0]); // Get the number from the tags key of b
+
+    if (isNaN(aNum) && isNaN(bNum)) { // If both a and b don't have numbers in their tags key
+      return 0; // Leave them in the current order
+    } else if (isNaN(aNum)) { // If a doesn't have a number in its tags key
+      return 1; // Put a after b
+    } else if (isNaN(bNum)) { // If b doesn't have a number in its tags key
+      return -1; // Put b after a
+    } else { // If both a and b have numbers in their tags key
+      return aNum - bNum; // Sort them in ascending order of the number in the tags key
+    }
+  });
+
+  return sortedArr
+}
+
+// Given a list of dictionaries only return the ones that match the sequence of the first element
+function filterDicts(dicts) {
+  return dicts.filter((item) => item.sequence === dicts[0].sequence);
 }

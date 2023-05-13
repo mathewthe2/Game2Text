@@ -23,6 +23,8 @@ const displayMediaOptions = {
   },
   audio: false
 }
+
+
 let dialogWindow, autoModeTimer, croppedVideoTimer, currentText;
 let audioSources, audioDeviceIndex;
 
@@ -73,6 +75,7 @@ const croppedVideoCanvas = document.getElementById("croppedVideoCanvas");
 const croppedVideoCtx = croppedVideoCanvas.getContext("2d");
 const settingsDialog = document.getElementById("settingsDialog");
 const dialogCloseButton = document.getElementById("dialogCloseButton");
+const captureSelect = document.getElementById("captureSource");
 
 init();
 
@@ -80,6 +83,7 @@ function init() {
   (async() => {
     loadProfiles();
     loadAnki();
+    getCaptureDevices();
   })();
 }
 
@@ -87,9 +91,50 @@ function selectApplication() {
   startCapture();
 }
 
+async function getCaptureDevices() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+    console.log("enumerateDevices() not supported.");
+    return;
+  }
+
+  captureSelect.options.length = 0;
+  navigator.mediaDevices.enumerateDevices().then(function(devices) {
+    devices.forEach(function(device) {
+      if (device.kind == "videoinput") {
+        const option = document.createElement('option');
+        option.value = device.deviceId;
+        option.text = device.label || `source ${captureSelect.length +1}`;
+        captureSelect.appendChild(option)
+      }
+    })
+  });
+
+}
+
+function selectCaptureDevice() {
+    startDeviceCapture();
+}
+
 async function startCapture(){
   try {
     videoElement.srcObject = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
+    if (settingsDialog.open) {
+      closeSettings();
+    }
+  }catch(err) {
+    console.error("Error" + err)
+  }
+}
+
+async function startDeviceCapture(){
+  const videoSource = captureSelect.value;
+  const userMediaOptions = {
+    video: {width: 1920, height: 1080, deviceId: videoSource ? {exact: videoSource} : undefined},
+    audio: false
+  }
+  try {
+    videoElement.srcObject = await navigator.mediaDevices.getUserMedia(userMediaOptions);
+    getCaptureDevices();
     if (settingsDialog.open) {
       closeSettings();
     }

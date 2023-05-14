@@ -81,7 +81,8 @@ function formatCard(logId, cardElement) {
   addCardToAnkiButton.setAttribute("log_id", logId);
 
   // Sort the dictionaries to match yomichan and then grab all entries that have the same sequence
-  const dictionaries = filterDicts(sortDicts(log.dictionary || []))
+  const filteredDicts = filterDicts(sortDicts(log.dictionary || []))
+  const { dictionaries } = extractOtherForms(filteredDicts)
   if (log.selectedText) {
     let selectedTextPreview = log.selectedText;
     if (dictionaries.length > 0) {
@@ -270,7 +271,8 @@ async function addCardToAnki(logId) {
     noteData['selectedtext'] = log.selectedText;
   }
   if (log.dictionary) {
-    const dictionaries = filterDicts(sortDicts(log.dictionary))
+  const filteredDicts = filterDicts(sortDicts(log.dictionary))
+  const { dictionaries } = extractOtherForms(filteredDicts)
 
     noteData['selectedtext'] = dictionaries[0].headword
     noteData['glossary'] = getDictionaryEntries(dictionaries).map((entry) => `<li>${entry}</li>`).join('')
@@ -369,4 +371,11 @@ function sortDicts(dicts) {
 // Given a list of dictionaries only return the ones that match the sequence of the first element
 function filterDicts(dicts) {
   return dicts.filter((item) => item.sequence === dicts[0].sequence);
+}
+
+function extractOtherForms(dicts) {
+  const dictionaries = dicts.filter(item => item.tags !== 'forms')
+  const forms = dicts.filter(item => item.tags === 'forms')
+
+  return { dictionaries, forms }
 }

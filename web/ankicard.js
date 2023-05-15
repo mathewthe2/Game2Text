@@ -243,13 +243,16 @@ function updateLogAudioById(logId, audioFileName) {
   currentLogs = logs;
 }
 
+// Grab dictionary entries from the backend and store thim in dictionary and jisho entries for the log
 async function updateCardWithDictionaryEntry(logId, word) {
-  const dictionaryEntry = await eel.look_up_dictionary(word)();
-  if (dictionaryEntry) {
+  const [ dictionaryEntry, jishoEntry ] = await eel.look_up_dictionary(word)();
+  if (dictionaryEntry || jishoEntry) {
     currentLogs.find(log=>log.id === logId)['dictionary'] = dictionaryEntry;
+    currentLogs.find(log=>log.id === logId)['jisho'] = jishoEntry;
     addLogAudioIfExists(logId);
   } else {
     currentLogs.find(log=>log.id === logId)['dictionary'] = null;
+    currentLogs.find(log=>log.id === logId)['jisho'] = null;
   }
   refreshCardContent(logId);
 }

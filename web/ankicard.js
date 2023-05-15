@@ -249,6 +249,26 @@ document.addEventListener('mouseup', event => {
   }
 });
 
+async function addLogAudioIfExists(logId) {
+  const log = getLogById(logId);
+  if (!log) {
+    return
+  }
+
+  const dictionary = getDictionaries(logId)[0]
+  const headword = dictionary?.headword
+  const reading = dictionary?.reading
+  if (reading) {
+    const kanji = headword;
+    const kana = reading;
+    const audioUrl = await eel.get_jpod_url(kanji, kana)();
+    if (audioUrl) {
+      dictionary.audio = audioUrl;
+      refreshCardContent(logId);
+    }
+  }
+}
+
 function updateLogAudioById(logId, audioFileName) {
   const logs = currentLogs;
   logs.forEach(log=>{

@@ -518,22 +518,6 @@ function animateRemove(element) {
   }, 300);
 }
 
-async function addLogAudioIfExists(logId) {
-  const log = getLogById(logId);
-  if (!log) {
-    return
-  }
-  if (log.dictionary[0].reading) {
-    const kanji = log['dictionary'][0].headword;
-    const kana = log['dictionary'][0].reading;
-    const audioUrl = await eel.get_jpod_url(kanji, kana)();
-    if (audioUrl) {
-      currentLogs.find(logObject=>logObject.id === log.id)['dictionary'][0].audio = audioUrl;
-      refreshCardContent(logId);
-    }
-  }
-}
-
 function updateLogFileById(logId) {
    const log = getLogById(logId);
    eel.update_log_text(logId, log.folder, log.text);

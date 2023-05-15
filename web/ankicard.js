@@ -96,7 +96,7 @@ function formatCard(logId, cardElement) {
       if (dictionaries[0].audio) {
         // TODO: prevent rest of the text from moving when inserting audio icon
         selectedTextPreview += `
-        <button log_id=${log.id} onclick="playWordAudio(this)" class="logMenuButton mdl-button mdl-js-button mdl-button--icon">
+        <button audio_url=${dictionaries[0].audio} onclick="playWordAudio(this)" class="logMenuButton mdl-button mdl-js-button mdl-button--icon">
           <i style="line-height: 20px !important;" class="material-icons">play_circle_filled</i>
         </button>`;
       }
@@ -159,16 +159,12 @@ async function translate(text) {
 }
 
 function playWordAudio(audioButton) {
-  const logId = audioButton.getAttribute('log_id');
-  const log = getLogById(logId);
-  if (log) {
-    const kanji = log.dictionary[0].headword;
-    const kana = log.dictionary[0].reading;
-    const src =`https://assets.languagepod101.com/dictionary/japanese/audiomp3.php?kanji=${kanji}&kana=${kana}`;
-    const audio = new Audio(src);
+  const audioUrl = audioButton.getAttribute('audio_url');
+  if (audioUrl) {
+    const audio = new Audio(audioUrl);
     audio.play();
   } else {
-    notify('Cannot find Log');
+    notify('Cannot find Audio');
   }
 }
 

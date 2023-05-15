@@ -57,6 +57,22 @@ function launchAnkiFormByLogId(logId) {
   }
 }
 
+// Consolidate the getDictionaries to ensure that order and
+// content matches the card as well as the anki card
+function getDictionaries(logId) {
+  const log = getLogById(logId);
+  const preferJisho = false; // TODO: Make this a config setting
+  const jishoDicts = log.jisho || [];
+  const otherDicts = log.dictionary || [];
+
+  const dicts = preferJisho ? [...jishoDicts, ...otherDicts] : [...otherDicts, ...jishoDicts];
+
+  const filteredDicts = filterDicts(sortDicts(dicts));
+  const { dictionaries } = extractOtherForms(filteredDicts);
+
+  return dictionaries;
+}
+
 // Grab all entries from the glassory lists
 function getDictionaryEntries(dictionary) {
   return dictionary.map((dic) => {
@@ -81,8 +97,8 @@ function formatCard(logId, cardElement) {
   addCardToAnkiButton.setAttribute("log_id", logId);
 
   // Sort the dictionaries to match yomichan and then grab all entries that have the same sequence
-  const filteredDicts = filterDicts(sortDicts(log.dictionary || []))
-  const { dictionaries } = extractOtherForms(filteredDicts)
+  const dictionaries = getDictionaries(logId)
+
   if (log.selectedText) {
     let selectedTextPreview = log.selectedText;
     if (dictionaries.length > 0) {
@@ -266,13 +282,13 @@ async function addCardToAnki(logId) {
     sentence: log.text,
     sentencetranslation: translation,
   }
+
+  const dictionaries = getDictionaries(logId)
+
   if (log.selectedText) {
     noteData['selectedtext'] = log.selectedText;
   }
-  if (log.dictionary) {
-  const filteredDicts = filterDicts(sortDicts(log.dictionary))
-  const { dictionaries } = extractOtherForms(filteredDicts)
-
+  if (dictionaries.length > 0 ) {
     noteData['selectedtext'] = dictionaries[0].headword
     noteData['glossary'] = getDictionaryEntries(dictionaries).map((entry) => `<li>${entry}</li>`).join('')
     if (dictionaries[0].reading) {

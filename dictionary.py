@@ -82,11 +82,16 @@ def look_up_jisho(word):
         for item in data:
             forms = []
             for form in item['japanese']:
-                forms.append(f"{form['word']}[{form['reading']}]")
+                word = form.get('word', '')
+                reading = form.get('reading', '')
+                if word == '':
+                    forms.append(f"{reading}")
+                else:
+                    forms.append(f"{word}[{reading}]")
             for sense in item['senses']:
                 dictionaries.append({
-                    'headword': item['japanese'][0]['word'],
-                    'reading': item['japanese'][0]['reading'],
+                    'headword': item['japanese'][0].get('word', ''),
+                    'reading': item['japanese'][0].get('reading', ''),
                     'tags': ' '.join(sense['tags']),
                     'glossary_list': sense['english_definitions'],
                     'sequence': item['slug'],

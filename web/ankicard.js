@@ -384,19 +384,29 @@ function extractContent(obj) {
 }
 
 // Sorts the dictionaries based on their tags so that the first result matches yomichan
+// Prefer words that have both headword and reading
 function sortDicts(dicts) {
   const sortedArr = dicts.sort((a, b) => {
-    const aNum = Number(a.tags.split(' ')[0]); // Get the number from the tags key of a
-    const bNum = Number(b.tags.split(' ')[0]); // Get the number from the tags key of b
+    const hasWordAndReadingA = a.headword && a.reading;
+    const hasWordAndReadingB = b.headword && b.reading;
 
-    if (isNaN(aNum) && isNaN(bNum)) { // If both a and b don't have numbers in their tags key
-      return 0; // Leave them in the current order
-    } else if (isNaN(aNum)) { // If a doesn't have a number in its tags key
-      return 1; // Put a after b
-    } else if (isNaN(bNum)) { // If b doesn't have a number in its tags key
-      return -1; // Put b after a
-    } else { // If both a and b have numbers in their tags key
-      return aNum - bNum; // Sort them in ascending order of the number in the tags key
+    if (hasWordAndReadingA && !hasWordAndReadingB) {
+      return -1; // Put a before b
+    } else if (!hasWordAndReadingA && hasWordAndReadingB) {
+      return 1; // Put b before a
+    } else {
+      const aNum = Number(a.tags.split(' ')[0]);
+      const bNum = Number(b.tags.split(' ')[0]);
+
+      if (isNaN(aNum) && isNaN(bNum)) { // If both a and b don't have numbers in their tags key
+        return 0; // Leave them in the current order
+      } else if (isNaN(aNum)) { // If a doesn't have a number in its tags key
+        return 1; // Put a after b
+      } else if (isNaN(bNum)) { // If b doesn't have a number in its tags key
+        return -1; // Put b after a
+      } else { // If both a and b have numbers in their tags key
+        return aNum - bNum; // Sort them in ascending order of the number in the tags key
+      }
     }
   });
 

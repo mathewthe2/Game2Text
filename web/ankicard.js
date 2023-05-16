@@ -76,7 +76,10 @@ function getDictionaries(logId) {
 // Grab all entries from the glassory lists
 function getDictionaryEntries(dictionary) {
   return dictionary.map((dic) => {
-    return extractContent(dic.glossary_list).join('; ')
+    const partsOfSpeech = dic.parts_of_speech || []
+    const glossaryList = extractContent(dic.glossary_list).join('; ')
+    const speech = partsOfSpeech.length > 0 ? `<i>${partsOfSpeech.join(', ')}</i><br/>` : ''
+    return `${speech}${glossaryList}`
   })
 }
 

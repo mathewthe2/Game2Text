@@ -94,6 +94,7 @@ function initConfig () {
             const ankiConfig = config[ANKI_CONFIG];
             initSetAnkiTags(ankiConfig['cardtags']);
             initSetAnkiDictionaries(ankiConfig['anki_dictionary']);
+            initSetAnkiJisho(ankiConfig['anki_prefer_jisho']);
             // Texthooker
             const texthookerConfig = config[TEXTHOOKER_CONFIG];
             // initSetRemoveRepeatedSentencesSwitch(texthookerConfig['remove_repeat_mode']);
@@ -554,11 +555,22 @@ async function initSetAnkiDictionaries(defaultDictionary) {
     })
 }
 
+async function initSetAnkiJisho(preferJisho) {
+    const checked = preferJisho === 'true'
+    if (!checked) { return }
+
+    document.getElementById('jisho-switch').parentElement.MaterialSwitch.on()
+}
+
 async function selectDictionary() {
     if (dictionarySelect.value) {
         eel.set_dictionary(dictionarySelect.value)();
         eel.update_config(ANKI_CONFIG, {'anki_dictionary': dictionarySelect.value});
     }
+}
+
+async function setPreferJisho(value) {
+    eel.update_config(ANKI_CONFIG, {'anki_prefer_jisho': String(value.checked)});
 }
 
 /**

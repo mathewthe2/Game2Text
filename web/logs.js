@@ -1,5 +1,3 @@
-const ANKI_CONFIG = 'ANKICONFIG';
-
 let currentLogs = [];
 window.tippyInstances = [];
 let activeCardLogId = '';

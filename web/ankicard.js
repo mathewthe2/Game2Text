@@ -1,4 +1,9 @@
-console.log('ankicard stuff')
+const ANKI_CONFIG = 'ANKICONFIG';
+
+let preferJisho
+eel.read_config(ANKI_CONFIG, 'anki_prefer_jisho')().then((prefer) => {
+  preferJisho = prefer === 'true'
+})
 
 function createAnkiFormCard() {
   createAnkiFormCardTippy(document.querySelectorAll('.showAnkiFormButton'))
@@ -61,10 +66,8 @@ function launchAnkiFormByLogId(logId) {
 // content matches the card as well as the anki card
 function getDictionaries(logId) {
   const log = getLogById(logId);
-  const preferJisho = false; // TODO: Make this a config setting
   const jishoDicts = log.jisho || [];
   const otherDicts = log.dictionary || [];
-
   const dicts = preferJisho ? [...jishoDicts, ...otherDicts] : [...otherDicts, ...jishoDicts];
 
   const filteredDicts = filterDicts(sortDicts(dicts));

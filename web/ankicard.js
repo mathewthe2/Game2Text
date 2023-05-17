@@ -267,6 +267,11 @@ async function addLogAudioIfExists(logId) {
     const kana = katakanaToHiragana(reading);
     let audioUrl = await eel.get_jpod_url(kanji, kana)();
 
+    // If audio fails try again without the kanji
+    if(!audioUrl) {
+      audioUrl = await eel.get_jpod_url('', kana)();
+    }
+
     if (audioUrl) {
       dictionary.audio = audioUrl;
       refreshCardContent(logId);

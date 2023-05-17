@@ -263,8 +263,10 @@ async function addLogAudioIfExists(logId) {
   const reading = dictionary?.reading
   if (reading) {
     const kanji = headword;
-    const kana = reading;
-    const audioUrl = await eel.get_jpod_url(kanji, kana)();
+    // Convert reading to hiragana for better results
+    const kana = katakanaToHiragana(reading);
+    let audioUrl = await eel.get_jpod_url(kanji, kana)();
+
     if (audioUrl) {
       dictionary.audio = audioUrl;
       refreshCardContent(logId);
@@ -426,4 +428,12 @@ function extractOtherForms(dicts) {
   const forms = dicts.filter(item => item.tags === 'forms')
 
   return { dictionaries, forms }
+}
+
+function katakanaToHiragana(text) {
+  return text.replace(/[\u30A1-\u30F6]/g, function(match) {
+    const hiraganaOffset = 0x60;
+    const hiraganaChar = String.fromCharCode(match.charCodeAt(0) - hiraganaOffset);
+    return hiraganaChar;
+  })
 }

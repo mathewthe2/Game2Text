@@ -399,7 +399,7 @@ function extractContent(obj) {
 // Sorts the dictionaries based on their tags so that the first result matches yomichan
 // Prefer words that have both headword and reading
 function sortDicts(dicts) {
-  const sortedArr = dicts.sort((a, b) => {
+  const sortedArr = [...dicts].sort((a, b) => {
     const hasWordAndReadingA = a.headword && a.reading;
     const hasWordAndReadingB = b.headword && b.reading;
 

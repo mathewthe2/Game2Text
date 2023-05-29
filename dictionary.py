@@ -89,8 +89,9 @@ def look_up_jisho(word):
                 else:
                     forms.append(f"{word}[{reading}]")
             for sense in item['senses']:
+                reading = item['japanese'][0].get('reading', '')
                 dictionaries.append({
-                    'headword': item['japanese'][0].get('word', ''),
+                    'headword': item['japanese'][0].get('word', reading),
                     'reading': item['japanese'][0].get('reading', ''),
                     'tags': ' '.join(sense['tags']),
                     'glossary_list': sense['english_definitions'],

@@ -193,6 +193,32 @@ body {
     box-sizing:border-box;
     align-items: center;
 }
+
+.addCardBodyContainer .card_card_glossary ul {
+    padding: 0;
+    list-style: none;
+}
+
+/* Keep a br tag on the code for Anki imports but don't actually show it */
+.addCardBodyContainer .card_card_glossary ul br {
+    display: none;
+}
+
+.addCardBodyContainer .card_card_glossary ul li {
+    position: relative;
+    padding-bottom: 14px;
+    line-height: 1.2;
+}
+
+/* Parts of speech should be greyed out */
+.addCardBodyContainer .card_card_glossary ul li i {
+    font-size: 10px;
+    color: var(--disabled);
+    display: inline-block;
+    line-height: normal;
+    width: 100%;
+}
+
 @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }

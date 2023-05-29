@@ -70,6 +70,40 @@ def look_up(word):
     } for entry in dictionary_map[word]]
     return result
 
+def look_up_jisho(word):
+    url = f"https://jisho.org/api/v1/search/words?keyword={word}"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()["data"]
+        dictionaries = []
+
+        # For each item in data we want to loop through the senses array and return and object that matches the current dictionaries
+        for item in data:
+            forms = []
+            for form in item['japanese']:
+                word = form.get('word', '')
+                reading = form.get('reading', '')
+                if word == '':
+                    forms.append(f"{reading}")
+                else:
+                    forms.append(f"{word}[{reading}]")
+            for sense in item['senses']:
+                reading = item['japanese'][0].get('reading', '')
+                dictionaries.append({
+                    'headword': item['japanese'][0].get('word', reading),
+                    'reading': item['japanese'][0].get('reading', ''),
+                    'tags': ' '.join(sense['tags']),
+                    'glossary_list': sense['english_definitions'],
+                    'sequence': item['slug'],
+                    'parts_of_speech': sense['parts_of_speech'],
+                    'forms': forms,
+                })
+
+        return dictionaries
+
+    return None
+
 def get_jpod_audio(url):
     try:
         requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)

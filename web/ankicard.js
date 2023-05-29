@@ -402,28 +402,56 @@ function sortDicts(dicts) {
   const sortedArr = [...dicts].sort((a, b) => {
     const hasWordAndReadingA = a.headword && a.reading;
     const hasWordAndReadingB = b.headword && b.reading;
+    const hasPartsOfSpeechA = a.parts_of_speech && a.parts_of_speech.length > 0;
+    const hasPartsOfSpeechB = b.parts_of_speech && b.parts_of_speech.length > 0;
 
     if (hasWordAndReadingA && !hasWordAndReadingB) {
       return -1; // Put a before b
     } else if (!hasWordAndReadingA && hasWordAndReadingB) {
       return 1; // Put b before a
+    } else if (hasPartsOfSpeechA && !hasPartsOfSpeechB) {
+      return -1; // Put a before b
+    } else if (!hasPartsOfSpeechA && hasPartsOfSpeechB) {
+      return 1; // Put b before a
     } else {
-      const aNum = Number(a.tags.split(' ')[0]);
-      const bNum = Number(b.tags.split(' ')[0]);
+      const aTags = a.tags.trim();
+      const bTags = b.tags.trim();
+
+      // When a word has many matches we usually want to prioritize common tags
+      const prioritizedTags = ['Familiar language'];
+
+      // Check if a tag is a prioritized tag
+      const isPrioritizedTag = (tag) => prioritizedTags.includes(tag);
+
+      // Compare tags
+      const compareTags = (tagA, tagB) => {
+        if (isPrioritizedTag(tagA) && !isPrioritizedTag(tagB)) {
+          return -1; // Put a before b
+        } else if (!isPrioritizedTag(tagA) && isPrioritizedTag(tagB)) {
+          return 1; // Put b before a
+        } else {
+          return 0; // Leave them in the current order
+        }
+      };
+
+      const aNum = aTags !== "" ? parseInt(aTags.split(' ')[0]) : NaN;
+      const bNum = bTags !== "" ? parseInt(bTags.split(' ')[0]) : NaN;
 
       if (isNaN(aNum) && isNaN(bNum)) { // If both a and b don't have numbers in their tags key
-        return 0; // Leave them in the current order
+        return compareTags(aTags, bTags);
       } else if (isNaN(aNum)) { // If a doesn't have a number in its tags key
         return 1; // Put a after b
       } else if (isNaN(bNum)) { // If b doesn't have a number in its tags key
         return -1; // Put b after a
-      } else { // If both a and b have numbers in their tags key
+      } else if (aNum !== bNum) { // If both a and b have numbers in their tags key
         return aNum - bNum; // Sort them in ascending order of the number in the tags key
+      } else {
+        return compareTags(aTags, bTags);
       }
     }
   });
 
-  return sortedArr
+  return sortedArr;
 }
 
 // Given a list of dictionaries only return the ones that match the sequence of the first element

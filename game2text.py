@@ -5,7 +5,7 @@ from pathlib import Path
 from ocr import detect_and_log
 from translate import multi_translate
 from hotkeys import hotkey_map
-from util import RepeatedTimer, create_directory_if_not_exists, get_default_browser_name, get_PID_list, format_output, remove_duplicate_characters, remove_spaces
+from util import RepeatedTimer, create_directory_if_not_exists, get_default_browser_name, get_PID_list, format_output
 from textractor import Textractor
 from tools import path_to_textractor, open_folder_textractor_path
 from pynput import keyboard

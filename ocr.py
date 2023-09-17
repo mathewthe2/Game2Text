@@ -48,4 +48,5 @@ def tesseract_ocr(image, text_orientation):
     return result
 
 tesseract_cmd, platform_name = path_to_tesseract()
-pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+if tesseract_cmd is not None:
+    pytesseract.pytesseract.tesseract_cmd = tesseract_cmd

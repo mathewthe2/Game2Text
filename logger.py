@@ -1,19 +1,21 @@
-import time
-import os
-import re
-import eel
-import glob
 import base64
 import codecs
-import threading
+import glob
+import os
 import platform
-from pathlib import Path
+import re
+import threading
+import time
 from datetime import datetime
-from config import r_config, LOG_CONFIG
-from util import create_directory_if_not_exists, base64_to_image_path
+from pathlib import Path
+
+import eel
+
 from audio import play_audio_from_file
+from config import LOG_CONFIG, r_config
 from gamescript import add_matching_script_to_logs
 from tools import bundle_dir
+from util import base64_to_image_path, create_directory_if_not_exists
 
 TEXT_LOG_PATH = Path(bundle_dir, "logs", "text")
 IMAGE_LOG_PATH = Path(bundle_dir, "logs", "images")

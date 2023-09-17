@@ -1,7 +1,9 @@
-import translators as ts
-import requests
 import time
-from config import r_config, TRANSLATION_CONFIG
+
+import requests
+import translators as ts
+
+from config import TRANSLATION_CONFIG, r_config
 
 
 def multi_translate(text):

@@ -1,13 +1,14 @@
-import zipfile
-import json
-import requests
 import base64
-from sudachipy import tokenizer
-from sudachipy import dictionary
-from tools import bundle_dir
-from pathlib import Path
-from config import r_config, ANKI_CONFIG
 import glob
+import json
+import zipfile
+from pathlib import Path
+
+import requests
+from sudachipy import dictionary, tokenizer
+
+from config import ANKI_CONFIG, r_config
+from tools import bundle_dir
 
 dictionary_map = {}
 pitch_dictionary_map = {}

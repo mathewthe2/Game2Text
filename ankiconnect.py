@@ -1,11 +1,13 @@
 import json
 import urllib.request
+from pathlib import Path
+
 import eel
 import yaml
-from pathlib import Path
-from logger import AUDIO_LOG_PATH
-from config import r_config, ANKI_CONFIG
+
+from config import ANKI_CONFIG, r_config
 from dictionary import get_jpod_audio_base64
+from logger import AUDIO_LOG_PATH
 from tools import bundle_dir
 
 ANKI_MODELS_FILENAME = "ankimodels.yaml"

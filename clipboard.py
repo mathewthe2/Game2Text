@@ -1,5 +1,5 @@
-import pyperclip
 import eel
+import pyperclip
 
 previous_text = ""
 

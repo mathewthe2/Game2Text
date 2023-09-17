@@ -1,6 +1,6 @@
-from configparser import ConfigParser
 import os
 import platform
+from configparser import ConfigParser
 
 OCR_CONFIG = "OCRCONFIG"
 TRANSLATION_CONFIG = "TRANSLATIONCONFIG"

@@ -1,5 +1,6 @@
 import eel
-from config import r_config, HOTKEYS_CONFIG
+
+from config import HOTKEYS_CONFIG, r_config
 
 
 def refresh_ocr_hotkey():

@@ -1,11 +1,13 @@
-from threading import Timer
-from pathlib import Path
-import os
-import psutil
-import platform
 import base64
+import os
+import platform
+from pathlib import Path
+from threading import Timer
+
 import cv2
 import eel
+import psutil
+
 from tools import bundle_dir
 
 try:

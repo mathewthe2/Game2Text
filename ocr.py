@@ -1,10 +1,12 @@
-import pytesseract
 from pathlib import Path
-from logger import log_text, log_media
-from config import r_config, OCR_CONFIG
+
+import pytesseract
+
+from config import OCR_CONFIG, r_config
+from logger import log_media, log_text
+from ocr_space import OCRSPACE_API_URL_EU, OCRSPACE_API_URL_USA, ocr_space_file
+from tools import bundle_dir, get_tessdata_dir, path_to_tesseract
 from util import base64_to_image, base64_to_image_path
-from tools import path_to_tesseract, get_tessdata_dir, bundle_dir
-from ocr_space import ocr_space_file, OCRSPACE_API_URL_USA, OCRSPACE_API_URL_EU
 
 HORIZONTAL_TEXT_DETECTION = 6
 VERTICAL_TEXT_DETECTON = 5

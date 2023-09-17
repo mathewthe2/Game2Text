@@ -1,11 +1,13 @@
-from pydub import AudioSegment
-from pydub.playback import play
-import pyaudio
 import os
 import platform
 from pathlib import Path
+
 import eel
-from config import r_config, LOG_CONFIG
+import pyaudio
+from pydub import AudioSegment
+from pydub.playback import play
+
+from config import LOG_CONFIG, r_config
 from tools import path_to_ffmpeg
 
 ffmpeg_path = path_to_ffmpeg()

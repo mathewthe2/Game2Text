@@ -1,22 +1,27 @@
-import eel
-import threading, os, platform, time
+import os
+import platform
+import threading
+import time
 from pathlib import Path
-from ocr import detect_and_log
-from translate import multi_translate
-from hotkeys import hotkey_map
-from util import RepeatedTimer, create_directory_if_not_exists, get_default_browser_name, get_PID_list, format_output
-from textractor import Textractor
-from tools import path_to_textractor, open_folder_textractor_path
-from audio import get_recommended_device_index
-from recordaudio import RecordThread
+
+import eel
 from pynput import keyboard
+
+from ankiconnect import create_anki_note, fetch_anki_fields, get_anki_models, invoke, update_anki_models
+from audio import get_recommended_device_index
 from clipboard import clipboard_to_output, text_to_clipboard
-from logger import get_time_string, log_text, log_media, update_log_text, AUDIO_LOG_PATH
-from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki_note, fetch_anki_fields
-from imageprofile import export_image_profile, load_image_profiles, open_image_profile
+from config import APP_CONFIG, LOG_CONFIG, TEXTHOOKER_CONFIG, r_config, r_config_all, r_config_section, w_config
+from dictionary import get_jpod_audio_url, get_local_dictionaries, load_all_dictionaries, load_dictionary, look_up
 from gamescript import load_game_scripts, open_game_script
-from dictionary import load_all_dictionaries, look_up, get_local_dictionaries, load_dictionary, get_jpod_audio_url
-from config import r_config, r_config_all, r_config_section, w_config, APP_CONFIG, LOG_CONFIG, TEXTHOOKER_CONFIG
+from hotkeys import hotkey_map
+from imageprofile import export_image_profile, load_image_profiles, open_image_profile
+from logger import AUDIO_LOG_PATH, get_time_string, log_media, log_text, update_log_text
+from ocr import detect_and_log
+from recordaudio import RecordThread
+from textractor import Textractor
+from tools import open_folder_textractor_path, path_to_textractor
+from translate import multi_translate
+from util import RepeatedTimer, create_directory_if_not_exists, format_output, get_default_browser_name, get_PID_list
 
 session_start_time = get_time_string()
 textractor = None

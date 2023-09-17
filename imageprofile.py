@@ -1,8 +1,10 @@
-import yaml
 import glob
 from pathlib import Path
 from tkinter import *
-from tkinter.filedialog import asksaveasfile, askopenfile
+from tkinter.filedialog import askopenfile, asksaveasfile
+
+import yaml
+
 from tools import bundle_dir
 
 IMAGE_PROFILE_PATH = Path(bundle_dir, "profiles")

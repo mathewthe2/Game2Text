@@ -1,9 +1,11 @@
-import threading
-import pyaudio
-import wave
 import os
 import platform
-from audio import valid_output_device, convert_audio
+import threading
+import wave
+
+import pyaudio
+
+from audio import convert_audio, valid_output_device
 
 
 class RecordThread(threading.Thread):

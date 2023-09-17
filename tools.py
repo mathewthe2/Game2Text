@@ -1,9 +1,11 @@
-import sys, os
+import os
 import platform
+import sys
 from pathlib import Path
-from config import r_config, w_config, OCR_CONFIG, PATHS_CONFIG
 from tkinter import *
 from tkinter.filedialog import askopenfile
+
+from config import OCR_CONFIG, PATHS_CONFIG, r_config, w_config
 
 try:
     is_compiled_with_pyinstaller = sys._MEIPASS is not None

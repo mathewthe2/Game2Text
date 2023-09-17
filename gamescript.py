@@ -1,10 +1,12 @@
 import glob
 from pathlib import Path
+from shutil import copyfile
 from tkinter import *
 from tkinter.filedialog import askopenfile
-from shutil import copyfile
+
 from fuzzywuzzy import process
-from config import r_config, w_config, LOG_CONFIG, SCRIPT_MATCH_CONFIG
+
+from config import LOG_CONFIG, SCRIPT_MATCH_CONFIG, r_config, w_config
 from tools import bundle_dir
 
 GAME_SCRIPT_PATH = Path(bundle_dir, "gamescripts")

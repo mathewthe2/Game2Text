@@ -1,15 +1,16 @@
-from parse import parse
+# import re
+import os
+import platform
+import sys
 
 # from pathlib import Path
 import time
 
-# import re
-import os, sys
+from parse import parse
 
 # import threading
 from tools import path_to_wexpect
 from util import RepeatedTimer
-import platform
 
 is_windows = platform.system() == "Windows"
 if is_windows:

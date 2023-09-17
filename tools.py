@@ -22,10 +22,7 @@ def path_to_ffmpeg():
         return str(Path(bundle_dir, "resources", "bin", "win", "ffmpeg", "ffmpeg.exe"))
     elif platform_name == 'Darwin':
         return str(Path(bundle_dir, "resources", "bin", "mac", "ffmpeg", "ffmpeg"))
-    return ''
-
-def path_to_ffmpeg_folder():
-    return str(Path(path_to_ffmpeg()).parent)
+    return None
 
 def path_to_tesseract():
     exec_data = {"Windows": str(Path(WIN_TESSERACT_DIR, "tesseract.exe")),

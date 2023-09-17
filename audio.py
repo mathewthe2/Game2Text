@@ -13,7 +13,8 @@ if ffmpeg_path is not None:
     AudioSegment.ffmpeg = ffmpeg_path
     os.environ["PATH"] += os.pathsep + str(Path(ffmpeg_path).parent)
 
- # User config device exists? use config device, if not check if (1) valid, use (1), if not no audio
+
+# User config device exists? use config device, if not check if (1) valid, use (1), if not no audio
 @eel.expose
 def get_recommended_device_index(audio_host):
     config_device_name = r_config(LOG_CONFIG, "logaudiodevice")
@@ -26,9 +27,10 @@ def get_recommended_device_index(audio_host):
         return default_device_index
     return -1
 
+
 def get_default_device_index():
     p = pyaudio.PyAudio()
-    #Set default to first in list or ask Windows
+    # Set default to first in list or ask Windows
     try:
         default_device_index = p.get_default_input_device_info()
     except IOError:
@@ -37,7 +39,8 @@ def get_default_device_index():
     p.terminate()
     return info["index"]
 
-#Select Device
+
+# Select Device
 @eel.expose
 def get_audio_objects():
     p = pyaudio.PyAudio()
@@ -46,19 +49,21 @@ def get_audio_objects():
         info = p.get_device_info_by_index(i)
         audio_host = p.get_host_api_info_by_index(info["hostApi"])["name"]
         if valid_output_device(info["index"]):
-            audio_objects.setdefault(audio_host,[]).append({info["index"]: info["name"]})
+            audio_objects.setdefault(audio_host, []).append({info["index"]: info["name"]})
     p.terminate()
     return audio_objects
+
 
 def get_audio_device_index_by_name(audio_host, device_name):
     p = pyaudio.PyAudio()
     for i in range(0, p.get_device_count()):
         info = p.get_device_info_by_index(i)
-        if (info["name"] == device_name and p.get_host_api_info_by_index(info["hostApi"])["name"] == audio_host):
+        if info["name"] == device_name and p.get_host_api_info_by_index(info["hostApi"])["name"] == audio_host:
             p.terminate()
             return info["index"]
     p.terminate()
     return -1
+
 
 def valid_output_device(deviceIndex):
     if not isinstance(deviceIndex, int):
@@ -68,7 +73,7 @@ def valid_output_device(deviceIndex):
     p = pyaudio.PyAudio()
     device_info = p.get_device_info_by_index(deviceIndex)
     is_input = device_info["maxInputChannels"] > 0
-    is_windows = (platform.system() == 'Windows')
+    is_windows = platform.system() == "Windows"
     is_wasapi = (p.get_host_api_info_by_index(device_info["hostApi"])["name"]).find("WASAPI") != -1
     p.terminate()
     if is_input:
@@ -78,11 +83,13 @@ def valid_output_device(deviceIndex):
             return True
     return True
 
+
 def play_audio_from_file(file):
     filename, file_extension = os.path.splitext(file)
     song = AudioSegment.from_file(file, file_extension[1:])
     play(song)
     return song.duration_seconds
+
 
 def convert_audio(in_file, out_file):
     filename, file_extension = os.path.splitext(out_file)

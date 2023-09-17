@@ -29,7 +29,7 @@ def path_to_tesseract():
                     "Darwin": str(Path(OSX_TESSERACT_DIR, "bin", "tesseract")),
                 }
     platform_name = platform.system()  # E.g. 'Windows'
-    return exec_data.get(platform_name)
+    return exec_data.get(platform_name), platform_name
 
 def get_tessdata_dir():
     platform_name = platform.system() 

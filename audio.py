@@ -4,7 +4,6 @@ import pyaudio
 import os
 import platform
 from pathlib import Path
-from shutil import copyfile
 import eel
 from config import r_config, LOG_CONFIG
 from tools import path_to_ffmpeg

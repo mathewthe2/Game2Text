@@ -1,0 +1,27 @@
+name: Linters
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  isort:
+    name: isort
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: isort/isort-action@v1.1.0
+        with:
+          configuration: "--check --diff"
+
+  black:
+    name: black
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: psf/black@stable
+        with:
+          options: "--check --diff"
+          version: "~= 23.0"

@@ -2,8 +2,8 @@ import zipfile
 import json
 import requests
 import base64
-from sudachipy import tokenizer
-from sudachipy import dictionary
+# from sudachipy import tokenizer
+# from sudachipy import dictionary
 from tools import bundle_dir
 from pathlib import Path
 from config import r_config, ANKI_CONFIG
@@ -13,8 +13,8 @@ dictionary_map = {}
 pitch_dictionary_map = {}
 
 # Sudachi Parser
-tokenizer_obj = dictionary.Dictionary(dict_type='small').create()
-mode = tokenizer.Tokenizer.SplitMode.A
+# tokenizer_obj = dictionary.Dictionary(dict_type='small').create()
+# mode = tokenizer.Tokenizer.SplitMode.A
 
 DICTIONARY_PATH = Path(bundle_dir, 'resources', 'dictionaries')
 
@@ -57,8 +57,9 @@ def load_dictionary(dictionary_name):
 def look_up(word):
     word = word.replace(" ", "")
     if word not in dictionary_map:
-        m = tokenizer_obj.tokenize(word, mode)[0]
-        word = m.dictionary_form()
+        # m = tokenizer_obj.tokenize(word, mode)[0]
+        # word = m.dictionary_form()
+        word = "TODO: add dict"
         if word not in dictionary_map:
             return None
     result = [{

@@ -12,11 +12,11 @@ VERTICAL_TEXT_DETECTON = 5
 def get_temp_image_path():
     return str(Path(bundle_dir,"logs", "images", "temp.png"))
 
-def detect_and_log(engine, cropped_image,  text_orientation, session_start_time, request_time, audio_recorder):
+def detect_and_log(engine, cropped_image,  text_orientation, session_start_time, request_time):
     result = image_to_text(engine, cropped_image, text_orientation)
     if result is not None:
         log_text(session_start_time, request_time, result)
-        log_media(session_start_time, request_time, audio_recorder)
+        log_media(session_start_time, request_time)
         return {'id': request_time, 'result': result }
     else:
         return {'error': 'OCR Failed'}

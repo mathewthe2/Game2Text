@@ -1,9 +1,6 @@
 from parse import parse
-# from pathlib import Path
 import time
-# import re
 import os, sys
-# import threading
 from tools import path_to_wexpect
 from util import RepeatedTimer
 import platform
@@ -140,7 +137,7 @@ class Textractor(object):
                 line = result.named['text']
                 while (parse(self.format_grouped_string, line)):
                     result = parse(self.format_grouped_string, line)
-                    line = ''.join(line.splitlines())
+                    # line = ''.join(line.splitlines())
                     line = result.named['text']
                     previous_object = previous_result.named
                     previous_object['text'] = result.named['prev_text']

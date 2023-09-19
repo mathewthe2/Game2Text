@@ -6,7 +6,6 @@ import glob
 import base64
 import codecs
 import threading
-import platform
 from pathlib import Path
 from datetime import datetime
 from config import r_config, LOG_CONFIG
@@ -16,7 +15,6 @@ from tools import bundle_dir
 
 TEXT_LOG_PATH = Path(bundle_dir, 'logs', 'text')
 IMAGE_LOG_PATH = Path(bundle_dir, 'logs', 'images')
-AUDIO_LOG_PATH = Path(bundle_dir, 'logs', 'audio')
 
 game_script_matcher = None
 
@@ -116,7 +114,7 @@ def text_to_log(text, file_path):
         'folder': Path(file_path).stem,
         'image': image,
         'image_type': image_type,
-        'audio': get_audio_file_name(log_id, Path(file_path).stem),
+        'audio': '', # TODO: get audio file path
         'hours': get_hours_string(date),
         'text': text[16:]
     }
@@ -230,26 +228,6 @@ def insert_newest_log_with_image(base64_image_string, image_type):
 
 def insert_newest_log_without_image():
     eel.addLogs([get_latest_log()])()
-
-@eel.expose
-def delete_audio_file(log_id, folder_name):
-    file = get_audio_file_name(log_id, folder_name)
-    if (file):
-        full_path = Path(AUDIO_LOG_PATH, folder_name, file)
-        os.remove(full_path)
-        return True
-    else:
-        return False
-
-def get_audio_file_name(log_id, folder_name):
-    path = Path(AUDIO_LOG_PATH, folder_name)
-    if not path.is_dir():
-        return None
-    file_name = next((f for f in os.listdir(path) if re.match('{}.(?:wav|mp3|mp4|ogg|wma|aac|aiff|flv|m4a|flac)$'.format(log_id), f)), None)
-    # Temporary fix for Mac OS: change file type since mp3 hasn't finished converting
-    if platform.system() == 'Darwin':
-        file_name = log_id + '.' + r_config(LOG_CONFIG, 'logaudiotype')
-    return file_name
 
 # Middleman for selected main window to launch add card in log window
 @eel.expose

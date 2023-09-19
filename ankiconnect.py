@@ -3,7 +3,6 @@ import urllib.request
 import eel
 import yaml
 from pathlib import Path
-from logger import AUDIO_LOG_PATH
 from config import r_config, ANKI_CONFIG
 from dictionary import get_jpod_audio_base64
 from tools import bundle_dir 
@@ -96,7 +95,7 @@ def create_anki_note(note_data):
         audio_params = {
             'filename': note_data['audio'],
             'fields': audio_fields,
-            'path':  str(Path(AUDIO_LOG_PATH, note_data['folder'], note_data['audio']))
+            'path':  '' # TODO: add audio path
         }
         note_params['note']['audio'] = [audio_params]
     if (word_audio_fields):

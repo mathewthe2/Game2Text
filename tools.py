@@ -16,17 +16,10 @@ OSX_TESSERACT_VERSION = "4.1.1"
 WIN_TESSERACT_DIR = Path(bundle_dir, "resources", "bin", "win", "tesseract")
 OSX_TESSERACT_DIR = Path(bundle_dir, "resources", "bin", "mac", "tesseract", OSX_TESSERACT_VERSION)
 
-def path_to_ffmpeg():
-    platform_name = platform.system()
-    if platform_name == 'Windows':
-        return str(Path(bundle_dir, "resources", "bin", "win", "ffmpeg", "ffmpeg.exe"))
-    elif platform_name == 'Darwin':
-        return str(Path(bundle_dir, "resources", "bin", "mac", "ffmpeg", "ffmpeg"))
-    return None
-
 def path_to_tesseract():
-    exec_data = {"Windows": str(Path(WIN_TESSERACT_DIR, "tesseract.exe")),
-                    "Darwin": str(Path(OSX_TESSERACT_DIR, "bin", "tesseract")),
+    exec_data = {
+                  "Windows": str(Path(WIN_TESSERACT_DIR, "tesseract.exe")),
+                  "Darwin": str(Path(OSX_TESSERACT_DIR, "bin", "tesseract")),
                 }
     platform_name = platform.system()  # E.g. 'Windows'
     return exec_data.get(platform_name)

@@ -8,7 +8,6 @@
 
 # Logs
 logs/text/*.txt
-logs/audio/
 
 # Sudachi Dict
 sudachidict_small/

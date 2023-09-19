@@ -14,7 +14,6 @@ const OEM_CONFIG = {
 let currentConfig = {}
 let logImageType = 'jpg';
 let logImageQuality = 1.0;
-let audioDevices = {};
 
 const outputToClipboardSwitch = document.getElementById("output-to-clipboard-mode-switch");
 const clipboardModeSwitch = document.getElementById("clipboard-mode-switch");
@@ -29,13 +28,6 @@ const translationSelect = document.getElementById("translation_select");
 const translationSelectContainer = document.getElementById("translation_select_container");
 const sourceLanguageInput = document.getElementById('source_language_input');
 const targetLanguageInput = document.getElementById('target_language_input');
-
-// Audio Control Elements
-const audioHostSelector = document.getElementById("audio_host_selector");
-const audioHostSelect = document.getElementById("audio_host_select");
-const audioDeviceSelector = document.getElementById("audio_device_selector");
-const audioDeviceSelect = document.getElementById("audio_device_select");
-const audioDurationInput = document.getElementById("audio_duration_input");
 
 // Picture Control Elements
 const imageTypeInput = document.getElementById('image_type_input');
@@ -57,7 +49,6 @@ const removeRepeatSelect = document.getElementById('removeRepeatSelect');
 // Hotkeys
 const refreshHotkeyInput = document.getElementById('refreshHotkeyInput');
 const addToAnkiHotkeyInput = document.getElementById('addToAnkiHotkeyInput');
-const recordAudioHotkeyInput = document.getElementById('recordAudioHotkeyInput');
 
 initConfig();
 
@@ -87,9 +78,6 @@ function initConfig() {
             initSetImageResize({ isResizeScreenshot: logConfig['resize_screenshot'], screenshotMaxWidth: logConfig['resize_screenshot_max_width'], screenshotMaxHeight: logConfig['resize_screenshot_max_height'] });
             logImageQuality = logConfig['logimagequality'];
             logSessionMaxLogSize = logConfig['lastsessionmaxlogsize'];
-            initIsLogAudio(logConfig['logaudio']);
-            initSetAudioSources(logConfig['logaudiohost']);
-            initSetAudioDuration(logConfig['logaudioduration']);
             // Anki
             const ankiConfig = config[ANKI_CONFIG];
             initSetAnkiTags(ankiConfig['cardtags']);
@@ -106,7 +94,6 @@ function initConfig() {
             initHotkeys({
                 refreshHotkey: hotkeyConfig['refresh_ocr'],
                 addToAnkiHotkey: hotkeyConfig['add_to_anki'],
-                recordHotkey: hotkeyConfig['record_audio']
             });
         }
     })()
@@ -221,13 +208,6 @@ function changeImageType() {
     }
 }
 
-
-function initIsLogAudio(isLogAudio) {
-    if (isLogAudio === 'true') {
-        toggleLogAudio();
-        document.getElementById("log-audio-switch").parentElement.MaterialSwitch.on();
-    }
-}
 
 /*
  *
@@ -538,10 +518,9 @@ async function changeTextractorExecutablePath() {
  * 
  * Hotkeys
  */
-function initHotkeys({ refreshHotkey, addToAnkiHotkey, recordHotkey }) {
+function initHotkeys({ refreshHotkey, addToAnkiHotkey }) {
     refreshHotkeyInput.value = refreshHotkey;
     addToAnkiHotkeyInput.value = addToAnkiHotkey;
-    recordAudioHotkeyInput.value = recordHotkey;
 }
 
 function changeRefreshHotkey(input) {

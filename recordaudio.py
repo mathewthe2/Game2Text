@@ -1,9 +1,12 @@
-import threading
-import pyaudio
-import wave
 import os
 import platform
-from audio import valid_output_device, convert_audio
+import threading
+import wave
+
+import pyaudio
+
+from audio import convert_audio, valid_output_device
+
 
 class RecordThread(threading.Thread):
     def __init__(self, deviceIndex=-1, frames=512):
@@ -30,52 +33,58 @@ class RecordThread(threading.Thread):
         is_wasapi = (p.get_host_api_info_by_index(device_info["hostApi"])["name"]).find("WASAPI") != -1
         useloopback = is_wasapi and not is_input
         # Open stream
-        channelcount = device_info["maxInputChannels"] if (device_info["maxOutputChannels"] < device_info["maxInputChannels"]) else device_info["maxOutputChannels"]
+        channelcount = (
+            device_info["maxInputChannels"]
+            if (device_info["maxOutputChannels"] < device_info["maxInputChannels"])
+            else device_info["maxOutputChannels"]
+        )
         try:
             stream_parameters = {
-                'format': pyaudio.paInt16,  
-                'channels': channelcount,
-                'rate': int(device_info["defaultSampleRate"]),
-                'input': True,
-                'frames_per_buffer': self.frames,
-                'input_device_index': device_info["index"]
+                "format": pyaudio.paInt16,
+                "channels": channelcount,
+                "rate": int(device_info["defaultSampleRate"]),
+                "input": True,
+                "frames_per_buffer": self.frames,
+                "input_device_index": device_info["index"],
             }
 
-            is_windows = (platform.system() == 'Windows')
+            is_windows = platform.system() == "Windows"
             if is_windows:
-                stream_parameters['as_loopback'] = useloopback
+                stream_parameters["as_loopback"] = useloopback
 
             stream = p.open(**stream_parameters)
-        
+
             # Start recording
             self.isRecording = True
             self.hasAudio = False
             while self.bRecord:
-                self.recorded_frames.append(stream.read(self.frames, exception_on_overflow = True))
+                self.recorded_frames.append(stream.read(self.frames, exception_on_overflow=True))
                 self.hasAudio = True
 
             stream.stop_stream()
             stream.close()
 
             # Don't save file if duration is 0
-            if (self.duration == 0):
+            if self.duration == 0:
                 p.terminate()
                 return
 
             file = self.audiofile
             filename, file_extension = os.path.splitext(file)
-            file_needs_conversion = file_extension != '.wav'
+            file_needs_conversion = file_extension != ".wav"
             if file_needs_conversion:
-                file = filename + '.wav'
-            waveFile = wave.open(file, 'wb')
+                file = filename + ".wav"
+            waveFile = wave.open(file, "wb")
             waveFile.setnchannels(channelcount)
             waveFile.setsampwidth(p.get_sample_size(pyaudio.paInt16))
             waveFile.setframerate(int(device_info["defaultSampleRate"]))
             start_frame = 0
-            trim_audio = (self.duration != -1)
+            trim_audio = self.duration != -1
             if trim_audio:
-                start_frame = len(self.recorded_frames) - int(int(device_info["defaultSampleRate"]) / self.frames * self.duration)
-            waveFile.writeframes(b''.join(self.recorded_frames[start_frame:]))
+                start_frame = len(self.recorded_frames) - int(
+                    int(device_info["defaultSampleRate"]) / self.frames * self.duration
+                )
+            waveFile.writeframes(b"".join(self.recorded_frames[start_frame:]))
             waveFile.close()
             p.terminate()
 
@@ -85,9 +94,9 @@ class RecordThread(threading.Thread):
                 os.remove(file)
 
         except Exception as e:
-            print('Error: cannot record audio with selected device', e)
-            
-    def stop_recording(self, audiofile='out.wav', duration = 10):
+            print("Error: cannot record audio with selected device", e)
+
+    def stop_recording(self, audiofile="out.wav", duration=10):
         self.audiofile = audiofile
         self.duration = duration
         self.bRecord = False

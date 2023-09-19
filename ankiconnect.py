@@ -23,7 +23,7 @@ def invoke(action, params):
         if len(response) != 2:
             return 'Error: Response has an unexpected number of fields'
         if 'error' not in response:
-            return 'Error: Response has an unexpected number of fields'
+            return 'Error: Response is missing required error field'
         if 'result' not in response:
             return 'Error: Response is missing required result field'
         if response['error'] is not None:

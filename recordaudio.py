@@ -4,7 +4,6 @@ import wave
 import os
 import platform
 from audio import valid_output_device, convert_audio
-from config import r_config, LOG_CONFIG
 
 class RecordThread(threading.Thread):
     def __init__(self, deviceIndex=-1, frames=512):

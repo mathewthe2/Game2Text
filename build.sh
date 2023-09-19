@@ -1,5 +1,5 @@
 #! /bin/sh
-rm -rf build, dist
+rm -rf build dist
 python -m eel game2text.py web \
 --windowed \
 --hidden-import sudachidict_small \

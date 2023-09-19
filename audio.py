@@ -1,16 +1,17 @@
 from pydub import AudioSegment
 from pydub.playback import play
 import pyaudio
-import wave 
 import os
 import platform
-from shutil import copyfile
+from pathlib import Path
 import eel
 from config import r_config, LOG_CONFIG
-from tools import path_to_ffmpeg, path_to_ffmpeg_folder
+from tools import path_to_ffmpeg
 
-AudioSegment.ffmpeg = path_to_ffmpeg()
-os.environ["PATH"] += os.pathsep + path_to_ffmpeg_folder()
+ffmpeg_path = path_to_ffmpeg()
+if ffmpeg_path is not None:
+    AudioSegment.ffmpeg = ffmpeg_path
+    os.environ["PATH"] += os.pathsep + str(Path(ffmpeg_path).parent)
 
  # User config device exists? use config device, if not check if (1) valid, use (1), if not no audio
 @eel.expose

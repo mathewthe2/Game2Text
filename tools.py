@@ -29,8 +29,8 @@ def path_to_ffmpeg_folder():
 
 def path_to_tesseract():
     exec_data = {"Windows": str(Path(WIN_TESSERACT_DIR, "tesseract.exe")),
-                    "Darwin": str(Path(OSX_TESSERACT_DIR, "bin", "tesseract")),
-                    "Linux": "/usr/local/bin/tesseract"}
+                  "Darwin": str(Path(OSX_TESSERACT_DIR, "bin", "tesseract")),
+                }
     platform_name = platform.system()  # E.g. 'Windows'
     return exec_data[platform_name], platform_name
 

@@ -86,6 +86,8 @@ def get_default_browser_name():
     return 'chrome'
 
 def get_PID_list():
+    if platform.system() == 'Darwin': # Not available for Mac
+        return []
     processes = [proc.name() + ' ' + str(proc.pid) for proc in psutil.process_iter()]
     processes.sort()
     pids = []

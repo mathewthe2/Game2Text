@@ -1,5 +1,6 @@
 import eel
-import threading, os, platform, time
+import threading, os, platform, time, concurrent.futures
+thread_pool_ref = concurrent.futures.ThreadPoolExecutor # Necessary for distribution to import ThreadPoolExecutor before app code
 from pathlib import Path
 from ocr import detect_and_log
 from translate import multi_translate
@@ -7,11 +8,9 @@ from hotkeys import hotkey_map
 from util import RepeatedTimer, create_directory_if_not_exists, get_default_browser_name, get_PID_list, format_output, remove_duplicate_characters, remove_spaces
 from textractor import Textractor
 from tools import path_to_textractor, open_folder_textractor_path
-from audio import get_recommended_device_index
-from recordaudio import RecordThread
 from pynput import keyboard
 from clipboard import clipboard_to_output, text_to_clipboard
-from logger import get_time_string, log_text, log_media, update_log_text, AUDIO_LOG_PATH
+from logger import get_time_string, log_text, log_media, update_log_text
 from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki_note, fetch_anki_fields
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
 from gamescript import load_game_scripts, open_game_script
@@ -32,13 +31,13 @@ def close(page, sockets):
 
 @eel.expose     
 def recognize_image(engine, image, orientation):
-    return detect_and_log(engine, image, orientation, session_start_time, get_time_string(), audio_recorder)
+    return detect_and_log(engine, image, orientation, session_start_time, get_time_string())
 
 @eel.expose
 def log_output(text):
     log_id = get_time_string()
     log_text(session_start_time, log_id, text)
-    log_media(session_start_time, log_id, audio_recorder)
+    log_media(session_start_time, log_id)
     return log_id
 
 @eel.expose
@@ -81,35 +80,6 @@ def monitor_clipboard():
         clipboard_timer.stop()
     else:
         clipboard_timer.start()
-
-@eel.expose
-def start_manual_recording(request_time, session_start_time):
-    global manual_audio_recorder
-    global manual_audio_file_path
-    if manual_audio_recorder.is_recording():
-        stop_manual_recording()
-    file_name = request_time + '.' + r_config(LOG_CONFIG, 'logaudiotype')
-    manual_audio_file_path = str(Path(AUDIO_LOG_PATH, session_start_time, file_name))
-    device_index = get_recommended_device_index(r_config(LOG_CONFIG, 'logaudiohost'))
-    manual_audio_recorder = RecordThread(device_index, int(r_config(LOG_CONFIG, "logaudioframes")))
-    manual_audio_recorder.start()
-
-@eel.expose
-def stop_manual_recording():
-    if manual_audio_recorder.is_recording():
-        create_directory_if_not_exists(manual_audio_file_path)
-        audio_exists = manual_audio_recorder.has_audio()
-        manual_audio_recorder.stop_recording(manual_audio_file_path, -1)
-        if audio_exists:
-            file_name = os.path.basename(manual_audio_file_path)
-            return file_name
-    return ''
-
-@eel.expose
-def restart_audio_recording(device_index):
-    global audio_recorder
-    audio_recorder = RecordThread(device_index, int(r_config(LOG_CONFIG, "logaudioframes")))
-    audio_recorder.start()
 
 @eel.expose
 def copy_text_to_clipboard(text):
@@ -250,24 +220,6 @@ main_thread.start()
 # Thread to load dictionaries
 dictionary_thread = threading.Thread(target=load_all_dictionaries, args=()) 
 dictionary_thread.start()
-
-# Thread to record audio continuously
-logaudiohost = r_config(LOG_CONFIG, 'logaudiohost')
-recommended_audio_device_index = get_recommended_device_index(logaudiohost)
-logaudioframes = int(r_config(LOG_CONFIG, "logaudioframes"))
-audio_recorder = RecordThread(recommended_audio_device_index, logaudioframes)
-is_log_audio = r_config(LOG_CONFIG, "logaudio").lower() == "true"
-# TODO: Fix input overflowed error if start logging audio on Mac automatically at launch
-is_mac = (platform.system() == 'Darwin')
-if is_mac:
-    is_log_audio  = False
-    w_config(LOG_CONFIG, {"logaudio": 'false'})
-if is_log_audio and recommended_audio_device_index != -1:
-    audio_recorder.start()
-
-# Thread to manually record audio
-manual_audio_recorder = RecordThread(recommended_audio_device_index, int(r_config(LOG_CONFIG, "logaudioframes")))
-manual_audio_file_path = ''
 
 # Thread to export clipboard text continuously
 clipboard_timer = RepeatedTimer(1, clipboard_to_output)

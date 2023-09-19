@@ -11,7 +11,6 @@ from pathlib import Path
 from datetime import datetime
 from config import r_config, LOG_CONFIG
 from util import create_directory_if_not_exists, base64_to_image_path
-from audio import play_audio_from_file
 from gamescript import add_matching_script_to_logs
 from tools import bundle_dir
 
@@ -43,16 +42,8 @@ def log_text(start_time,request_time, text):
             f.write('{}, {}'.format(request_time, parsed_text))
         f.close()
         
-def log_media(session_start_time, request_time, audio_recorder):
+def log_media(session_start_time, request_time):
     is_log_images = r_config(LOG_CONFIG, 'logimages').lower() == 'true'
-    is_log_audio = r_config(LOG_CONFIG, 'logaudio').lower() == 'true'
-    audio_duration = float(r_config(LOG_CONFIG, 'logaudioduration'))
-    if is_log_audio:
-        file_name = request_time + '.' + r_config(LOG_CONFIG, 'logaudiotype')
-        audio_file_path = str(Path(AUDIO_LOG_PATH, session_start_time, file_name))
-        create_directory_if_not_exists(audio_file_path)
-        audio_recorder.stop_recording(audio_file_path, audio_duration)
-        eel.restartAudioRecording()()
     if is_log_images:
         image_extension = r_config(LOG_CONFIG, 'logimagetype')
         file_name = request_time + '.' + image_extension
@@ -239,12 +230,6 @@ def insert_newest_log_with_image(base64_image_string, image_type):
 
 def insert_newest_log_without_image():
     eel.addLogs([get_latest_log()])()
-
-@eel.expose
-def play_log_audio(file_name, folder_name):
-    file = Path(AUDIO_LOG_PATH, folder_name, file_name)
-    if file:
-        return play_audio_from_file(str(file))
 
 @eel.expose
 def delete_audio_file(log_id, folder_name):

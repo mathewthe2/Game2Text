@@ -1,18 +1,20 @@
 html {
     scroll-behavior: smooth;
 }
+
 :root {
     --white: #f8f8f8;
     --black: #121212;
     --dark: #2e2e2e;
     --light-gray: #BDBDBD;
     --gray: #eee;
-    --purple: rgb(103,58,183);
+    --purple: rgb(103, 58, 183);
     --purple-50: rgb(242, 231, 254);
     --purple-100: rgb(219, 178, 255);
     --purple-200: rgb(187, 134, 252);
     --purple-700: rgb(55, 0, 179);
 }
+
 .light-theme {
     --primary: var(--purple);
     --mainBg: var(--white);
@@ -24,6 +26,7 @@ html {
     --disabled: var(--light-gray);
     --fontColor: var(--black);
 }
+
 .dark-theme {
     --primary: var(--purple);
     --mainBg: var(--black);
@@ -35,19 +38,24 @@ html {
     --disabled: var(--black);
     --fontColor: var(--white);
 }
+
 * {
     transition: background-color 0.3s ease, color 0.5s ease;
 }
+
 body {
     background-color: var(--mainBg);
 }
+
 .mdl-list__item-primary-content {
     color: var(--fontColor);
 }
+
 .mdl-card {
     background-color: var(--dialogBg);
     box-shadow: initial;
 }
+
 #loadingLogsScreen {
     margin: 0;
     position: absolute;
@@ -57,10 +65,12 @@ body {
     -webkit-animation: fadein 0.6s;
     animation: fadein 0.6s;
 }
+
 #loadingLogsCaption {
     font-size: 22px;
     text-align: center;
 }
+
 #gameScriptLoader {
     background: var(--header);
     color: var(--white);
@@ -70,136 +80,180 @@ body {
     display: flex;
     align-items: center;
 }
-#gameScriptLoader > i, span, select {
+
+#gameScriptLoader>i,
+span,
+select {
     padding-right: 10px
 }
+
 #toggleDarkThemeButton {
     margin-left: auto;
     right: 15px;
 }
+
 .logItem {
     transition-duration: .28s;
-    transition-timing-function: cubic-bezier(.4,0,.2,1);
-    transition-property: background-color;  
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-property: background-color;
     -webkit-animation: fadein 0.6s;
     animation: fadein 0.6s;
     transition: all 0.3s ease;
 }
-.logItem:hover, .matchingScriptMenuCard > .mdl-list > .mdl-list__item:hover, .logMenuCard > .mdl-list > .mdl-list__item:hover {
+
+.logItem:hover,
+.matchingScriptMenuCard>.mdl-list>.mdl-list__item:hover,
+.logMenuCard>.mdl-list>.mdl-list__item:hover {
     background-color: var(--secondaryBg);
 }
+
 .mdl-button--colored {
     color: var(--iconButton) !important;
 }
-.matchingScriptMenuCard > .mdl-list > .mdl-list__item:hover, .logMenuCard > .mdl-list > .mdl-list__item:hover {
+
+.matchingScriptMenuCard>.mdl-list>.mdl-list__item:hover,
+.logMenuCard>.mdl-list>.mdl-list__item:hover {
     background-color: var(--focus);
 }
-.mdl-list__item-primary-content > .logMenuButton {
-   visibility: hidden;
-   opacity: 0;
+
+.mdl-list__item-primary-content>.logMenuButton {
+    visibility: hidden;
+    opacity: 0;
 }
+
 .logItem:hover .logMenuButton {
     visibility: visible;
     opacity: 1;
     transition: all 0.2s ease-in 0.3s;
 }
-.matchingScriptMenuCard > .mdl-list > .mdl-list__item {
+
+.matchingScriptMenuCard>.mdl-list>.mdl-list__item {
     cursor: pointer;
     font-size: 16px;
     transition-duration: .28s;
-    transition-timing-function: cubic-bezier(.4,0,.2,1);
-    transition-property: background-color;  
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-property: background-color;
     -webkit-animation: fadein 0.6s;
     animation: fadein 0.6s;
 }
-.logMenuCard > .mdl-list {
+
+.logMenuCard>.mdl-list {
     padding: 0
 }
-.logMenuCard > .mdl-list > .mdl-list__item {
+
+.logMenuCard>.mdl-list>.mdl-list__item {
     cursor: pointer;
     font-size: 16px;
     transition-duration: .28s;
-    transition-timing-function: cubic-bezier(.4,0,.2,1);
-    transition-property: background-color;  
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-property: background-color;
     -webkit-animation: fadein 0.6s;
     animation: fadein 0.6s;
 }
+
 .matchingScriptMenuCard {
     width: 100%;
 }
+
 .game-script-arrow-down-icon {
     color: var(--fontColor);
 }
+
 .logMenuCard {
     width: 180px;
     min-height: 0px;
 }
+
 .disabled_list__item {
-    pointer-events: none; 
- }
- .disabled_list__item > .mdl-list__item-primary-content {
-     color: var(--disabled);
- }
+    pointer-events: none;
+}
+
+.disabled_list__item>.mdl-list__item-primary-content {
+    color: var(--disabled);
+}
+
 .note-add-icon:hover {
     color: #E21549
 }
-.playAudioButton .recordAudioButton {
+
+.playAudioButton {
     margin-right: 0.2em;
 }
+
 .logSecondaryActionGroup {
     min-width: 70px;
 }
+
 .addCardScreenshot {
-   width: 100%;
-   display: block;
+    width: 100%;
+    display: block;
 }
+
 .addCardFormField {
     font-size: 22px;
 }
+
 .addToAnkiButton:hover {
     filter: brightness(150%);
 }
+
 .tippy-box[data-theme~='material-light'] {
     color: black;
     background-color: var(--dialogBg);
     box-shadow:
-    /* offset-x | offset-y | blur-radius | spread-radius | color */
-    0px 6px 10px 0px hsla(0,0%,0%,0.14), 
-    0px 1px 18px 0px hsla(0,0%,0%,0.12), 
-    0px 3px 5px -1px hsla(0,0%,0%,0.2);
+        /* offset-x | offset-y | blur-radius | spread-radius | color */
+        0px 6px 10px 0px hsla(0, 0%, 0%, 0.14),
+        0px 1px 18px 0px hsla(0, 0%, 0%, 0.12),
+        0px 3px 5px -1px hsla(0, 0%, 0%, 0.2);
 }
+
 .tippy-box[data-theme~='material-light-long'] {
     color: black;
     background-color: var(--dialogBg);
     box-shadow:
-    /* offset-x | offset-y | blur-radius | spread-radius | color */
-    0px 6px 10px 0px hsla(0,0%,0%,0.14), 
-    0px 1px 18px 0px hsla(0,0%,0%,0.12), 
-    0px 3px 5px -1px hsla(0,0%,0%,0.2);
+        /* offset-x | offset-y | blur-radius | spread-radius | color */
+        0px 6px 10px 0px hsla(0, 0%, 0%, 0.14),
+        0px 1px 18px 0px hsla(0, 0%, 0%, 0.12),
+        0px 3px 5px -1px hsla(0, 0%, 0%, 0.2);
     min-width: 85vw;
 }
+
 .demo-card-square.mdl-card {
     height: 400px;
 }
+
 .addCardBody {
     padding: 0px;
 }
+
 .addCardBodyList {
     max-height: 220px;
     overflow-y: auto;
 }
-.addCardBodyContainer > .mdl-card__actions {
+
+.addCardBodyContainer>.mdl-card__actions {
     display: flex;
-    box-sizing:border-box;
+    box-sizing: border-box;
     align-items: center;
 }
+
 @keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 /* Safari, Chrome and Opera > 12.1 */
 @-webkit-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }

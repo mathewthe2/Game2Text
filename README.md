@@ -33,8 +33,15 @@
 Create a venv and activate it.
 
 ```bash
-virtualenv venv --python=python3.7.4
+virtualenv venv --python=python3.12
 source venv/bin/activate
+```
+
+or alternatively if you have issues use conda:
+
+```bash
+conda create -n game2text python=3.12
+conda activate game2text
 ```
 
 Install requirements:

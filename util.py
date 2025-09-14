@@ -83,7 +83,7 @@ def get_default_browser_name():
                 return browser_map[browser]
             else:
                 return 'chromium'
-    return 'chrome'
+    return 'default'
 
 def get_PID_list():
     if platform.system() == 'Darwin': # Not available for Mac

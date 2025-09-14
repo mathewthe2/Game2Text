@@ -8,7 +8,12 @@ from hotkeys import hotkey_map
 from util import RepeatedTimer, create_directory_if_not_exists, get_default_browser_name, get_PID_list, format_output
 from textractor import Textractor
 from tools import path_to_textractor, open_folder_textractor_path
-from pynput import keyboard
+try:
+    from pynput import keyboard
+    _pynput_available = True
+except Exception as e:
+    print(f"[Warning] pynput not available or failed to initialize: {e}\nGlobal hotkeys will be disabled.")
+    _pynput_available = False
 from clipboard import clipboard_to_output, text_to_clipboard
 from logger import get_time_string, log_text, log_media, update_log_text
 from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki_note, fetch_anki_fields
@@ -225,5 +230,13 @@ dictionary_thread.start()
 clipboard_timer = RepeatedTimer(1, clipboard_to_output)
 clipboard_timer.stop() # stop the initial timer
 
-with keyboard.GlobalHotKeys(hotkey_map) as listener:
-    listener.join()
+
+
+
+if _pynput_available:
+    try:
+        with keyboard.GlobalHotKeys(hotkey_map) as listener: listener.join()
+    except Exception as e:
+        print(f"[Warning] Failed to start global hotkeys: {e}\nContinuing without keybindings.")
+else:
+    print("[Info] Global hotkeys are disabled.")

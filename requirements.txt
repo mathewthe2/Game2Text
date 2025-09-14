@@ -1,16 +1,14 @@
-bottle==0.12.25
+bottle==0.13.4
 bottle-websocket==0.2.9
 certifi==2020.11.8
-cffi==1.14.4
-Eel==0.16.0
+cffi==2.0.0
+eel==0.18.2
 future==0.18.2
-fuzzywuzzy==0.18.0
 idna==3.4
-numpy==1.26.0
-opencv-python==4.8.0.76
-parse==1.19.0
-Pillow==10.0.1
-psutil==5.9.5
+opencv-python==4.12.0.88
+parse==1.20.2
+Pillow==10.4.0
+psutil==7.0.0
 pycparser==2.21
 pydub==0.25.1
 pyinstaller==5.13.2
@@ -22,17 +20,17 @@ pyparsing==2.4.7
 pyperclip==1.8.2
 pytesseract==0.3.10
 python-xlib==0.29
-python-Levenshtein==0.12.2
 pywin32-ctypes==0.2.0
 PyYAML==6.0.1
-requests==2.31.0
+requests==2.32.5
 six==1.16.0
+thefuzz==0.22.1
 tk==0.1.0
-transformers==4.27.4
-translators==5.8.3
-urllib3==1.26.2
+translators==6.0.1
+urllib3==2.5.0
 whichcraft==0.6.1
 wexpect==4.0.0; sys_platform == 'win32'
 wurlitzer>=3.0.2,<4.0.0; sys_platform == 'darwin'
+xkbcommon==1.5.1
 zope.event==5.0
 zope.interface==6.0

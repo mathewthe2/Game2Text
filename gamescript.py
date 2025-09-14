@@ -3,7 +3,7 @@ from pathlib import Path
 from tkinter import *
 from tkinter.filedialog import askopenfile
 from shutil import copyfile
-from fuzzywuzzy import process
+from thefuzz import process
 from config import r_config, w_config, LOG_CONFIG, SCRIPT_MATCH_CONFIG
 from tools import bundle_dir
 
